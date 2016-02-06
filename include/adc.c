@@ -12,7 +12,7 @@ void adc_check_event(void)
     ADC_Cmd(ADC1, DISABLE); // ВЫКЛ!
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, DISABLE);
     RCC_HSICmd(DISABLE); // Выключаем HSI
-		ADCData.Batt_voltage=(ADCData.Calibration_bit_voltage*ADCData.Batt_voltage_raw/1000)*2;
+		ADCData.Batt_voltage=((ADCData.Calibration_bit_voltage*ADCData.Batt_voltage_raw)/1000)*2;
 
 		reset_TIM_prescallers_and_Compare();
 
@@ -34,10 +34,10 @@ void adc_calibration(void)
   
   ADC_Cmd(ADC1, ENABLE); // ВКЛ!
 
-  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET){}  // Тупо ждем запуска АЦП
+  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET);  // Тупо ждем запуска АЦП
   ADC_SoftwareStartConv(ADC1); // Стартуем преобразование
 
-  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET){} // Тупо ждем завершения преобразования
+  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET); // Тупо ждем завершения преобразования
 		
   ADCData.Calibration_bit_voltage=(1220000/ADC_GetConversionValue(ADC1)); // битовое значение соотв. напряжению референса 1.22в, из него вычисляем скольким микровольтам соответствует 1 бит.
   ADCData.Power_voltage=((ADCData.Calibration_bit_voltage * 4095)/1000);
@@ -56,7 +56,7 @@ void adc_init(void)
 
   RCC_HSICmd(ENABLE); // Включаем HSI
 
-  while(RCC_GetFlagStatus(RCC_FLAG_HSIRDY) == RESET){}   // Ждем пока запустатися HSI
+  while(RCC_GetFlagStatus(RCC_FLAG_HSIRDY) == RESET);   // Ждем пока запустатися HSI
 
 	
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);  // Разрешаем тактирование ADC
@@ -108,7 +108,7 @@ void ADC_Batt_Read (void)
 
   GPIO_ResetBits(GPIOB,GPIO_Pin_15);// Подключаем токосемник
   ADC_SoftwareStartConv(ADC1); // Стартуем преобразование
-  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET){} // Тупо ждем завершения преобразования
+  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET); // Тупо ждем завершения преобразования
   ADCData.Batt_voltage_raw=ADC_GetConversionValue(ADC1);
   // ===============================================================================================  
   // Отключаем токосемную цепь

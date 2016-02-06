@@ -9,7 +9,7 @@ __IO TestStatus MemoryProgramStatus_eeprom = PASSED;
 //////////////////////////////////////////////////////////////////////////////////////
 void full_erase_flash(void) // Erase full dataflash
 {  
-	uint32_t j, Address, NbrOfPage, tmp;
+	uint32_t j = 0, Address = 0, NbrOfPage = 0, tmp = 0;
 
   /* Unlock the FLASH Program memory */ 
   FLASH_Unlock();

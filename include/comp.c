@@ -58,12 +58,11 @@ void comp_init()
 	EXTI_Init(&EXTI_InitStructure);
 	
 	NVIC_InitStructure.NVIC_IRQChannel = COMP_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
 
-	while(!(COMP->CSR  & COMP_CSR_INSEL)){} // ждем пока не включиться компаратор
+	while(!(COMP->CSR  & COMP_CSR_INSEL)); // ждем пока не включиться компаратор
 }
 

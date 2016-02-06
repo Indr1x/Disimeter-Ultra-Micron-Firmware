@@ -187,7 +187,7 @@ void EXTI9_5_IRQHandler(void)
 					Pump_now(ENABLE);
 				} else last_count_pump_on_impulse++;
 			}
-			if(Settings.Sound == 1 && !(Alarm.Alarm_active && !Alarm.User_cancel))
+			if(Settings.Sound && !(Alarm.Alarm_active && !Alarm.User_cancel))
 			{
 				if(Power.Display_active)
 				{

@@ -171,7 +171,7 @@ type
 end;
 
 var
-  Need_build: string = '30 Jan 2016';
+  Need_build: string = ' 6 Feb 2016';
   mainFrm: TmainFrm;
   MyThread: TMyThread;
   FeatureReportLen: integer = 0;
@@ -514,6 +514,7 @@ if MyMessage.WParam = PBT_APMRESUMEAUTOMATIC then begin
 end
 else begin
     DevPresent:= false;
+    firmware_date:='';
     date_sent_flag:=false;
     device_serial_0:=0;
     device_serial_1:=0;
@@ -1117,6 +1118,7 @@ begin
   if(DevPresent=true) then
    begin
       DevPresent:=false;
+      firmware_date:='';
       date_sent_flag:=false;
       device_serial_0:=0;
       device_serial_1:=0;
@@ -1650,8 +1652,12 @@ if(USB_massive_loading = false) then begin
 
       vAns[i]:=$d4; i:=i+1; // считать текущие данные
 
-      vAns[i]:=$e5; i:=i+1; // считать дату прошивки
-      vAns[i]:=$e6; i:=i+1; // считать дату прошивки
+      if(firmware_date='') then
+      begin
+        vAns[i]:=$e5; i:=i+1; // считать дату прошивки
+        vAns[i]:=$e6; i:=i+1; // считать дату прошивки
+      end;
+
 
       if Length(vAns) > 0 then RS232.Send(vAns);
 
@@ -1659,6 +1665,7 @@ if(USB_massive_loading = false) then begin
       if(DevPresent=true) then
       begin
         DevPresent:=false;
+        firmware_date:='';
         date_sent_flag:=false;
         device_serial_0:=0;
         device_serial_1:=0;
@@ -1751,6 +1758,7 @@ if(usb_send_try < 10) then
     RS232.StopListner;
     RS232.Close;
     DevPresent:= false;
+    firmware_date:='';
     date_sent_flag:=false;
     device_serial_0:=0;
     device_serial_1:=0;

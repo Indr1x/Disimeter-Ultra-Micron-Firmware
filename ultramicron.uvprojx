@@ -10,8 +10,7 @@
       <TargetName>Ultra-Micron 4.02+ service</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5040082::V5.04 update 2 (build 82)::.\ARMCC_504u2</pArmCC>
-      <pCCUsed>5040082::V5.04 update 2 (build 82)::.\ARMCC_504u2</pCCUsed>
+      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L152CB</Device>
@@ -135,7 +134,7 @@
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>1</LimitSpeedToRealTime>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
             <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
@@ -228,7 +227,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -352,7 +351,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -758,19 +757,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
                     <EnumInt>2</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -810,19 +809,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
                     <EnumInt>2</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -1291,7 +1290,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -1415,7 +1414,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -1821,19 +1820,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -1873,19 +1872,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -2354,7 +2353,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -2478,7 +2477,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -2884,19 +2883,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -2936,19 +2935,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -3417,7 +3416,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -3541,7 +3540,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -3947,19 +3946,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -3999,19 +3998,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -4480,7 +4479,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -4604,7 +4603,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -5010,19 +5009,19 @@
                   <Cads>
                     <interw>2</interw>
                     <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
@@ -5061,20 +5060,20 @@
                 <FileArmAds>
                   <Cads>
                     <interw>2</interw>
-                    <Optim>1</Optim>
-                    <oTime>0</oTime>
-                    <SplitLS>0</SplitLS>
-                    <OneElfS>0</OneElfS>
-                    <Strict>0</Strict>
-                    <EnumInt>0</EnumInt>
-                    <PlainCh>0</PlainCh>
-                    <Ropi>0</Ropi>
-                    <Rwpi>0</Rwpi>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
                     <wLevel>2</wLevel>
-                    <uThumb>0</uThumb>
-                    <uSurpInc>0</uSurpInc>
-                    <uC99>0</uC99>
-                    <useXO>0</useXO>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>

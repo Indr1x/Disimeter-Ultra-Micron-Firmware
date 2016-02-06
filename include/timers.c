@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 void sound_activate(void)
 {
-	if(Power.USB_active==DISABLE)
+	if(!Power.USB_active)
 	{
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 		if(Power.Display_active==ENABLE)
@@ -66,7 +66,7 @@ void reset_TIM_prescallers_and_Compare(void)
 #ifdef version_401
 	if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
 	{
-		pump_period=(Settings.v4_target_pump*4200)/5000; // расчет целевой накачки (Пример 1,75мкс*4.2В/5.0В напряжение USB=1.25мкс)
+		pump_period=(Settings.v4_target_pump*4200)/4400; // расчет целевой накачки (Пример 1,75мкс*4.2В/4.4В напряжение USB=1.25мкс)
 	} else {
 		pump_period=(Settings.v4_target_pump*4200)/ADCData.Batt_voltage; // расчет целевой накачки (Пример 1,75мкс*4.2В/3.3В напряжение АКБ=2.0мкс)
 	}
@@ -97,7 +97,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
   TIM_BaseConfig.TIM_Prescaler = (uint16_t) (SystemCoreClock / 4000000) - 1; // Делитель (1 тик = 0.25мкс)
   TIM_BaseConfig.TIM_ClockDivision = 0;
 #ifdef version_401
-  TIM_BaseConfig.TIM_Period = 560;  // ИЗМЕРЕННО ОСЦЫЛОМ, НЕ МЕНЯТЬ!  Общее количество тиков (скваженность) 140мкс (частота накачки 1с/140мкс=** кГц)
+  TIM_BaseConfig.TIM_Period = 560;  // ИЗМЕРЕННО ОСЦЫЛОМ, 560!  Общее количество тиков (скваженность) 140мкс (частота накачки 1с/140мкс=** кГц)
 #else
   TIM_BaseConfig.TIM_Period = 560;  // Общее количество тиков (скваженность) 140мкс
 #endif

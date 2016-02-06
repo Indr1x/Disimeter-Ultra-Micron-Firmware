@@ -418,8 +418,12 @@ void stat_screen()
 		sprintf (lcd_buf, "tim9   %5i", Wakeup.tim9_wakeup); 	 	  LcdString(1,3);
 		sprintf (lcd_buf, LANG_DIMP,    Wakeup.pump_wakeup); 			LcdString(1,4);
 		sprintf (lcd_buf, "COMP2  %5i", Wakeup.comp_wakeup); 			LcdString(1,5);
-		sprintf (lcd_buf, LANG_DTIME,   debug_wutr/2); 	        	LcdString(1,7);
-		sprintf (lcd_buf, LANG_DSENS,   Wakeup.sensor_wakeup);  		LcdString(1,8);
+		//sprintf (lcd_buf, LANG_DTIME,   debug_wutr/2); 	        	LcdString(1,7);
+		//sprintf (lcd_buf, LANG_DSENS,   Wakeup.sensor_wakeup);  		LcdString(1,8);
+	sprintf (lcd_buf, "ADC CAL   %5i",   ADCData.Calibration_bit_voltage); 	        	LcdString(1,6);
+	sprintf (lcd_buf, "DAC V/R   %5i",   ADCData.DAC_voltage_raw); 	        	LcdString(1,7);
+	sprintf (lcd_buf, "DAC OUT   %5i",   DAC_GetDataOutputValue(DAC_Channel_2)); 	        	LcdString(1,8);
+	
 
 	break;
 #endif

@@ -3,6 +3,8 @@
 #include "STM32L1xx.h"                  // Device header
 #include "main.h"
 
+#define DOR_OFFSET                 ((uint32_t)0x0000002C)
+
 
 // ===============================================================================================
 
@@ -15,18 +17,18 @@ void Pump_now(FunctionalState pump)
 		dac_on();  // Включаем ЦАП
 		TIM9->EGR |= 0x0001;  // Устанавливаем бит UG для принудительного сброса счетчика
 		TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
-		
-		TIM_ITConfig(TIM9, TIM_IT_Update, ENABLE);
+
 		TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Enable); // разрешить накачку	
+		TIM_ITConfig(TIM9, TIM_IT_Update, ENABLE);
 
 		comp_on(); // Включаем компаратор
 	} else {
-		TIM_ITConfig(TIM9, TIM_IT_Update, DISABLE);
-		TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
 		TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable); // запретить накачку
-				//pump_counter_avg_impulse_by_1sec[0]++;
+		TIM_ITConfig(TIM9, TIM_IT_Update, DISABLE);
+		//pump_counter_avg_impulse_by_1sec[0]++;
 		comp_off();              // Выключаем компаратор
 		dac_off(); // Выключаем ЦАП
+		TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
 		Power.Pump_active=DISABLE;
 	}
 }
@@ -232,3 +234,5 @@ void geiger_calc_fon(void)
   }
 }
 // ===============================================================================================
+
+

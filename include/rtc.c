@@ -91,7 +91,9 @@ void RTC_Config(void)
   SynchPrediv = (Settings.LSI_freq/128) - 1;
 #else // версии с кварцем
 	RCC_LSEConfig(RCC_LSE_ON); // Пытаемся включить LSE // по ДШ время запуска 1 секунда
-	while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET){}
+	while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
+	{
+	}
 	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
 	SynchPrediv = 0xFF;
 	Settings.LSI_freq=0x00;
@@ -149,14 +151,14 @@ void RTC_Config(void)
   
   // Enable the RTC Wakeup Interrupt
   NVIC_InitStructure.NVIC_IRQChannel = RTC_WKUP_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
   RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16); // 1 tick is 488 us
   RTC_SetWakeUpCounter(0xFFF);
-	while(RTC_WakeUpCmd(ENABLE)!=SUCCESS){}
+	while(RTC_WakeUpCmd(ENABLE)!=SUCCESS);
   
   
   // Enable the RTC Wakeup Interrupt
@@ -164,3 +166,6 @@ void RTC_Config(void)
   
   
 }
+
+
+

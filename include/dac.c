@@ -7,6 +7,7 @@ void dac_init()
   //Конфигурируем систему детектирования выброса
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_DAC, ENABLE);
 
+  DAC_StructInit(&DAC_InitStructure);
   DAC_InitStructure.DAC_Trigger = DAC_Trigger_Software;
   DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_None;
   DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
@@ -34,6 +35,8 @@ void dac_on()
 
 void dac_reload()
 {
+	dac_init();
+	ADCData.DAC_voltage_raw=1;
 #ifdef version_401
   if(Settings.Geiger_voltage>200)
 	{
@@ -45,8 +48,6 @@ void dac_reload()
 		// Расчет кофэицентов смотри в XLS файле !!!
 		// ADCData.DAC_voltage_raw=(((Settings.Geiger_voltage*(1000-K3 ))/K4)-K1 )/K2; 
 		ADCData.DAC_voltage_raw=   (((Settings.Geiger_voltage*(1000-21 ))/11)-200)/34;
-	} else {
-		ADCData.DAC_voltage_raw=1; //Заплатка
 	}
 #else
 	ADCData.DAC_voltage_raw=((Settings.Geiger_voltage*1000)/30/11); // напряжение датчика/Ктансформации/коэффицент резистивного делителя
