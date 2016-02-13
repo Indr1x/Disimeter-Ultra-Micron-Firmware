@@ -415,34 +415,68 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,uint8_t y_en
   
   x_lenght=x_end-x_start;
   y_lenght=y_end-y_start;
-  
-  scalling_factor=y_lenght/10;
-  for(q=0;q<(x_lenght/2)+1;q++)
-  {
-			if(Detector_massive_pointer>=q)
-			{
-				pointer=Detector_massive_pointer-q;
-			}else
-			{
-				pointer=(Settings.Second_count>>2)-(q-Detector_massive_pointer);
-			}
+	
+	
+  if((Settings.Second_count/4)>100)
+	{ // если время счета большое, то рисуем тонкие линии
+		scalling_factor=y_lenght/10;
+		for(q=0;q<x_lenght+1;q++)
+		{
+				if(Detector_massive_pointer>=q)
+				{
+					pointer=Detector_massive_pointer-q;
+				}else
+				{
+					pointer=(Settings.Second_count>>2)-(q-Detector_massive_pointer);
+				}
 			
-			if(Detector_massive[pointer]>scalling_factor)scalling_factor=Detector_massive[pointer];
-  }
+				if(Detector_massive[pointer]>scalling_factor)scalling_factor=Detector_massive[pointer];
+		}
   	
-  for(q=x_end;q>x_start;q--)
-  {
-  		if(Detector_massive_pointer>=((x_end-q)/2))
-			{
-				pointer=Detector_massive_pointer-((x_end-q)/2);
-			}else
-			{
-				pointer=(Settings.Second_count>>2)-(((x_end-q)/2)-Detector_massive_pointer);
-			}
+		for(q=x_end;q>x_start;q--)
+		{
+				if(Detector_massive_pointer>=(x_end-q))
+				{
+					pointer=Detector_massive_pointer-(x_end-q);
+				}else
+				{
+					pointer=(Settings.Second_count>>2)-((x_end-q)-Detector_massive_pointer);
+				}
 
-    i=Detector_massive[pointer];
-    if(i>0) LcdLine(x_end-q,y_end,x_end-q,y_end-((i*y_lenght)/scalling_factor),1);
-  }
+			i=Detector_massive[pointer];
+			if(i>0) LcdLine(x_end-q,y_end,x_end-q,y_end-((i*y_lenght)/scalling_factor),1);
+		}
+	}
+	else
+	{ // если время счета маленькое, то рисуем толстые линии
+		scalling_factor=y_lenght/10;
+		for(q=0;q<(x_lenght/2)+1;q++)
+		{
+				if(Detector_massive_pointer>=q)
+				{
+					pointer=Detector_massive_pointer-q;
+				}else
+				{
+					pointer=(Settings.Second_count>>2)-(q-Detector_massive_pointer);
+				}
+			
+				if(Detector_massive[pointer]>scalling_factor)scalling_factor=Detector_massive[pointer];
+		}
+  	
+		for(q=x_end;q>x_start;q--)
+		{
+				if(Detector_massive_pointer>=((x_end-q)/2))
+				{
+					pointer=Detector_massive_pointer-((x_end-q)/2);
+				}else
+				{
+					pointer=(Settings.Second_count>>2)-(((x_end-q)/2)-Detector_massive_pointer);
+				}
+
+			i=Detector_massive[pointer];
+			if(i>0) LcdLine(x_end-q,y_end,x_end-q,y_end-((i*y_lenght)/scalling_factor),1);
+		}
+	}
   
   //risuem setku
   LcdLine(x_start,y_start,x_start,y_start-2,1); 
@@ -473,6 +507,34 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,uint8_t y_en
     }
   }
   
+}
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start,uint8_t y_end)
+{
+  uint32_t i=0;
+	int massive_len=Settings.Second_count>>2; // 50@200 62@250
+	int recalc_len=massive_len/auto_speedup_factor; // 62/9 = 6
+	
+	
+  if((Settings.Second_count/4)>100)
+	{ // если время счета большое, то рисуем тонкие линии
+		i=x_start+recalc_len;
+  	
+	}
+	else
+	{ // если время счета маленькое, то рисуем толстые линии
+		i=x_start+(recalc_len*2);
+	}
+
+	if((i+2)<=x_end)
+	{
+		LcdLine(i,y_start-2,i+2,y_start-2,1);
+		LcdLine(i,y_start-3,i+2,y_start-3,1);
+	}
 }
 //////////////////////////////////////////////////////////////////////////////////////
 

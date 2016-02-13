@@ -250,7 +250,8 @@ void main_screen()
 
 	if(auto_speedup_factor>1)
 	{
-		sprintf (lcd_buf, "x%1u", auto_speedup_factor); // Пишем в буфер значение счетчика
+		Draw_speedup(2, 94, 67-25, 67);
+		sprintf (lcd_buf, "x%2u", auto_speedup_factor); // Пишем в буфер значение счетчика
 		LcdString(12,3); // // Выводим обычным текстом содержание буфера
 	}
     LcdUpdate(); // записываем данные из сформированного фрейм-буфера на дисплей

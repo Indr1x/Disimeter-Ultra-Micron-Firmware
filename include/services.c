@@ -148,8 +148,6 @@ void recalculate_fon(void)
 		fon_level+=Detector_massive[pointer];
 	}
 	tmp=fon_level; // фон 6-ти €чеек (при ускорении 9)... 24 000
-	//tmp=tmp/recalc_len;
-	//tmp=tmp*(massive_len/auto_speedup_factor);
 	tmp=tmp*auto_speedup_factor;
 	tmp=tmp+(((tmp/recalc_len)/auto_speedup_factor)*(massive_len % auto_speedup_factor)); // €чейка 24000/6=4000; остаток от делени€ 8
 																																												// (4000/9*)8=3552; 24000+3552=27552
