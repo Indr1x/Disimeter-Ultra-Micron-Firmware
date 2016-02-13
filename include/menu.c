@@ -16,13 +16,15 @@ MenuItem Menu_list[max_struct_index] = {
   {  0x00, LANG_CLEARDO,    "*",   						"*",		        "*",	         0x00,                                                   0x00,    0x00,     0x00,    &plus_doze_reset,         0x00},
   {  0x00, LANG_REBOOT,     "*",   						"*",		        "*",	         0x00,                                                   0x00,    0x00,     0x00,    &plus_reboot,             &minus_poweroff},
 	{  0x00, LANG_UNITS,      LANG_UR,    		  LANG_UZV, 	    "",      		   &Settings.units,                                        0x00,    0x01,     0x00,    &plus_one, 		           &minus_one},
+	{  0x00, LANG_CLEAR_FON,  "*",    		      "*", 	    			"*",     		   0x00,                                        					 0x00,    0x00,     0x00,    &plus_rad_reset,          0x00},
+	{  0x00, LANG_BETA_MEAS,  "*",		    		  "*",		  			"*",     		   0x00,                                      						 0x00,    0x00,     0x00,    &plus_ab_engage, 		     0x00},
   {  0x01, LANG_CONTRAST,   "",		  					"",			        "%u",  	       &Settings.contrast,                                     0,       15,       0,       &plus_one,                &minus_one},
   {  0x01, LANG_REVERSE,    LANG_OFF,					"",			        "%u",	         &Settings.Display_reverse,                              0,       3,        0,       &plus_one,                &minus_one},
   {  0x01, LANG_COUNT,      "",		  					"",			        LANG_USEC,	   &Settings.Second_count,                                 200,     1450,     250,     &plus_ten,                &minus_ten},
 	{  0x01, "LSI",		        LANG_QUARTZ,			"",			        LANG_UHZ,	     &Settings.LSI_freq,                            	       26000,   56000,    38000,   &plus_500,                &minus_500},
 	{  0x01, LANG_V4PUMP,     "",								"",			        LANG_UV4PUMP,  &Settings.v4_target_pump,                       	       4,       14,       11,      &plus_one,                &minus_one},
 	{  0x01, LANG_VOLTAGE,	  "",		  					"",			        LANG_UV,	     &Settings.Geiger_voltage,                               300,     450,      380,     &plus_ten,                &minus_ten},
-// Заплатка на бета окно		if(menu_struct_index == 13) ! Исправить в коде при изменении порядка пунктов меню!
+// Заплатка на бета окно		if(menu_struct_index == 15) ! Исправить в коде при изменении порядка пунктов меню!
 	{  0x01, LANG_BWINDOW,    "",								"",			        LANG_BWINDOW_, &Settings.Beta_window,                       	         1,       100,       20,     &plus_one,                &minus_one},
 	{  0x01, LANG_BPROCENT,   "",								"",			        LANG_BPROCENT_,&Settings.Beta_procent,                       	         1,       100,       37,     &plus_one,                &minus_one}
 	/*	{  0x01, "Индукция",	    "",		  						"",			        	"%uмТл",	     &Settings.Pump_Energy,                                  150,     450,      250,     &plus_50,                 &minus_50},
@@ -55,11 +57,14 @@ void main_screen()
   uint32_t battery_procent, i=0,x=0;
    
   //Рачсет процента батарейки 3.5В = 0% 4.0В = 100%
-  battery_procent=ADCData.Batt_voltage;
-  battery_procent-=3500;
-  battery_procent/=5;
-  if(ADCData.Batt_voltage<3500){LcdBatt(82, 19, 82+10, 19+19, 0);}//рисуем батарейкуADCData.Batt_voltage
-  else LcdBatt(84, 19, 84+10, 19+19, battery_procent);//рисуем батарейкуADCData.Batt_voltage
+	if(Settings.AB_mode==0)
+	{
+		battery_procent=ADCData.Batt_voltage;
+		battery_procent-=3500;
+		battery_procent/=5;
+		if(ADCData.Batt_voltage<3500){LcdBatt(82, 19, 82+10, 19+19, 0);}//рисуем батарейкуADCData.Batt_voltage
+		else LcdBatt(84, 19, 84+10, 19+19, battery_procent);//рисуем батарейкуADCData.Batt_voltage
+	}
 
   if (main_menu_stat>8)main_menu_stat=1;
   if (main_menu_stat<1)main_menu_stat=8;
@@ -90,6 +95,8 @@ void main_screen()
 		}
 	}
 
+if(Settings.AB_mode==0)
+{
   switch (main_menu_stat)
 	{
 		case 0x01:
@@ -243,7 +250,10 @@ void main_screen()
     default: 
 			break;
 	}
-
+} else
+{
+	Draw_AB_digit(4, 1, 0);
+}
 	
     Draw_fon_digit(1, 1, 0);
     Draw_fon_graph(2, 94, 67-25, 67);
@@ -325,7 +335,7 @@ void menu_screen()
 			sprintf (para_string,  LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value)); 
 
 		// Заплатка на бета окно
-		if(menu_struct_index == 13)
+		if(menu_struct_index == 15)
 		{
 			tmp=*Menu_list[menu_struct_index].Parameter_value;
 			tmp=tmp/10;

@@ -581,6 +581,50 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
+{  
+	// отрисовка едениц
+	if(Settings.AB_mode<2)
+	{
+		sprintf(lcd_buf,LANG_BETA1);
+		LcdStringInv(((start_char+6)*2),line);
+  
+		sprintf(lcd_buf,LANG_BETA2);                            
+		LcdStringInv(((start_char+6)*2),line+1);
+	}
+	else
+	{
+		sprintf(lcd_buf,LANG_BETA1);
+		LcdString(((start_char+6)*2),line);
+  
+		sprintf(lcd_buf,LANG_BETA2);                            
+		LcdString(((start_char+6)*2),line+1);
+	}
+  
+  LcdLine(((start_char+5)*12)+5,line*8,((start_char+5)*12)+18+5,line*8,1);
+	
+	if(AB_fon<1000000)
+	{
+		sprintf(lcd_buf,"%6i",AB_fon);
+		LcdStringBold(start_char,line);
+	}
+	else
+	{
+		sprintf(lcd_buf,"%5iK",AB_fon/1000);
+		LcdStringBold(start_char,line);	
+	}
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+
 void LcdBatt(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t persent)	//рисуем батарейку с заполнением в %
 {
   uint32_t horizon_line=0,horizon_line2=0,i=0;

@@ -175,9 +175,15 @@ void EXTI9_5_IRQHandler(void)
   {
 		EXTI_ClearITPendingBit(EXTI_Line8);
 		if(!poweroff_state)  
-		{		
-			Detector_massive[Detector_massive_pointer]++;  // Добавляем пойманную частицу к счетчику  
-			ram_Doze_massive[0]++;	           					// Увеличение суточного массива дозы
+		{
+			if(Settings.AB_mode<2)
+			{
+				Detector_massive[Detector_massive_pointer]++;  // Добавляем пойманную частицу к счетчику  
+				ram_Doze_massive[0]++;	           					// Увеличение суточного массива дозы
+			} else
+			{
+				Detector_AB_massive[0]++;
+			}
 
 			if(Power.Pump_active==DISABLE)
 			{
@@ -310,7 +316,8 @@ void RTC_Alarm_IRQHandler(void) { // Тик каждые 4 секунды
 			if(Power.USB_active)
 			{
 				USB_not_active++; // Счетчик неактивности USB
-				madorc_impulse+=Detector_massive[Detector_massive_pointer]; // Счетчик импульсов для передачи по USB
+				if(Settings.AB_mode<2)
+					madorc_impulse+=Detector_massive[Detector_massive_pointer]; // Счетчик импульсов для передачи по USB
 			}
 			
 			// Счетчик времени для обновления напряжения АКБ (каждые 4 минуты)
@@ -395,8 +402,19 @@ void RTC_Alarm_IRQHandler(void) { // Тик каждые 4 секунды
 			} else DataUpdate.doze_sec_count++;
 			////////////////////////////////////////////////////	
 
+			if(Settings.AB_mode==2)
+			{
+				AB_fon=calc_ab();
+				
+				for(i=14;i>0;i--)
+				{
+					Detector_AB_massive[i]=Detector_AB_massive[i-1];
+				}
+				Detector_AB_massive[0]=0;
+			}
 			
 			////////////////////////////////////////////////////    
+			if(Settings.AB_mode<2)
 				if(Detector_massive[Detector_massive_pointer]>=10)
 				{
 					auto_speedup_factor=1;
@@ -433,22 +451,24 @@ void RTC_Alarm_IRQHandler(void) { // Тик каждые 4 секунды
 				{ // если ускорение не требуется
 					if(auto_speedup_factor!=1){auto_speedup_factor=1;recalculate_fon();}
 					else
-					{	fon_level+=Detector_massive[Detector_massive_pointer];}
+					{	if(Settings.AB_mode<2) fon_level+=Detector_massive[Detector_massive_pointer];}
 				}
 
-				Detector_massive_pointer++;
-				if(Detector_massive_pointer>=(Settings.Second_count>>2))	
+				if(Settings.AB_mode<2) 
 				{
-					if(auto_speedup_factor==1)fon_level-=Detector_massive[0];
-					Detector_massive[0]=0;
-					Detector_massive_pointer=0;
-				}else
-				{
-					if(auto_speedup_factor==1)fon_level-=Detector_massive[Detector_massive_pointer];
-					Detector_massive[Detector_massive_pointer]=0;
+					Detector_massive_pointer++;
+					if(Detector_massive_pointer>=(Settings.Second_count>>2))	
+					{
+						if(auto_speedup_factor==1)fon_level-=Detector_massive[0];
+						Detector_massive[0]=0;
+						Detector_massive_pointer=0;
+					}else
+					{
+						if(auto_speedup_factor==1)fon_level-=Detector_massive[Detector_massive_pointer];
+						Detector_massive[Detector_massive_pointer]=0;
+					}
+					if(fon_level>ram_max_fon_massive[0])ram_max_fon_massive[0]=fon_level; // заполнение массива максимального фона
 				}
-				if(fon_level>ram_max_fon_massive[0])ram_max_fon_massive[0]=fon_level; // заполнение массива максимального фона
-			
 				DataUpdate.Need_fon_update=ENABLE;
 			////////////////////////////////////////////////////
 		

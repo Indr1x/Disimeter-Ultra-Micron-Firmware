@@ -87,6 +87,7 @@ void LcdStringInv (unsigned char x, unsigned char y);                           
 void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,uint8_t y_end);
 void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start,uint8_t y_end);
 void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds);
+void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds);
 void LcdBatt(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t persent);	//рисуем батарейку с заполнением в %
 void LcdClear_massive (void);
 void display_on(void);

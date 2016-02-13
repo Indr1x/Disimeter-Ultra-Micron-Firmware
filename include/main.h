@@ -132,6 +132,8 @@ typedef struct
 	uint32_t serial1;
 	uint32_t serial2;
 	uint32_t serial3;
+
+	uint32_t AB_mode; // 0-выкл 1-гамма 2-альфа-бета
 }SettingsDef;
 
 
@@ -183,6 +185,9 @@ extern uint32_t ix_update;
 #define Detector_massive_pointer_max 375
 
 extern uint16_t Detector_massive[Detector_massive_pointer_max+1];
+
+extern uint32_t Detector_AB_massive[15]; // 1 минута, интервалами по 4 сек
+extern uint32_t AB_fon; // Фон Альфа-Бета
 
 #define FLASH_PAGE_SIZE                 0x100         // (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 #define FLASH_START_ADDR                0x0800F000

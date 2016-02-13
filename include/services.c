@@ -126,6 +126,41 @@ float convert_mkr_sv(uint32_t mkrn)
 
 
 
+
+// ===============================================================================================
+uint32_t calc_ab(void)
+{
+	uint32_t i;
+	float gamma_level=0;
+	float AB_level=0;
+	float pi4=0.78539815;  // Пи/4
+	float S=0;  //
+	float S_multipiller=0;  //
+// fon_level - гамма фон мкР/ч
+// fon_level/(Settings.Second_count/60) - частиц в минуту по гамме
+	for(i=0;i<15;i++)
+	{
+		AB_level+=Detector_AB_massive[i]; // подсчет импульсов за минуту
+	}
+	gamma_level=(float)fon_level/((float)Settings.Second_count/60);  // 198 имп/м
+	
+	if(AB_level<=gamma_level) return 0;
+	
+	AB_level-=gamma_level;
+	
+	// Компенсация процента регистрации счетчика
+	AB_level*=100;
+	AB_level=AB_level/(float)Settings.Beta_procent;
+	
+	
+	S=pi4*((float)Settings.Beta_window/10)*((float)Settings.Beta_window/10); //площадь отверстия
+	S_multipiller=100/S; // на сколько надо умножить частицы чтобы выйки на "частиц на см2 за минуту"
+	S=AB_level*S_multipiller;
+	
+	return (uint32_t)S;
+}
+
+
 // ===============================================================================================
 void recalculate_fon(void)
 {

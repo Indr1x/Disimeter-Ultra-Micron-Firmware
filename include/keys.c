@@ -79,6 +79,51 @@ void minus_off(uint32_t *param) // откл
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void  plus_rad_reset(uint32_t *param)
+{
+	int i;
+
+	for(i=Detector_massive_pointer_max;i>0;i--)
+	{
+		Detector_massive[i]=0;
+	}
+	recalculate_fon();	
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void ab_meas_on()
+{
+	uint32_t i;
+	Settings.AB_mode=2;
+	for(i=0;i<15;i++)Detector_AB_massive[i]=0; // подсчет импульсов за минуту
+	AB_fon=0;
+
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+void ab_meas_off()
+{
+	Settings.AB_mode=1;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void plus_ab_engage(uint32_t *param)
+{
+	uint32_t i;
+	
+	Settings.AB_mode=1;
+	for(i=0;i<15;i++)Detector_AB_massive[i]=0; // подсчет импульсов за минуту
+	AB_fon=0;
+	menu_select=0;
+	enter_menu_item=DISABLE;
+	screen=1;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void  plus_doze_reset(uint32_t *param) // Сброс дозы
 {
 	int i;
@@ -429,41 +474,50 @@ void keys_proccessing(void)
     while (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6));
     delay_ms(10);
 		DataUpdate.Need_display_update=ENABLE;
-    if (screen==2 && enter_menu_item==DISABLE)menu_select--;
-		if (screen==1)main_menu_stat++;
-		if (screen==3)
+		if(Settings.AB_mode>0)
 		{
-#ifdef debug
-			if(stat_screen_number==2)
-#else
-			if(stat_screen_number==1)
-#endif
-			{
-				stat_screen_number=0;
-			} else {
-				stat_screen_number++;
-			}
+			ab_meas_on();
+			key=0;
 		}
-		if(hidden_menu){
-			if(menu_select>max_struct_index)menu_select=max_struct_index;
-		}else{
-			if(menu_select>max_public_string_count)menu_select=max_public_string_count;
-		}
-		
-    key=0;
-		
-		///////////
-    if(enter_menu_item==ENABLE)
-    {
+		else
+		{
 
-	if(menu_select>max_struct_index)return;
-	if(menu_select==0)return;
+			if (screen==2 && enter_menu_item==DISABLE)menu_select--;
+			if (screen==1)main_menu_stat++;
+			if (screen==3)
+			{
+#ifdef debug
+				if(stat_screen_number==2)
+#else
+				if(stat_screen_number==1)
+#endif
+				{
+					stat_screen_number=0;
+				} else {
+					stat_screen_number++;
+				}
+			}
+			if(hidden_menu){
+				if(menu_select>max_struct_index)menu_select=max_struct_index;
+			}else{
+				if(menu_select>max_public_string_count)menu_select=max_public_string_count;
+			}
+			
+			key=0;
+		
+			///////////
+			if(enter_menu_item==ENABLE)
+			{
+
+		if(menu_select>max_struct_index)return;
+		if(menu_select==0)return;
       
-      if(Menu_list[menu_select-1].Plus_reaction!=0x00) // Если адрес функции существует, то выполнить ее.
-      {
-        (*Menu_list[menu_select-1].Plus_reaction)(&menu_select); // запуск  функции - гиперхак мать его :)
-      }
-    }    
+				if(Menu_list[menu_select-1].Plus_reaction!=0x00) // Если адрес функции существует, то выполнить ее.
+				{
+					(*Menu_list[menu_select-1].Plus_reaction)(&menu_select); // запуск  функции - гиперхак мать его :)
+				}
+			}    
+		}
   }
   
   
@@ -477,43 +531,49 @@ void keys_proccessing(void)
     while (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6));
     delay_ms(10);
 		DataUpdate.Need_display_update=ENABLE;
-    if (screen==2 && enter_menu_item==DISABLE)menu_select++;
-		if (screen==1)main_menu_stat--;
-		if (screen==3)
+		if(Settings.AB_mode>0)
 		{
-			if(stat_screen_number==0)
-				{
-					
+			ab_meas_off();
+			key=0;
+		}
+		else
+		{
+			if (screen==2 && enter_menu_item==DISABLE)menu_select++;
+			if (screen==1)main_menu_stat--;
+			if (screen==3)
+			{
+				if(stat_screen_number==0)
+					{
+						
 #ifdef debug
-					stat_screen_number=2;
+						stat_screen_number=2;
 #else
-					stat_screen_number=1;
+						stat_screen_number=1;
 #endif
-				} else {
-					stat_screen_number--;
+					} else {
+						stat_screen_number--;
+					}
+			}
+			if(hidden_menu){
+				if(menu_select>max_struct_index)menu_select=0;
+			}else{
+				if(menu_select>max_public_string_count)menu_select=0;
+			}
+	
+			key=0;
+	
+			///////////
+			if(enter_menu_item==ENABLE) // тревога
+			{
+				if(menu_select>max_struct_index)return;
+				if(menu_select==0)return;
+	
+				if(Menu_list[menu_select-1].Minus_reaction!=0x00) // Если адрес функции существует, то выполнить ее.
+				{
+					(*Menu_list[menu_select-1].Minus_reaction)(&menu_select); // запуск  функции - гиперхак мать его :)
 				}
-		}
-		if(hidden_menu){
-			if(menu_select>max_struct_index)menu_select=0;
-		}else{
-		  if(menu_select>max_public_string_count)menu_select=0;
-		}
-
-    key=0;
-
-    ///////////
-    if(enter_menu_item==ENABLE) // тревога
-    {
-			if(menu_select>max_struct_index)return;
-			if(menu_select==0)return;
-
-      if(Menu_list[menu_select-1].Minus_reaction!=0x00) // Если адрес функции существует, то выполнить ее.
-      {
-        (*Menu_list[menu_select-1].Minus_reaction)(&menu_select); // запуск  функции - гиперхак мать его :)
-      }
-    }
-    
-    
+			}
+    } 
   }
   /////////////////////////////////
   if (key & 0x1) // Кнопка Меnu
@@ -529,17 +589,24 @@ void keys_proccessing(void)
     key=0;
 
     ///////////
-    if(menu_select>0)
-    {
-      if(enter_menu_item==DISABLE){enter_menu_item=ENABLE;}
-      else                    
-      {
-        enter_menu_item=DISABLE;
-				eeprom_apply_settings(); //применяем параметры
-        eeprom_write_settings(); //сохраняем параметры
-      }
-    }
-    if(menu_select==0)screen++;
+		if(Settings.AB_mode>0)
+		{
+			Settings.AB_mode=0; // отмена режима Альфа-Бета
+		}
+		else
+		{
+			if(menu_select>0)
+			{
+				if(enter_menu_item==DISABLE){enter_menu_item=ENABLE;}
+				else                    
+				{
+					enter_menu_item=DISABLE;
+					eeprom_apply_settings(); //применяем параметры
+					eeprom_write_settings(); //сохраняем параметры
+				}
+			}
+			if(menu_select==0)screen++;
+		}
   }
   if (screen>3) screen=1;
   

@@ -52,6 +52,10 @@ uint32_t working_days=0;
 
 uint32_t madorc_impulse=0;
 
+uint32_t Detector_AB_massive[15]; // 1 минута, интервалами по 4 сек
+uint32_t AB_fon; // Фон Альфа-Бета
+
+
 FunctionalState Sound_key_pressed=DISABLE;
 
 DataUpdateDef DataUpdate;
@@ -89,6 +93,7 @@ int main(void)
 	eeprom_write_default_settings(); // Проверка, заполнен ли EEPROM
   eeprom_read_settings(); // Чтение настроек из EEPROM
   screen=1;
+	AB_fon=0;
 	Power.USB_active=DISABLE;
 	Power.sleep_time=Settings.Sleep_time;
   Power.Display_active=ENABLE;

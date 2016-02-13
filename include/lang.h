@@ -32,6 +32,8 @@
 #define LANG_BWINDOW_  "%2.1fDмм"
 #define LANG_BPROCENT  "B-проц."
 #define LANG_BPROCENT_ "%3u"
+#define LANG_CLEAR_FON "—брос фона"
+#define LANG_BETA_MEAS "«амер A-B"
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
@@ -82,6 +84,8 @@
 #define LANG_USBON    "USB активирован"
 #define LANG_USBOFF   "USB  выключен"
 
+#define LANG_BETA1		"час"
+#define LANG_BETA2		"см2"
 #define LANG_UR       "мк–"
 #define LANG_UZ       "мк«"
 #define LANG_UZV      "мк«в"
@@ -120,6 +124,8 @@
 #define LANG_BWINDOW_ "%2.1fDmm"
 #define LANG_BPROCENT "B-proc."
 #define LANG_BPROCENT_ "%9u%%"
+#define LANG_CLEAR_FON "Clear rad"
+#define LANG_BETA_MEAS "A-B meas."
 
 ///////////////////////////////////////////////////////
 
@@ -172,6 +178,8 @@
 #define LANG_USBON    "USB enabled"
 #define LANG_USBOFF   "USB disabled"
 
+#define LANG_BETA1		"par"
+#define LANG_BETA2		"cm2"
 #define LANG_UR       "uR"
 #define LANG_UZ       "uSv"
 #define LANG_UZV      "uSv"
