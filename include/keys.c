@@ -298,7 +298,7 @@ void minus_poweroff(uint32_t *param) // выключение
   NVIC_InitTypeDef NVIC_InitStructure;
   EXTI_InitTypeDef   EXTI_InitStructure;
 
-	if(licensed  && Power.USB_active)USB_off(); 		
+	if(Power.USB_active)USB_off(); 		
 	LcdClear_massive();
 	sprintf (lcd_buf, LANG_POWEROFF); // Пишем в буфер значение счетчика
 	LcdString(1,5); // // Выводим обычным текстом содержание буфера
@@ -310,7 +310,7 @@ void minus_poweroff(uint32_t *param) // выключение
   LcdUpdate(); // записываем данные из сформированного фрейм-буфера на дисплей
 	delay_ms(6000);
 
-	
+
 	sleep_mode(ENABLE);
 	poweroff_state=ENABLE;
 	Pump_now(DISABLE);
