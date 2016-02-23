@@ -555,11 +555,16 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 		LcdString(((start_char+6)*2),i);
 	} else 
 	{
-		if(fon_level<=100000)
+		if(fon_level<=100000) // 999.99 ìêÇâ/÷
 		{
 			sprintf(lcd_buf,"%6.2f",convert_mkr_sv(fon_level));
 		} else {
-			sprintf(lcd_buf,"%6.1f",convert_mkr_sv(fon_level));
+			if(fon_level<=1000000)// 9999.9 ìêÇâ/÷
+			{
+				sprintf(lcd_buf,"%6.1f",convert_mkr_sv(fon_level));
+			} else { // 999999 ìêÇâ/÷
+				sprintf(lcd_buf,"%6.0f",convert_mkr_sv(fon_level));
+			}
 		}
 		LcdStringBold(start_char,i);
   

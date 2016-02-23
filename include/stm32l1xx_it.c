@@ -127,6 +127,7 @@ void EXTI3_IRQHandler(void)
 			if(Alarm.Alarm_active && !Alarm.User_cancel)
 			{
 				Alarm.User_cancel=ENABLE;
+				sound_deactivate();
 			}
 			else
 			{
