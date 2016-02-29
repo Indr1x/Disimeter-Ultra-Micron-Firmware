@@ -25,8 +25,9 @@ void adc_check_event(void)
 //************************************************************************************************************
 void adc_calibration(void)
 {
+	uint32_t i,x=0;
 
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 1, ADC_SampleTime_4Cycles); // Конфигурирование канала
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 1, ADC_SampleTime_384Cycles); // Конфигурирование канала
 
   ADC_DelaySelectionConfig(ADC1, ADC_DelayLength_Freeze); // Задержка до момента чтения данных из АЦП
 
@@ -35,11 +36,16 @@ void adc_calibration(void)
   ADC_Cmd(ADC1, ENABLE); // ВКЛ!
 
   while (ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET);  // Тупо ждем запуска АЦП
-  ADC_SoftwareStartConv(ADC1); // Стартуем преобразование
 
-  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET); // Тупо ждем завершения преобразования
+	for(i=0;i<10;i++)
+	{
+		ADC_SoftwareStartConv(ADC1); // Стартуем преобразование
+		while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET); // Тупо ждем завершения преобразования
+		x+=ADC_GetConversionValue(ADC1);
+	}
+	x/=10;
 		
-  ADCData.Calibration_bit_voltage=(1220000/ADC_GetConversionValue(ADC1)); // битовое значение соотв. напряжению референса 1.22в, из него вычисляем скольким микровольтам соответствует 1 бит.
+  ADCData.Calibration_bit_voltage=(1220000/x); // битовое значение соотв. напряжению референса 1.22в, из него вычисляем скольким микровольтам соответствует 1 бит.
   ADCData.Power_voltage=((ADCData.Calibration_bit_voltage * 4095)/1000);
 
 	dac_reload(); //перезагрузить в ЦАП новое напряжение отсечки накачки
@@ -78,15 +84,14 @@ void adc_init(void)
   
   ADC_Cmd(ADC1, ENABLE); // ВКЛ!
 
-  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET)  // Тупо ждем запуска АЦП
-  {
-  }
+  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET);  // Тупо ждем запуска АЦП
 }
 
 //************************************************************************************************************
 void ADC_Batt_Read (void)
 {
   GPIO_InitTypeDef   GPIO_InitStructure;
+	uint32_t i;
 
   // Ножка изиерения напряжения АКБ
   GPIO_StructInit(&GPIO_InitStructure);
@@ -104,12 +109,17 @@ void ADC_Batt_Read (void)
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIOB, &GPIO_InitStructure);  // Загружаем конфигурацию
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_20, 1, ADC_SampleTime_4Cycles); // Конфигурирование канала
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_20, 1, ADC_SampleTime_384Cycles); // Конфигурирование канала
 
   GPIO_ResetBits(GPIOB,GPIO_Pin_15);// Подключаем токосемник
-  ADC_SoftwareStartConv(ADC1); // Стартуем преобразование
-  while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET); // Тупо ждем завершения преобразования
-  ADCData.Batt_voltage_raw=ADC_GetConversionValue(ADC1);
+	ADCData.Batt_voltage_raw=0;
+	for(i=0;i<10;i++)
+	{
+		ADC_SoftwareStartConv(ADC1); // Стартуем преобразование
+		while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET); // Тупо ждем завершения преобразования
+		ADCData.Batt_voltage_raw+=ADC_GetConversionValue(ADC1);
+	}
+	ADCData.Batt_voltage_raw/=10;
   // ===============================================================================================  
   // Отключаем токосемную цепь
   GPIO_StructInit(&GPIO_InitStructure);
