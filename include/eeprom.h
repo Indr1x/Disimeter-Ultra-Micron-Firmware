@@ -41,6 +41,7 @@ typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 #define unlock_3_address 	                           						0x68
 #define Beta_window_address																			0x6C
 #define Beta_procent_address																		0x70
+#define VRef_address																		        0x74
 
 extern uint32_t NbrOfPage, Address;
   

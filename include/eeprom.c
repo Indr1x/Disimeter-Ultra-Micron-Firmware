@@ -24,6 +24,7 @@ uint32_t NbrOfPage = 0, j = 0, Address = 0;
 				Settings.units=0;
 				Settings.Beta_window=20;
 				Settings.Beta_procent=37;
+				Settings.VRef=1224;
         eeprom_write_settings(); // Запись
       }  
     }
@@ -45,6 +46,7 @@ void eeprom_write_settings(void)
 	if(eeprom_read(v4_target_pump_address) !=Settings.v4_target_pump) eeprom_write(v4_target_pump_address, Settings.v4_target_pump);
 	if(eeprom_read(Beta_window_address)    !=Settings.Beta_window)    eeprom_write(Beta_window_address,    Settings.Beta_window);
 	if(eeprom_read(Beta_procent_address)   !=Settings.Beta_procent)   eeprom_write(Beta_procent_address,   Settings.Beta_procent);
+	if(eeprom_read(VRef_address)           !=Settings.VRef)           eeprom_write(VRef_address,           Settings.VRef);
 	if(eeprom_read(units_address)          !=Settings.units)          eeprom_write(units_address,          Settings.units);
 	if(Settings.LSI_freq != 0x00) // если запустился кварц, попытки сохранения игнорировать
 	{
@@ -119,8 +121,23 @@ void eeprom_read_settings(void)
 	Settings.serial3=	          		eeprom_read(unlock_3_address);
 	Settings.Beta_window=       		eeprom_read(Beta_window_address);
 	Settings.Beta_procent=       		eeprom_read(Beta_procent_address);
+	Settings.VRef=              		eeprom_read(VRef_address);
 
+	// Если не установленны какие-то из важных параметров, то произвести сброс.
+	if((Settings.VRef==0)||
+		 (Settings.v4_target_pump==0)||
+		 (Settings.Geiger_voltage==0)||
+		 (Settings.Beta_procent==0)||
+	   (Settings.Beta_window==0))
+	{
+		Settings.Geiger_voltage=360;
+		Settings.v4_target_pump=8;
+		Settings.Beta_window=20;
+		Settings.Beta_procent=37;
+		Settings.VRef=1224;
 
+		eeprom_write_settings(); // Запись
+	}
 	Power.led_sleep_time=Settings.Sleep_time-3;
 }
 

@@ -44,8 +44,8 @@ void adc_calibration(void)
 		x+=ADC_GetConversionValue(ADC1);
 	}
 	x/=10;
-		
-  ADCData.Calibration_bit_voltage=(1220000/x); // битовое значение соотв. напряжению референса 1.22в, из него вычисляем скольким микровольтам соответствует 1 бит.
+
+  ADCData.Calibration_bit_voltage=((Settings.VRef*1000)/x); // битовое значение соотв. напряжению референса 1.22в, из него вычисляем скольким микровольтам соответствует 1 бит.
   ADCData.Power_voltage=((ADCData.Calibration_bit_voltage * 4095)/1000);
 
 	dac_reload(); //перезагрузить в ЦАП новое напряжение отсечки накачки

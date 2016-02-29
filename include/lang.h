@@ -34,6 +34,8 @@
 #define LANG_BPROCENT_ "%3u"
 #define LANG_CLEAR_FON "Сброс фона"
 #define LANG_BETA_MEAS "Замер A-B"
+#define LANG_REF_VOLT  "кал.ИОН"
+#define LANG_REF_VOLT_ "%uмВ"
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
@@ -126,7 +128,8 @@
 #define LANG_BPROCENT_ "%9u%%"
 #define LANG_CLEAR_FON "Clear rad"
 #define LANG_BETA_MEAS "A-B meas."
-
+#define LANG_REF_VOLT  "cal Vref"
+#define LANG_REF_VOLT_ "%umV"
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////

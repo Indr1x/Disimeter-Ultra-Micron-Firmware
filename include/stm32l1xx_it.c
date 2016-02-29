@@ -417,29 +417,29 @@ void RTC_Alarm_IRQHandler(void) { // Тик каждые 4 секунды
 			////////////////////////////////////////////////////    
 			if(Settings.AB_mode<2)
 				if(Detector_massive[Detector_massive_pointer]>=10)
-				{
+			{
 					auto_speedup_factor=1;
 					if(Detector_massive[Detector_massive_pointer]>300) // деление на 9 при фоне более 10 000
 					{ 
-						if(auto_speedup_factor!=99)auto_speedup_factor=99;
+							if(auto_speedup_factor!=99)auto_speedup_factor=99;
 					} else
 					{
 						if(Detector_massive[Detector_massive_pointer]>199) // деление на 9 при фоне более 10 000
 						{ 
-							if(auto_speedup_factor!=30)auto_speedup_factor=30;
+								if(auto_speedup_factor!=30)auto_speedup_factor=30;
 						} else
 						{
 							if(Detector_massive[Detector_massive_pointer]>99) // деление на 5 при фоне более 5 000
 							{ 
-								if(auto_speedup_factor!=10)auto_speedup_factor=10;
+									if(auto_speedup_factor!=10)auto_speedup_factor=10;
 							} else
 							{
 								if(Detector_massive[Detector_massive_pointer]>19) // деление на 3 при фоне более 1 000
 								{ 
-									if(auto_speedup_factor!=4)auto_speedup_factor=4;
+										if(auto_speedup_factor!=4)auto_speedup_factor=4;
 								} else
 								{ // деление на 2 при фоне более 500
-									if(auto_speedup_factor!=2)auto_speedup_factor=2;
+										if(auto_speedup_factor!=2)auto_speedup_factor=2;
 								}
 							}
 						}

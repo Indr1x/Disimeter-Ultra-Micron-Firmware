@@ -172,6 +172,41 @@ void minus_one(uint32_t *param) // -1
   }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Установка референса
+void minus_one_ref(uint32_t *param)
+{
+	if(*param>max_struct_index)return;
+	if(*param==0)return;
+
+	
+	  if(Settings.VRef <= Menu_list[*param-1].Min_limit)
+  {
+    Settings.VRef=Menu_list[*param-1].Max_limit;
+  } else {
+    Settings.VRef--;; // -1
+  }
+
+	DataUpdate.Need_batt_voltage_update=ENABLE;
+	adc_check_event();
+}
+
+void plus_one_ref(uint32_t *param)
+{
+	if(*param>max_struct_index)return;
+	if(*param==0)return;
+
+  if(Settings.VRef >= Menu_list[*param-1].Max_limit)
+  {
+    Settings.VRef=Menu_list[*param-1].Min_limit;
+  } else {
+    Settings.VRef++; //+1
+  }
+	
+	DataUpdate.Need_batt_voltage_update=ENABLE;
+	adc_check_event();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // +10 -10
