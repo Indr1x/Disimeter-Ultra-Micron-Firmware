@@ -171,7 +171,7 @@ type
 end;
 
 var
-  Need_build: string = '29 Feb 2016';
+  Need_build: string = ' 3 Mar 2016';
   mainFrm: TmainFrm;
   MyThread: TMyThread;
   FeatureReportLen: integer = 0;
@@ -317,9 +317,14 @@ begin
    AIdHTTP.HandleRedirects := true;
    try
      // добавляем нужные параметры
-     for ix := 0 to max_address do begin
+     for ix := 0 to max_address-1 do begin
        if doze_massive[ix]>0 then
+       if(geiger_seconds_count>600) then begin
+         data.AddFormField(IntToStr(ix), IntToStr((((doze_massive[ix]+doze_massive[ix+1]) * geiger_seconds_count) Div 1200)));
+       end
+       else begin
          data.AddFormField(IntToStr(ix), IntToStr(((doze_massive[ix] * geiger_seconds_count) Div 600)));
+       end;
      end;
      AIdHTTP.Post(Concat('http://upload.xn--h1aeegel.net/upload.php?id=',key,'&devoffset=',Inttostr(time_offset_device)), data);
    except
@@ -1490,19 +1495,39 @@ begin
        DateTimeToString(formattedDateTime, 'c', IncMinute(IncSecond(myDate, -(4*time_offset_device)), -(10*ix)));
        if(mainfrm.units.Checked = true) then
        begin
-         WriteLn(F,
-          '"', IntToStr(ix), '";',
-          '"', formattedDateTime,      '";',
-          '"', Convert_to_usv((doze_massive[ix] * geiger_seconds_count) Div 600), '";',
-          '"', Convert_to_usv(max_fon_massive[ix]), '";',
-          '"', 'uSv/h', '"');
-       end else
-         WriteLn(F,
-          '"', IntToStr(ix), '";',
-          '"', formattedDateTime,      '";',
-          '"', IntToStr((doze_massive[ix] * geiger_seconds_count) Div 600), '";',
-          '"', IntToStr(max_fon_massive[ix]), '";',
-          '"', 'uR/h', '"');
+         if(geiger_seconds_count>600) then begin
+           WriteLn(F,
+              '"', IntToStr(ix), '";',
+              '"', formattedDateTime,      '";',
+              '"', Convert_to_usv((((doze_massive[ix]+doze_massive[ix+1]) * geiger_seconds_count) Div 1200)), '";',
+              '"', Convert_to_usv(max_fon_massive[ix]), '";',
+              '"', 'uSv/h', '"');
+         end
+         else begin
+           WriteLn(F,
+              '"', IntToStr(ix), '";',
+              '"', formattedDateTime,      '";',
+              '"', Convert_to_usv((doze_massive[ix] * geiger_seconds_count) Div 600), '";',
+              '"', Convert_to_usv(max_fon_massive[ix]), '";',
+              '"', 'uSv/h', '"');
+         end;
+      end else
+         if(geiger_seconds_count>600) then begin
+            WriteLn(F,
+              '"', IntToStr(ix), '";',
+              '"', formattedDateTime,      '";',
+              '"', IntToStr((((doze_massive[ix]+doze_massive[ix+1]) * geiger_seconds_count) Div 1200 )), '";',
+              '"', IntToStr(max_fon_massive[ix]), '";',
+              '"', 'uR/h', '"');
+         end
+         else begin
+            WriteLn(F,
+              '"', IntToStr(ix), '";',
+              '"', formattedDateTime,      '";',
+              '"', IntToStr((doze_massive[ix] * geiger_seconds_count) Div 600), '";',
+              '"', IntToStr(max_fon_massive[ix]), '";',
+              '"', 'uR/h', '"');
+         end;
        end;
     end;
   finally
@@ -1709,14 +1734,24 @@ begin
     end;
 
     if ((((Image2.Width-foo.X) Div 5)>time_offset) or (Combobox1.ItemIndex <> 0)) then begin
-      Label9.Caption:=avg_lang+    IntToStr(((doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset] * geiger_seconds_count) Div 600))+   mkr2_lang;
-      Label10.Caption:=maxi2_lang+IntToStr(max_fon_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset])+mkr2_lang;
+       if(geiger_seconds_count>600) then begin
+          Label9.Caption:=avg_lang+    IntToStr(((((doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset] + doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset+1]) * geiger_seconds_count) Div 1200)))+   mkr2_lang;
+          Label10.Caption:=maxi2_lang+IntToStr(max_fon_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset])+mkr2_lang;
 
-        if(mainfrm.units.Checked = true) then begin
-          Label9.Caption:=avg_lang+   Convert_to_usv(((doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset] * geiger_seconds_count) Div 600))+   mkzv2_lang;
-          Label10.Caption:=maxi2_lang+Convert_to_usv(max_fon_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset])+mkzv2_lang;
-        end;
+            if(mainfrm.units.Checked = true) then begin
+              Label9.Caption:=avg_lang+   Convert_to_usv(((((doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset] + doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset+1] ) * geiger_seconds_count) Div 1200)))+   mkzv2_lang;
+              Label10.Caption:=maxi2_lang+Convert_to_usv(max_fon_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset])+mkzv2_lang;
+            end;
+       end
+       else begin
+          Label9.Caption:=avg_lang+    IntToStr(((doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset] * geiger_seconds_count) Div 600))+   mkr2_lang;
+          Label10.Caption:=maxi2_lang+IntToStr(max_fon_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset])+mkr2_lang;
 
+            if(mainfrm.units.Checked = true) then begin
+              Label9.Caption:=avg_lang+   Convert_to_usv(((doze_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset] * geiger_seconds_count) Div 600))+   mkzv2_lang;
+              Label10.Caption:=maxi2_lang+Convert_to_usv(max_fon_massive[((Image2.Width-foo.X) Div 5)+(144*(Combobox1.ItemIndex))-time_offset])+mkzv2_lang;
+            end;
+       end;
     end else begin
       if(mainfrm.units.Checked = true) then
       begin Label9.Caption:=avg2zv_lang;
@@ -1893,8 +1928,16 @@ MainFrm.Width:=1148;
     begin
       if ((ii>time_offset) or (Combobox1.ItemIndex <> 0)) then begin
 
-        graph_y:= (max_fon_massive[ii+(144*(Combobox1.ItemIndex))-time_offset]                                    * always_multipiller) Div scale_factor;
-        graph_y2:=((( doze_massive[ii+(144*(Combobox1.ItemIndex))-time_offset]  * geiger_seconds_count) Div 600)  * always_multipiller) Div scale_factor;
+
+         graph_y:= (max_fon_massive[ii+(144*(Combobox1.ItemIndex))-time_offset]                                    * always_multipiller) Div scale_factor;
+
+         if(geiger_seconds_count>600) then begin
+          graph_y2:=((((( doze_massive[ii+(144*(Combobox1.ItemIndex))-time_offset] + doze_massive[ii+(144*(Combobox1.ItemIndex))-time_offset + 1] )  * geiger_seconds_count) Div 1200 ))  * always_multipiller) Div scale_factor;
+         end
+         else begin
+          graph_y2:=((( doze_massive[ii+(144*(Combobox1.ItemIndex))-time_offset]  * geiger_seconds_count) Div 600)  * always_multipiller) Div scale_factor;
+        end;
+
 
         if graph_y=graph_y2 then graph_y2:=graph_y-1;
         Image2.Canvas.Brush.Color :=  RGB(0, 29, 135);
