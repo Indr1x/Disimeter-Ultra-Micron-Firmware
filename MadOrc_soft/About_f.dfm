@@ -302,6 +302,7 @@ object About: TAbout
     Width = 49
     Height = 21
     Alignment = taCenter
+    Enabled = False
     TabOrder = 3
   end
   object Edit4: TEdit
@@ -310,6 +311,7 @@ object About: TAbout
     Width = 49
     Height = 21
     Alignment = taCenter
+    Enabled = False
     TabOrder = 4
   end
   object Edit5: TEdit
@@ -318,6 +320,7 @@ object About: TAbout
     Width = 49
     Height = 21
     Alignment = taCenter
+    Enabled = False
     TabOrder = 5
   end
   object Edit6: TEdit
@@ -326,6 +329,7 @@ object About: TAbout
     Width = 49
     Height = 21
     Alignment = taCenter
+    Enabled = False
     TabOrder = 6
   end
   object Timer1: TTimer
