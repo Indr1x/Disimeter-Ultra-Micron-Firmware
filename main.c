@@ -41,7 +41,6 @@ uint32_t fon_level=0;
 FunctionalState poweroff_state=DISABLE;
 FunctionalState hidden_menu=DISABLE;
 FunctionalState Pump_on_alarm=DISABLE;
-FunctionalState licensed=DISABLE;
 
 uint32_t unlock_0_serial=0;
 uint32_t unlock_1_serial=0;
@@ -99,8 +98,6 @@ int main(void)
   Power.Display_active=ENABLE;
 	
 	ADCData.DAC_voltage_raw=0x4FD;
-
-	licensed=check_license(); // проверка лицензии
 
   dac_init();
 	comp_init();

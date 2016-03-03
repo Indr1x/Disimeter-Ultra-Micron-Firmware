@@ -245,7 +245,6 @@ extern uint32_t unlock_3_serial;
 extern FunctionalState hidden_menu;
 
 extern FunctionalState poweroff_state;
-extern FunctionalState licensed;
 extern uint32_t fullstop;
 extern FunctionalState Sound_key_pressed;
 extern FunctionalState Pump_on_alarm;

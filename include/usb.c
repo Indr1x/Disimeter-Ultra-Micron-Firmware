@@ -97,7 +97,7 @@ void USB_send_serial_data(int num)
 			break;
 	}
 	Send_Buffer[5]=0;                                      // передать по УСАПП 
-	Send_Buffer[6]=licensed;                               // передать по УСАПП 
+	Send_Buffer[6]=1;                                      // Атрибут лицензирования
 	
 	Send_length=7;
 }
@@ -164,77 +164,66 @@ void time_loading(uint32_t current_rcvd_pointer)
 	RTC_DateTypeDef RTC_DateStructure;
 	FunctionalState need_update_wakeup=DISABLE;
 	
-
-	if (licensed==ENABLE)
-	{
-
-		//-----------------------------------------------------------------------------------------
-
-		
-    // Проверка и установка времени
-		//-----------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------
+	// Проверка и установка времени
+	//-----------------------------------------------------------------------------------------
+	RTC_TimeStructInit(&RTC_TimeStructure);
+	RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
+	if(current_rcvd_pointer+6>=VIRTUAL_COM_PORT_DATA_SIZE)return;
+	if(
+			( RTC_TimeStructure.RTC_Hours           != (Receive_Buffer[current_rcvd_pointer+4] & 0xff)) ||
+			( RTC_TimeStructure.RTC_Minutes         != (Receive_Buffer[current_rcvd_pointer+5] & 0xff)) ||
+	  	(
+	      !(
+	        ((RTC_TimeStructure.RTC_Seconds+1) >= Receive_Buffer[current_rcvd_pointer+6]) &&
+   		    ((RTC_TimeStructure.RTC_Seconds-1) <= Receive_Buffer[current_rcvd_pointer+6])
+	       )
+			)
+	  )
+	{ // Если время не совпадает, устанавливаем новое (+-1 секунда)
 		RTC_TimeStructInit(&RTC_TimeStructure);
-		RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
-		if(current_rcvd_pointer+6>=VIRTUAL_COM_PORT_DATA_SIZE)return;
-		if(
-				( RTC_TimeStructure.RTC_Hours           != (Receive_Buffer[current_rcvd_pointer+4] & 0xff)) ||
-				( RTC_TimeStructure.RTC_Minutes         != (Receive_Buffer[current_rcvd_pointer+5] & 0xff)) ||
-		  	(
-		      !(
-		        ((RTC_TimeStructure.RTC_Seconds+1) >= Receive_Buffer[current_rcvd_pointer+6]) &&
-    		    ((RTC_TimeStructure.RTC_Seconds-1) <= Receive_Buffer[current_rcvd_pointer+6])
-		       )
-				)
-		  )
-		{ // Если время не совпадает, устанавливаем новое (+-1 секунда)
-			RTC_TimeStructInit(&RTC_TimeStructure);
+		RTC_TimeStructure.RTC_Hours   = Receive_Buffer[current_rcvd_pointer+4] & 0xff;
+		RTC_TimeStructure.RTC_Minutes = Receive_Buffer[current_rcvd_pointer+5] & 0xff;
+		RTC_TimeStructure.RTC_Seconds = Receive_Buffer[current_rcvd_pointer+6] & 0xff;
 
-			RTC_TimeStructure.RTC_Hours   = Receive_Buffer[current_rcvd_pointer+4] & 0xff;
-			RTC_TimeStructure.RTC_Minutes = Receive_Buffer[current_rcvd_pointer+5] & 0xff;
-			RTC_TimeStructure.RTC_Seconds = Receive_Buffer[current_rcvd_pointer+6] & 0xff;
+		need_update_wakeup=ENABLE;
 
-			need_update_wakeup=ENABLE;
+		RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+	   RTC_ClearFlag(RTC_FLAG_ALRAF);
 
-			RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
-	    RTC_ClearFlag(RTC_FLAG_ALRAF);
+		RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure);
+	}
+	//-----------------------------------------------------------------------------------------
+  // Проверка и установка даты
+	//-----------------------------------------------------------------------------------------
+	RTC_DateStructInit(&RTC_DateStructure);
+	RTC_GetDate(RTC_Format_BIN, &RTC_DateStructure);
 
-			RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure);
-		}
-		//-----------------------------------------------------------------------------------------
-
-
-    // Проверка и установка даты
-		//-----------------------------------------------------------------------------------------
+	if(
+			(RTC_DateStructure.RTC_Date  != (Receive_Buffer[current_rcvd_pointer+3] & 0xff)) ||
+			(RTC_DateStructure.RTC_Month != (Receive_Buffer[current_rcvd_pointer+2] & 0xff)) ||
+			(RTC_DateStructure.RTC_Year  != (Receive_Buffer[current_rcvd_pointer+1] & 0xff)) )
+	{ // Если дата не совпадает, устанавливаем новую
 		RTC_DateStructInit(&RTC_DateStructure);
-		RTC_GetDate(RTC_Format_BIN, &RTC_DateStructure);
+		RTC_DateStructure.RTC_Date  = Receive_Buffer[current_rcvd_pointer+3] & 0xff;
+		RTC_DateStructure.RTC_Month = Receive_Buffer[current_rcvd_pointer+2] & 0xff;
+		RTC_DateStructure.RTC_Year  = Receive_Buffer[current_rcvd_pointer+1] & 0xff;
 
-		if(
-				(RTC_DateStructure.RTC_Date  != (Receive_Buffer[current_rcvd_pointer+3] & 0xff)) ||
-				(RTC_DateStructure.RTC_Month != (Receive_Buffer[current_rcvd_pointer+2] & 0xff)) ||
-				(RTC_DateStructure.RTC_Year  != (Receive_Buffer[current_rcvd_pointer+1] & 0xff)) )
-		{ // Если дата не совпадает, устанавливаем новую
-			RTC_DateStructInit(&RTC_DateStructure);
+		need_update_wakeup=ENABLE;
 
-			RTC_DateStructure.RTC_Date  = Receive_Buffer[current_rcvd_pointer+3] & 0xff;
-			RTC_DateStructure.RTC_Month = Receive_Buffer[current_rcvd_pointer+2] & 0xff;
-			RTC_DateStructure.RTC_Year  = Receive_Buffer[current_rcvd_pointer+1] & 0xff;
+		RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+	   RTC_ClearFlag(RTC_FLAG_ALRAF);
 
-			need_update_wakeup=ENABLE;
-
-			RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
-	    RTC_ClearFlag(RTC_FLAG_ALRAF);
-
-			RTC_SetDate(RTC_Format_BIN, &RTC_DateStructure);
-		}
-		//-----------------------------------------------------------------------------------------
-		
-		if(need_update_wakeup==ENABLE)
-		{
-			RTC_WaitForSynchro();
-			Set_next_alarm_wakeup(); // установить таймер просыпания на +4 секунды
-			LcdClear_massive();
-			LcdUpdate();
-		}
+		RTC_SetDate(RTC_Format_BIN, &RTC_DateStructure);
+	}
+	//-----------------------------------------------------------------------------------------
+	
+	if(need_update_wakeup==ENABLE)
+	{
+		RTC_WaitForSynchro();
+		Set_next_alarm_wakeup(); // установить таймер просыпания на +4 секунды
+		LcdClear_massive();
+		LcdUpdate();
 	}
 }
 
@@ -289,39 +278,32 @@ void USB_work()
 							current_rcvd_pointer++;
 							break;
 					case 0xE5: 								// Отправка даты прошивки (RCV 1 байт)
-							if(licensed==ENABLE)
-							{
-								Send_Buffer[0]=0xE5;                                  // передать ключ
-								Send_Buffer[1]=__DATE__[4];  // день
-								Send_Buffer[2]=__DATE__[5];  // день
-								Send_Buffer[3]=__DATE__[0];  // месяц
-								Send_Buffer[4]=__DATE__[1];  // месяц
-								Send_Buffer[5]=__DATE__[2];  // месяц
-								Send_Buffer[6]=__DATE__[10]; // год
-
-								Send_length=7;
-							}
+							Send_Buffer[0]=0xE5;                                  // передать ключ
+							Send_Buffer[1]=__DATE__[4];  // день
+							Send_Buffer[2]=__DATE__[5];  // день
+							Send_Buffer[3]=__DATE__[0];  // месяц
+							Send_Buffer[4]=__DATE__[1];  // месяц
+							Send_Buffer[5]=__DATE__[2];  // месяц
+							Send_Buffer[6]=__DATE__[10]; // год
+							Send_length=7;
 							current_rcvd_pointer++;
 							break;
 							
 					case 0xE6: 								// Отправка версии железа (RCV 1 байт)
-							if(licensed==ENABLE)
-							{
-								Send_Buffer[0]=0xE6;                                  // передать ключ
-								Send_Buffer[1]=HW_REVISION[0];
-								Send_Buffer[2]=HW_REVISION[1];
-								Send_Buffer[3]=HW_REVISION[2];
-								Send_Buffer[4]=HW_REVISION[3];
-								Send_Buffer[5]=HW_REVISION[4];
-								Send_Buffer[6]=0x00;
+							Send_Buffer[0]=0xE6;                                  // передать ключ
+							Send_Buffer[1]=HW_REVISION[0];
+							Send_Buffer[2]=HW_REVISION[1];
+							Send_Buffer[3]=HW_REVISION[2];
+							Send_Buffer[4]=HW_REVISION[3];
+							Send_Buffer[5]=HW_REVISION[4];
+							Send_Buffer[6]=0x00;
+							Send_length=7;
 
-								Send_length=7;
-							}
 							current_rcvd_pointer++;
 							break;
 							
 					case 0xD5: 								// Отправка метки смещения времени (RCV 1 байт)
-							if(licensed==ENABLE)USB_send_time_offset_data();
+							USB_send_time_offset_data();
 							current_rcvd_pointer++;
 							break;
 
@@ -367,7 +349,6 @@ void USB_work()
 								eeprom_write(unlock_2_address, Receive_Buffer[current_rcvd_pointer+3]);
 								eeprom_write(unlock_3_address, Receive_Buffer[current_rcvd_pointer+4]);
 								current_rcvd_pointer+=5;
-								licensed=check_license(); // проверка лицензии
 			LcdClear_massive();
 			LcdUpdate();
 							} else {

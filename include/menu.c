@@ -88,11 +88,8 @@ void main_screen()
 															x=flash_read_massive(i,max_fon_select);
 															if(x>Max_fon)Max_fon=x;                      // расчет максимального фона
 														 }
-			if(licensed==ENABLE)
-			{
-				if(i<doze_length_month) Doze_month_count+= flash_read_massive(i,dose_select);// расчет мес€чной дозы
-				if(i<doze_length_2month)Doze_2month_count+=flash_read_massive(i,dose_select);// расчет мес€чной дозы
-			}
+			if(i<doze_length_month) Doze_month_count+= flash_read_massive(i,dose_select);// расчет мес€чной дозы
+			if(i<doze_length_2month)Doze_2month_count+=flash_read_massive(i,dose_select);// расчет мес€чной дозы
 		}
 	}
 

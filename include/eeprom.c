@@ -74,10 +74,9 @@ void eeprom_apply_settings(void)
 	
   if(eeprom_read(units_address)!=Settings.units)
 	{
-		if(licensed!=ENABLE)Settings.units=0;
+		Settings.units=0;
 	}
 	
-	if(licensed==ENABLE)
 	// -------------------------------------------------------------------
   if(eeprom_read(v4_target_pump_address)!=Settings.v4_target_pump)
 	{
