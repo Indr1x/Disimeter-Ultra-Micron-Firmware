@@ -240,6 +240,7 @@ extern uint32_t unlock_1_serial;
 extern uint32_t unlock_2_serial;
 extern uint32_t unlock_3_serial;
 
+extern uint8_t Pump_on_alarm_count;
 
 
 extern FunctionalState hidden_menu;

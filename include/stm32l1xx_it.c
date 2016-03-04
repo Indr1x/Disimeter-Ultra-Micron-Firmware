@@ -188,7 +188,7 @@ void EXTI9_5_IRQHandler(void)
 
 			if(Power.Pump_active==DISABLE)
 			{
-				if(last_count_pump_on_impulse>3)
+				if(last_count_pump_on_impulse>10)
 				{
 					pump_on_impulse=ENABLE;
 					Pump_now(ENABLE);
@@ -479,8 +479,17 @@ void RTC_Alarm_IRQHandler(void) { // Тик каждые 4 секунды
 			if(Power.led_sleep_time>4){Power.led_sleep_time-=4;}
 			else{Power.led_sleep_time=0;}
 		}
-		if(Pump_on_alarm==ENABLE)Pump_now(ENABLE); // оптимизируем накачку вынося из вейкап таймера
+		if(Pump_on_alarm==ENABLE)
+		{
+			if(Pump_on_alarm_count>1)
+			{
+				Pump_now(ENABLE); // оптимизируем накачку вынося из вейкап таймера
+				Pump_on_alarm_count=0;
+			}
+			else Pump_on_alarm_count++;
 		}
+		
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

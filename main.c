@@ -16,7 +16,7 @@ uint16_t USB_maxfon_massive_pointer=0;
 uint16_t USB_doze_massive_pointer=0;
 uint16_t current_pulse_count=0;
 uint8_t pump_count=0;
-
+uint8_t Pump_on_alarm_count=0;
 uint32_t Doze_day_count=0;
 uint32_t Doze_week_count=0;
 uint32_t Doze_hour_count=0;

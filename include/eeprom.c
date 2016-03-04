@@ -74,7 +74,7 @@ void eeprom_apply_settings(void)
 	
   if(eeprom_read(units_address)!=Settings.units)
 	{
-		Settings.units=0;
+//		Settings.units=0;
 	}
 	
 	// -------------------------------------------------------------------
