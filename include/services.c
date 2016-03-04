@@ -186,6 +186,7 @@ void recalculate_fon(void)
 	tmp=tmp+(((tmp/recalc_len)/auto_speedup_factor)*(massive_len % auto_speedup_factor)); // €чейка 24000/6=4000; остаток от делени€ 8
 																																												// (4000/9*)8=3552; 24000+3552=27552
 	fon_level=(uint32_t)tmp;
+	if(fon_level>Max_fon)Max_fon=fon_level;
 }
 
 
