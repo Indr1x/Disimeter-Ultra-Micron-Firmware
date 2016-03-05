@@ -4,7 +4,8 @@
 
 
 /* Private typedef -----------------------------------------------------------*/
-typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
+typedef enum
+{ FAILED = 0, PASSED = !FAILED } TestStatus;
 
 /* Private define ------------------------------------------------------------*/
 #define DATA_EEPROM_START_ADDR     0x08080000
@@ -44,7 +45,7 @@ typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 #define VRef_address																		        0x74
 
 extern uint32_t NbrOfPage, Address;
-  
+
 
 
 void eeprom_erase(void);

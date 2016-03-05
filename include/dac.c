@@ -38,7 +38,7 @@ void dac_reload()
   dac_init();
   ADCData.DAC_voltage_raw = 1;
 #ifdef version_401
-  if (Settings.Geiger_voltage > 200)
+  if(Settings.Geiger_voltage > 200)
   {
     // К1 = 200  - Падение на диоде мВ
     // К2 = 34   - Коэфицент резистивного делителя (1к+33к)/1к  (! обратный расчет 1/x)

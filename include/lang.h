@@ -2,6 +2,7 @@
 #define __lang_H
 
 #ifndef LANG_EN
+/* *INDENT-OFF* */
 ///////////////////////////////////////////////////////
 // Menu
 #define LANG_ALARM     "Тревога"
@@ -40,8 +41,8 @@
 
 ///////////////////////////////////////////////////////
 // Dose
-#define LANG_TIME 	    "Время"
-#define LANG_DATE 	    "Дата"
+#define LANG_TIME       "Время"
+#define LANG_DATE       "Дата"
 #define LANG_MAXFON     "Максимум фона"
 #define LANG_DOSE10M    "Доза за 10мин"
 #define LANG_DOSEHOUR   "Доза за час"
@@ -86,16 +87,16 @@
 #define LANG_USBON    "USB активирован"
 #define LANG_USBOFF   "USB  выключен"
 
-#define LANG_BETA1		"час"
-#define LANG_BETA2		"см2"
+#define LANG_BETA1    "час"
+#define LANG_BETA2    "см2"
 #define LANG_UR       "мкР"
 #define LANG_UZ       "мкЗ"
 #define LANG_UZV      "мкЗв"
 #define LANG_H        " ч "
 ///////////////////////////////////////////////////////
-
+/* *INDENT-ON* */
 #else
-
+/* *INDENT-OFF* */
 ///////////////////////////////////////////////////////
 // Menu
 #define LANG_ALARM    "Alarm"
@@ -134,8 +135,8 @@
 
 ///////////////////////////////////////////////////////
 // Dose
-#define LANG_TIME 	    "Time"
-#define LANG_DATE 	    "Date"
+#define LANG_TIME       "Time"
+#define LANG_DATE       "Date"
 #define LANG_MAXFON     "Radiation max"
 #define LANG_DOSE10M    "10 min dose"
 #define LANG_DOSEHOUR   "Hour dose"
@@ -181,14 +182,14 @@
 #define LANG_USBON    "USB enabled"
 #define LANG_USBOFF   "USB disabled"
 
-#define LANG_BETA1		"par"
-#define LANG_BETA2		"cm2"
+#define LANG_BETA1    "par"
+#define LANG_BETA2    "cm2"
 #define LANG_UR       "uR"
 #define LANG_UZ       "uSv"
 #define LANG_UZV      "uSv"
 #define LANG_H        " h "
 ///////////////////////////////////////////////////////
 
-
+/* *INDENT-ON* */
 #endif
 #endif

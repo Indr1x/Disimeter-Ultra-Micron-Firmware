@@ -7,7 +7,7 @@ void set_bor(void)
   BOROptionBytes = FLASH_OB_GetBOR();
 
 
-  if ((BOROptionBytes & 0x0F) != BOR_LEVEL)
+  if((BOROptionBytes & 0x0F) != BOR_LEVEL)
   {
     /* Unlocks the option bytes block access */
     FLASH_OB_Unlock();

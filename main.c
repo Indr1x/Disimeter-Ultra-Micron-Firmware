@@ -132,7 +132,7 @@ int main(void)
 
   DataUpdate.Need_batt_voltage_update = ENABLE;
 
-  if (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6))
+  if(!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6))
     hidden_menu = ENABLE;       // Открытие сервисных пунктов меню
 
   delay_ms(500);                // подождать установки напряжения
@@ -141,50 +141,50 @@ int main(void)
 /////////////////////////////////
   {
     //if(DataUpdate.RTC_tick_update==ENABLE)        RTC_tick_processing();
-    if (DataUpdate.Need_fon_update == ENABLE)
+    if(DataUpdate.Need_fon_update == ENABLE)
       geiger_calc_fon();
-    if (key > 0)
+    if(key > 0)
       keys_proccessing();
-    if (DataUpdate.Need_batt_voltage_update)
+    if(DataUpdate.Need_batt_voltage_update)
       adc_check_event();
 
     ////////////////////////////////////////////////////
 
 
-    if ((Power.sleep_time > 0) && (!Power.Display_active))
+    if((Power.sleep_time > 0) && (!Power.Display_active))
       sleep_mode(DISABLE);      // Если дисплей еще выключен, а счетчик сна уже отсчитывает, поднимаем напряжение и включаем дисплей
 
-    if (Power.Display_active)
+    if(Power.Display_active)
     {
-      if (Power.sleep_time == 0 && !Alarm.Alarm_active)
+      if(Power.sleep_time == 0 && !Alarm.Alarm_active)
         sleep_mode(ENABLE);     // Счетчик сна досчитал до нуля, а дисплей еще активен, то выключаем его и понижаем напряжение
-      if (DataUpdate.Need_display_update == ENABLE)
+      if(DataUpdate.Need_display_update == ENABLE)
       {
         DataUpdate.Need_display_update = DISABLE;
         LcdClear_massive();
-        if (screen == 1)
+        if(screen == 1)
           main_screen();
-        if (screen == 2)
+        if(screen == 2)
           menu_screen();
-        if (screen == 3)
+        if(screen == 3)
           stat_screen();
       }
 ///////////////////////////////////////////////////////////////////////////////
     }
 #ifdef version_401
-    if ((!Power.USB_active) && (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)))
+    if((!Power.USB_active) && (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)))
     {
       usb_activate(0x0);        // Если питание USB начало подаваться включаем USB
     }
 #endif
 
-    if (!Power.USB_active)      // если USB не активен, можно уходить в сон
+    if(!Power.USB_active)       // если USB не активен, можно уходить в сон
     {
-      if (current_pulse_count < 30)     // Если счетчик не зашкаливает, то можно уйти в сон
+      if(current_pulse_count < 30)      // Если счетчик не зашкаливает, то можно уйти в сон
       {
         //if(DataUpdate.RTC_tick_update==ENABLE)        RTC_tick_processing();
 
-        if (!Power.Pump_active && !Power.Sound_active)
+        if(!Power.Pump_active && !Power.Sound_active)
         {
 //#ifndef debug
           PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI); // Переходим в сон

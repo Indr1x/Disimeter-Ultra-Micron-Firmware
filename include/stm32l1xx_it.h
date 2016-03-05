@@ -30,8 +30,9 @@
 #define __STM32L1xx_IT_H
 
 #ifdef __cplusplus
- extern "C" {
-#endif 
+extern "C"
+{
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l1xx.h"
@@ -41,27 +42,27 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-void NMI_Handler(void);
-void HardFault_Handler(void);
-void MemManage_Handler(void);
-void BusFault_Handler(void);
-void UsageFault_Handler(void);
-void SVC_Handler(void);
-void DebugMon_Handler(void);
-void PendSV_Handler(void);
-void SysTick_Handler(void);
-void EXTI9_5_IRQHandler(void);
-void EXTI15_10_IRQHandler(void);
-void TIM9_IRQHandler(void);
-void TIM10_IRQHandler(void);
-void RTC_WKUP_IRQHandler(void);
-void COMP_IRQHandler(void);
-void Pump_now(FunctionalState pump);
+  void NMI_Handler(void);
+  void HardFault_Handler(void);
+  void MemManage_Handler(void);
+  void BusFault_Handler(void);
+  void UsageFault_Handler(void);
+  void SVC_Handler(void);
+  void DebugMon_Handler(void);
+  void PendSV_Handler(void);
+  void SysTick_Handler(void);
+  void EXTI9_5_IRQHandler(void);
+  void EXTI15_10_IRQHandler(void);
+  void TIM9_IRQHandler(void);
+  void TIM10_IRQHandler(void);
+  void RTC_WKUP_IRQHandler(void);
+  void COMP_IRQHandler(void);
+  void Pump_now(FunctionalState pump);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __STM32L1xx_IT_H */
+#endif                          /* __STM32L1xx_IT_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

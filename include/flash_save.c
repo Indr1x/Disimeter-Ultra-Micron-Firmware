@@ -23,12 +23,12 @@ void full_erase_flash(void)     // Erase full dataflash
   for (j = 0; j < NbrOfPage; j++)
   {
     tmp = Address + (FLASH_PAGE_SIZE * j);
-    if (tmp > FLASH_END_ADDR)
+    if(tmp > FLASH_END_ADDR)
     {
       FLASH_Lock();
       return;
     }
-    if (tmp < FLASH_START_ADDR)
+    if(tmp < FLASH_START_ADDR)
     {
       FLASH_Lock();
       return;
@@ -36,7 +36,7 @@ void full_erase_flash(void)     // Erase full dataflash
 
     FLASHStatus_eeprom = FLASH_ErasePage(tmp);
 
-    if (FLASHStatus_eeprom != FLASH_COMPLETE)
+    if(FLASHStatus_eeprom != FLASH_COMPLETE)
     {
       MemoryProgramStatus_eeprom = FAILED;
     } else
@@ -52,7 +52,7 @@ void full_erase_flash(void)     // Erase full dataflash
 void page_erase_flash(uint32_t page)    // Erase 32 elements
 {
   uint32_t Address = 0;
-  if (FLASH_MAX_PAGE >= page)   // если не за границами диапазона
+  if(FLASH_MAX_PAGE >= page)    // если не за границами диапазона
   {
 
     /* Unlock the FLASH Program memory */
@@ -64,12 +64,12 @@ void page_erase_flash(uint32_t page)    // Erase 32 elements
     Address = FLASH_START_ADDR + (page * FLASH_PAGE_SIZE);
     /* Erase the FLASH Program memory pages */
 
-    if (Address > FLASH_END_ADDR)
+    if(Address > FLASH_END_ADDR)
     {
       FLASH_Lock();
       return;
     }
-    if (Address < FLASH_START_ADDR)
+    if(Address < FLASH_START_ADDR)
     {
       FLASH_Lock();
       return;
@@ -77,7 +77,7 @@ void page_erase_flash(uint32_t page)    // Erase 32 elements
 
     FLASHStatus_eeprom = FLASH_ErasePage(Address);
 
-    if (FLASHStatus_eeprom != FLASH_COMPLETE)
+    if(FLASHStatus_eeprom != FLASH_COMPLETE)
     {
       MemoryProgramStatus_eeprom = FAILED;
     } else
@@ -94,7 +94,7 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
 {
   uint32_t Address = 0;
 
-  if (FLASH_MAX_PAGE >= page)   // если не за границами диапазона
+  if(FLASH_MAX_PAGE >= page)    // если не за границами диапазона
   {
 
     Address = FLASH_START_ADDR + (page * FLASH_PAGE_SIZE);
@@ -109,12 +109,12 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
 
     /* Write the FLASH Program memory using HalfPage operation */
 
-    if (Address > FLASH_END_ADDR)
+    if(Address > FLASH_END_ADDR)
     {
       FLASH_Lock();
       return;
     }
-    if (Address < FLASH_START_ADDR)
+    if(Address < FLASH_START_ADDR)
     {
       FLASH_Lock();
       return;
@@ -122,7 +122,7 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
 
     FLASHStatus_eeprom = FLASH_ProgramHalfPage(Address, ram_Doze_massive);
 
-    if (FLASHStatus_eeprom == FLASH_COMPLETE)
+    if(FLASHStatus_eeprom == FLASH_COMPLETE)
     {
     } else
     {
@@ -132,12 +132,12 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
     Address += FLASH_PAGE_SIZE >> 1;
     /* Write the FLASH Program memory using HalfPage operation */
 
-    if (Address > FLASH_END_ADDR)
+    if(Address > FLASH_END_ADDR)
     {
       FLASH_Lock();
       return;
     }
-    if (Address < FLASH_START_ADDR)
+    if(Address < FLASH_START_ADDR)
     {
       FLASH_Lock();
       return;
@@ -145,7 +145,7 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
 
     FLASHStatus_eeprom = FLASH_ProgramHalfPage(Address, ram_max_fon_massive);
 
-    if (FLASHStatus_eeprom == FLASH_COMPLETE)
+    if(FLASHStatus_eeprom == FLASH_COMPLETE)
     {
     } else
     {
@@ -162,14 +162,14 @@ uint32_t flash_read_massive(uint32_t virt_element, uint32_t mode)
 {
   uint32_t Address = FLASH_START_ADDR, page = 0, page_num = 0, index = 0;
 
-  if (virt_element >= FLASH_MAX_ELEMENT)
+  if(virt_element >= FLASH_MAX_ELEMENT)
     return 0;                   // Проверка входящего параметра
 
-  if (virt_element < doze_length)       // 0-31
+  if(virt_element < doze_length)        // 0-31
   {
-    if (mode == max_fon_select)
+    if(mode == max_fon_select)
       return ram_max_fon_massive[virt_element];
-    if (mode == dose_select)
+    if(mode == dose_select)
       return ram_Doze_massive[virt_element];
 
   } else                        // >31 Элемент не из памяти, лезем во флешку
@@ -186,7 +186,7 @@ uint32_t flash_read_massive(uint32_t virt_element, uint32_t mode)
     //page_num=index/doze_length; // до оптимизации
     page_num = index >> 5;      // сколько страниц надо пройти // /32
 
-    if (page_num > page)
+    if(page_num > page)
     {
       page = FLASH_MAX_PAGE + page - page_num;
     }                           // Если надо пройти больше конца памяти, то скорректировать число
@@ -202,13 +202,13 @@ uint32_t flash_read_massive(uint32_t virt_element, uint32_t mode)
     // до оптимизации
     //if(mode == max_fon_select) Address = FLASH_START_ADDR + (FLASH_PAGE_SIZE/2) + (page * FLASH_PAGE_SIZE) + (index*4); // вычисляем адрес начала страницы
     //if(mode == dose_select)    Address = FLASH_START_ADDR +                       (page * FLASH_PAGE_SIZE) + (index*4); // вычисляем адрес начала страницы
-    if (mode == max_fon_select)
+    if(mode == max_fon_select)
       Address = FLASH_START_ADDR + (FLASH_PAGE_SIZE >> 1) + (page << 8) + (index << 2); // вычисляем адрес начала страницы
-    if (mode == dose_select)
+    if(mode == dose_select)
       Address = FLASH_START_ADDR + (page << 8) + (index << 2);  // вычисляем адрес начала страницы
-    if (Address < FLASH_START_ADDR)
+    if(Address < FLASH_START_ADDR)
       return 0;
-    if (Address > FLASH_END_ADDR)
+    if(Address > FLASH_END_ADDR)
       return 0;
 
     return (*(__IO uint32_t *) Address);

@@ -31,61 +31,61 @@
 
 
 // ------------- СЕРИЙНИК ! ------------- 
-#define U_ID_0 (*(uint32_t*) 0x1FF80050) // MCU Serial
+#define U_ID_0 (*(uint32_t*) 0x1FF80050)        // MCU Serial
 #define U_ID_1 (*(uint32_t*) 0x1FF80054)
 #define U_ID_2 (*(uint32_t*) 0x1FF80064)
 
 #ifdef service
-	#define debug // отладка
+#define debug                   // отладка
 #endif
 
 #ifdef version_401
-	#define HW_REVISION  "4.02+"
+#define HW_REVISION  "4.02+"
 #endif
 
 #ifdef version_300
-	#define HW_REVISION  "3.00+"
+#define HW_REVISION  "3.00+"
 #endif
 
 #ifdef version_204
-	#define HW_REVISION  "2.04 "
+#define HW_REVISION  "2.04 "
 #endif
 
 
 typedef struct
 {
-  FunctionalState Need_batt_voltage_update;    // Необходимо обновить данные по напряжению батарейки
+  FunctionalState Need_batt_voltage_update;     // Необходимо обновить данные по напряжению батарейки
 //  FunctionalState Need_geiger_voltage_update;  // Необходимо обновить данные по высокому напряжению 
-  FunctionalState Need_fon_update;             // Необходимо обновить данные по высокому напряжению 
-  FunctionalState Need_display_update;         // Необходимо обновить данные по высокому напряжению 
-  uint16_t Batt_update_time_counter;            // счетчик таймаута измерения напряжения АКБ
+  FunctionalState Need_fon_update;      // Необходимо обновить данные по высокому напряжению 
+  FunctionalState Need_display_update;  // Необходимо обновить данные по высокому напряжению 
+  uint16_t Batt_update_time_counter;    // счетчик таймаута измерения напряжения АКБ
 //  uint8_t Calibration_update_time_counter;     // счетчик таймаута измерения напряжения АКБ
   uint8_t pump_counter_update_time;
-	uint16_t  doze_sec_count;                    // Служебный счетчик для времени дозы
-	uint16_t  days_sec_count;
-	uint16_t  doze_count;                    // Служебный счетчик для отметки окончания массива дозы
-	uint32_t  current_flash_page;                    // Служебный счетчик для отметки окончания массива дозы
-	FunctionalState Need_update_mainscreen_counters;
-	FunctionalState Need_erase_flash;
-	FunctionalState RTC_tick_update;
+  uint16_t doze_sec_count;      // Служебный счетчик для времени дозы
+  uint16_t days_sec_count;
+  uint16_t doze_count;          // Служебный счетчик для отметки окончания массива дозы
+  uint32_t current_flash_page;  // Служебный счетчик для отметки окончания массива дозы
+  FunctionalState Need_update_mainscreen_counters;
+  FunctionalState Need_erase_flash;
+  FunctionalState RTC_tick_update;
 //  uint8_t second_pump_counter;
 //  uint8_t pump_pulse_by_impulse_counter;
-  
-}DataUpdateDef;
+
+} DataUpdateDef;
 
 
 typedef struct
 {
-  uint32_t Batt_voltage_raw;        // Напряжение АКБ
-  uint32_t Batt_voltage;            // Напряжение АКБ
-  uint32_t Power_voltage;           // Напряжение питания МК
+  uint32_t Batt_voltage_raw;    // Напряжение АКБ
+  uint32_t Batt_voltage;        // Напряжение АКБ
+  uint32_t Power_voltage;       // Напряжение питания МК
 //  uint32_t Geiger_voltage_raw;      // Напряжение счетчика
 //  uint32_t Geiger_voltage;          // Напряжение счетчика
-  uint32_t Calibration_bit_voltage; // Цена одного бита
-  uint32_t Procent_battery;         // Цена одного бита
-  uint32_t DAC_voltage_raw;         // Уровень накачки для DAC
-  
-}ADCDataDef;
+  uint32_t Calibration_bit_voltage;     // Цена одного бита
+  uint32_t Procent_battery;     // Цена одного бита
+  uint32_t DAC_voltage_raw;     // Уровень накачки для DAC
+
+} ADCDataDef;
 
 /*
 typedef struct
@@ -102,9 +102,9 @@ typedef struct
 
 typedef struct
 {
-  uint32_t Alarm_level;                             // Уровень аларма
-  uint32_t Sleep_time;                              // время до ухода в сон
-  uint32_t contrast;                                 // Контраст дисплея
+  uint32_t Alarm_level;         // Уровень аларма
+  uint32_t Sleep_time;          // время до ухода в сон
+  uint32_t contrast;            // Контраст дисплея
 //  uint32_t second_pump;                              // кол-во импульсов подкачки каждую секунду
 //  uint32_t Geiger_angle_of_counter_characteristics; // угол наклона счетной хакактиристики в десятых долях процента на Вольт
 //  uint32_t Geiger_plato_begin;                      // начало плато
@@ -112,39 +112,39 @@ typedef struct
 //  uint32_t HV_ADC_Corr;                             // Корректировка ВВ делителя
 //  uint32_t pump_pulse_by_impulse;                   // кол-во импульсов подкачки на каждый импульс датчика
 //  uint32_t pump_skvagennost;                        // скваженность накачки
-//  uint32_t Sound_freq;				    // Частота звука в кГц
-  uint32_t Power_comp;				    // Уровень потребления
-  uint32_t Geiger_voltage;			    // Напряжение датчика
-	uint32_t Pump_Energy;
-  uint32_t Display_reverse;                  // переворот дисплея
-  uint32_t Sound;                            // Звук вкл-выкл
+//  uint32_t Sound_freq;                                    // Частота звука в кГц
+  uint32_t Power_comp;          // Уровень потребления
+  uint32_t Geiger_voltage;      // Напряжение датчика
+  uint32_t Pump_Energy;
+  uint32_t Display_reverse;     // переворот дисплея
+  uint32_t Sound;               // Звук вкл-выкл
   uint32_t Second_count;
   uint32_t LSI_freq;
-#ifndef version_401 // Версия платы дозиметра 4.01+
+#ifndef version_401             // Версия платы дозиметра 4.01+
   uint32_t USB;
 #endif
-	uint32_t v4_target_pump;
-	uint32_t units;
-	uint32_t Vibro;
-	uint32_t Beta_window;
-	uint32_t Beta_procent;
-	uint32_t serial0;
-	uint32_t serial1;
-	uint32_t serial2;
-	uint32_t serial3;
+  uint32_t v4_target_pump;
+  uint32_t units;
+  uint32_t Vibro;
+  uint32_t Beta_window;
+  uint32_t Beta_procent;
+  uint32_t serial0;
+  uint32_t serial1;
+  uint32_t serial2;
+  uint32_t serial3;
 
-	uint32_t AB_mode; // 0-выкл 1-гамма 2-альфа-бета
-	uint32_t VRef; // 0-выкл 1-гамма 2-альфа-бета
-}SettingsDef;
+  uint32_t AB_mode;             // 0-выкл 1-гамма 2-альфа-бета
+  uint32_t VRef;                // 0-выкл 1-гамма 2-альфа-бета
+} SettingsDef;
 
 
 typedef struct
 {
   uint32_t Alarm_beep_count;
   uint32_t Tick_beep_count;
-  FunctionalState Alarm_active; 
-  FunctionalState User_cancel; 
-}AlarmDef;
+  FunctionalState Alarm_active;
+  FunctionalState User_cancel;
+} AlarmDef;
 
 #ifdef debug
 typedef struct
@@ -157,27 +157,27 @@ typedef struct
   uint32_t rtc_wakeup;
   uint32_t pump_wakeup;
   uint32_t comp_wakeup;
-}WakeupDef;
+} WakeupDef;
 #endif
 
 typedef struct
 {
-  FunctionalState ADC_active;     // Сейчас работает АЦП
-  FunctionalState Pump_active;    // В данный момент идет накачка
-  FunctionalState Sound_active;   // В данный подается звук
-  FunctionalState Display_active; // Включен дисплей
-  FunctionalState USB_active;     // Включен USB
-  FunctionalState sleep_now;     // Активность сна
+  FunctionalState ADC_active;   // Сейчас работает АЦП
+  FunctionalState Pump_active;  // В данный момент идет накачка
+  FunctionalState Sound_active; // В данный подается звук
+  FunctionalState Display_active;       // Включен дисплей
+  FunctionalState USB_active;   // Включен USB
+  FunctionalState sleep_now;    // Активность сна
 
-  uint32_t APB1ENR;  //
-	
-	uint32_t sleep_time;  //
-  uint32_t led_sleep_time;  //
-  FunctionalState Pump_deny;  
-}PowerDef;
+  uint32_t APB1ENR;             //
 
-static __IO uint8_t  timer_is_reload = 0;	// counts 1ms timeTicks
-extern uint16_t key; // массив нажатых кнопок [012]
+  uint32_t sleep_time;          //
+  uint32_t led_sleep_time;      //
+  FunctionalState Pump_deny;
+} PowerDef;
+
+static __IO uint8_t timer_is_reload = 0;        // counts 1ms timeTicks
+extern uint16_t key;            // массив нажатых кнопок [012]
 extern uint32_t ix;
 extern uint32_t ix_update;
 
@@ -185,15 +185,15 @@ extern uint32_t ix_update;
 
 #define Detector_massive_pointer_max 375
 
-extern uint16_t Detector_massive[Detector_massive_pointer_max+1];
+extern uint16_t Detector_massive[Detector_massive_pointer_max + 1];
 
-extern uint32_t Detector_AB_massive[15]; // 1 минута, интервалами по 4 сек
-extern uint32_t AB_fon; // Фон Альфа-Бета
+extern uint32_t Detector_AB_massive[15];        // 1 минута, интервалами по 4 сек
+extern uint32_t AB_fon;         // Фон Альфа-Бета
 
-#define FLASH_PAGE_SIZE                 0x100         // (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
+#define FLASH_PAGE_SIZE                 0x100   // (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 #define FLASH_START_ADDR                0x0800F000
 #define FLASH_END_ADDR                  0x0801FFFF
-#define FLASH_MAX_PAGE                  (FLASH_END_ADDR - FLASH_START_ADDR) / FLASH_PAGE_SIZE 
+#define FLASH_MAX_PAGE                  (FLASH_END_ADDR - FLASH_START_ADDR) / FLASH_PAGE_SIZE
 #define FLASH_MAX_ELEMENT               FLASH_MAX_PAGE * (FLASH_PAGE_SIZE >> 3)
 
 #define max_fon_select 1
@@ -206,10 +206,10 @@ extern uint32_t AB_fon; // Фон Альфа-Бета
 #define doze_length_month  4320 // 1 месяц  интервалами по 10 минут (60/10)*24*30
 #define doze_length_2month 8640 // 2 месяца интервалами по 10 минут (60/10)*24*30*2
 
-#define doze_length 32 // длинна массива в памяти (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
+#define doze_length 32          // длинна массива в памяти (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 
-extern uint32_t ram_Doze_massive[doze_length+1]; // 1 ячейка = 10 минут
-extern uint32_t ram_max_fon_massive[doze_length+1]; // 1 ячейка = 10 минут
+extern uint32_t ram_Doze_massive[doze_length + 1];      // 1 ячейка = 10 минут
+extern uint32_t ram_max_fon_massive[doze_length + 1];   // 1 ячейка = 10 минут
 extern uint16_t USB_maxfon_massive_pointer;
 extern uint16_t USB_doze_massive_pointer;
 
@@ -220,7 +220,7 @@ extern uint32_t Doze_week_count;
 extern uint32_t Doze_month_count;
 extern uint32_t Doze_2month_count;
 extern uint32_t Max_fon;
-extern uint8_t  main_menu_stat;
+extern uint8_t main_menu_stat;
 extern uint32_t menu_select;
 extern FunctionalState enter_menu_item;
 extern uint8_t screen;
@@ -229,7 +229,7 @@ extern uint16_t Detector_massive_pointer;
 extern uint16_t pump_counter_avg_impulse_by_1sec[2];
 extern uint32_t fon_level;
 extern uint32_t working_days;
-extern uint8_t  auto_speedup_factor;
+extern uint8_t auto_speedup_factor;
 extern uint32_t madorc_impulse;
 extern uint32_t USB_not_active;
 extern uint32_t last_count_pump_on_impulse;
@@ -251,13 +251,13 @@ extern FunctionalState Sound_key_pressed;
 extern FunctionalState Pump_on_alarm;
 extern uint16_t current_pulse_count;
 
-extern ADCDataDef    ADCData;
+extern ADCDataDef ADCData;
 extern DataUpdateDef DataUpdate;
-extern PowerDef      Power;
-extern SettingsDef   Settings;
-extern AlarmDef      Alarm;
+extern PowerDef Power;
+extern SettingsDef Settings;
+extern AlarmDef Alarm;
 #ifdef debug
-extern WakeupDef     Wakeup;
+extern WakeupDef Wakeup;
 extern uint32_t debug_wutr;
 #endif
 extern uint8_t pump_count;

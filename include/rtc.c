@@ -27,7 +27,7 @@ void RTC_TimeRegulate(void)
   RTC_TimeStructure.RTC_Seconds = tmp_ss;
 
   /* Configure the RTC time register */
-  if (RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure) == ERROR)
+  if(RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure) == ERROR)
   {
     //    printf("\n\r>> !! RTC Set Time failed. !! <<\n\r");
   } else
@@ -55,7 +55,7 @@ void Set_next_alarm_wakeup(void)
   RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
 
   RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds = RTC_TimeStructure.RTC_Seconds + 4;
-  if (RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds > 59)
+  if(RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds > 59)
     RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds -= 60;
 
   RTC_AlarmStructure.RTC_AlarmMask = RTC_AlarmMask_Exept_seconds;
@@ -85,7 +85,7 @@ void RTC_Config(void)
   RCC_RTCResetCmd(DISABLE);
 
 #ifdef version_204              // версия без кварца
-  if (Settings.LSI_freq == 0x00)
+  if(Settings.LSI_freq == 0x00)
     Settings.LSI_freq = 37000;
   RCC_LSICmd(ENABLE);
   while (RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET);

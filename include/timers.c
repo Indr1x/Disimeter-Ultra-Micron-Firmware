@@ -4,10 +4,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 void sound_activate(void)
 {
-  if (!Power.USB_active)
+  if(!Power.USB_active)
   {
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-    if (Power.Display_active == ENABLE)
+    if(Power.Display_active == ENABLE)
     {
       TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
       TIM10->EGR |= 0x0001;     // Устанавливаем бит UG для принудительного сброса счетчика
@@ -17,9 +17,9 @@ void sound_activate(void)
       Alarm.Tick_beep_count = 0;
       Power.Sound_active = ENABLE;
 #ifdef version_401
-      if (Settings.Vibro == 1)
+      if(Settings.Vibro == 1)
         GPIO_SetBits(GPIOA, GPIO_Pin_15);       // Активируем вибромотор
-      if ((Settings.Vibro > 1) && (Alarm.Alarm_active == ENABLE))
+      if((Settings.Vibro > 1) && (Alarm.Alarm_active == ENABLE))
         GPIO_SetBits(GPIOA, GPIO_Pin_15);       // Активируем вибромотор
 #endif
     }
@@ -68,7 +68,7 @@ void reset_TIM_prescallers_and_Compare(void)
   TIM_PrescalerConfig(TIM9, (uint32_t) (SystemCoreClock / 4000000) - 1, TIM_PSCReloadMode_Immediate);   // 0.25 мкс
 
 #ifdef version_401
-  if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
+  if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))
   {
     pump_period = (Settings.v4_target_pump * 4200) / 4400;      // расчет целевой накачки (Пример 1,75мкс*4.2В/4.4В напряжение USB=1.25мкс)
   } else
@@ -77,7 +77,7 @@ void reset_TIM_prescallers_and_Compare(void)
   }
 #else
   pump_period = (352 * Settings.Pump_Energy) / ADCData.Batt_voltage;    // перерасчет энергии накачки
-  if ((pump_period > 32) && (Settings.LSI_freq == 0))
+  if((pump_period > 32) && (Settings.LSI_freq == 0))
     pump_period = 32;           // не привышать критический уровень для верии 3.*
 #endif
 

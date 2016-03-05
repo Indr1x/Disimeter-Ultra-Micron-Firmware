@@ -95,7 +95,7 @@ void LcdSend(uint8_t data, uint8_t cmd) //Sends data to display controller
   sdata = data;
   LCD_CLK_L;                    //clk низкий уровень
   LCD_CS_L;                     //CS низкий уровень
-  if (cmd == lcd_CMD)
+  if(cmd == lcd_CMD)
   {
     LCD_DATA_L;
   }                             //идентефикатор кода
@@ -109,7 +109,7 @@ void LcdSend(uint8_t data, uint8_t cmd) //Sends data to display controller
   while (ibit < 8)              //выдаем побитно данные в дисплей
   {
     sbit = sdata & 0x80;
-    if (sbit == 0x80)
+    if(sbit == 0x80)
     {
       LCD_DATA_H;
     } else
@@ -143,9 +143,9 @@ void LcdInit()
   LcdSend(0x00, lcd_CMD);
   LcdSend(0x90 + Settings.contrast, lcd_CMD);   //  онтраст 0x90 минимальный - 0x9f максимальный
 
-  if (Settings.Display_reverse & 0x01)
+  if(Settings.Display_reverse & 0x01)
     LcdSend(0xC8, lcd_CMD);     // зеркалит развертку по Y
-  if (Settings.Display_reverse & 0x02)
+  if(Settings.Display_reverse & 0x02)
     LcdSend(0xA1, lcd_CMD);     // зеркалит развертку по ’
   //LcdSend(0xA1,lcd_CMD);
 
@@ -193,9 +193,9 @@ void LcdPixel(unsigned char x, unsigned char y, unsigned char mode)     //Displa
   int index = 0;
   unsigned char offset = 0, data = 0;
 
-  if (x > LCD_X_RES)
+  if(x > LCD_X_RES)
     return;                     //если передали в функцию муть - выходим
-  if (y > LCD_Y_RES)
+  if(y > LCD_Y_RES)
     return;
 
   index = (((int) (y) >> 3) * 96) + x;  //считаем номер байта в массиве пам€ти диспле€
@@ -203,11 +203,11 @@ void LcdPixel(unsigned char x, unsigned char y, unsigned char mode)     //Displa
 
   data = LcdCache[index];       //берем байт по найденному индексу
 
-  if (mode == PIXEL_OFF)
+  if(mode == PIXEL_OFF)
     data &= (~(0x01 << offset));        //редактируем бит в этом байте
-  else if (mode == PIXEL_ON)
+  else if(mode == PIXEL_ON)
     data |= (0x01 << offset);
-  else if (mode == PIXEL_XOR)
+  else if(mode == PIXEL_XOR)
     data ^= (0x01 << offset);
 
   LcdCache[index] = data;       //загружаем байт назад
@@ -221,18 +221,18 @@ void LcdLine(int x1, int y1, int x2, int y2, unsigned char mode)        //Draws 
   signed int stepy = 0;
   signed int fraction = 0;
 
-  if (x1 > LCD_X_RES || x2 > LCD_X_RES || y1 > LCD_Y_RES || y2 > LCD_Y_RES)
+  if(x1 > LCD_X_RES || x2 > LCD_X_RES || y1 > LCD_Y_RES || y2 > LCD_Y_RES)
     return;
 
   dy = y2 - y1;
   dx = x2 - x1;
-  if (dy < 0)
+  if(dy < 0)
   {
     dy = -dy;
     stepy = -1;
   } else
     stepy = 1;
-  if (dx < 0)
+  if(dx < 0)
   {
     dx = -dx;
     stepx = -1;
@@ -241,12 +241,12 @@ void LcdLine(int x1, int y1, int x2, int y2, unsigned char mode)        //Draws 
   dy <<= 1;
   dx <<= 1;
   LcdPixel(x1, y1, mode);
-  if (dx > dy)
+  if(dx > dy)
   {
     fraction = dy - (dx >> 1);
     while (x1 != x2)
     {
-      if (fraction >= 0)
+      if(fraction >= 0)
       {
         y1 += stepy;
         fraction -= dx;
@@ -260,7 +260,7 @@ void LcdLine(int x1, int y1, int x2, int y2, unsigned char mode)        //Draws 
     fraction = dx - (dy >> 1);
     while (y1 != y2)
     {
-      if (fraction >= 0)
+      if(fraction >= 0)
       {
         x1 += stepx;
         fraction -= dy;
@@ -289,7 +289,7 @@ void clean_lcd_buf(void)        //очистка текстового буфера
 void LcdChr(int ch)             //Displays a character at current cursor location and increment cursor location
 {
   char i = 0;
-  if (ch > 0x7f)
+  if(ch > 0x7f)
   {
     for (i = 0; i < 5; i++)
       LcdCache[LcdCacheIdx++] = lcd_font_table_rus[(ch * 5 + (i) - 0x3C0)];     //выдел€ем байт-столбик из символа и грузим в массив - 5 раз
@@ -304,7 +304,7 @@ void LcdChr(int ch)             //Displays a character at current cursor locatio
 void LcdChrInv(int ch)          //Displays a character at current cursor location and increment cursor location
 {
   unsigned char i = 0;
-  if (ch > 0x7f)
+  if(ch > 0x7f)
   {
     for (i = 0; i < 5; i++)
       LcdCache[LcdCacheIdx++] = ~(lcd_font_table_rus[(ch * 5 + i - 0x3C0)]);    //выдел€ем байт-столбик из символа и грузим в массив - 5 раз
@@ -320,11 +320,11 @@ void LcdString(unsigned char x, unsigned char y)        //Displays a string at c
 {
   unsigned char i = 0;
 
-  if (x > 17 || y > 8)
+  if(x > 17 || y > 8)
     return;
   LcdGotoXYFont(x, y);
   for (i = 0; i < 17; i++)
-    if (lcd_buf[i])
+    if(lcd_buf[i])
       LcdChr(lcd_buf[i]);
   clean_lcd_buf();
 }
@@ -333,11 +333,11 @@ void LcdStringInv(unsigned char x, unsigned char y)     //Displays a string at c
 {
   unsigned char i = 0;
 
-  if (x > 17 || y > 8)
+  if(x > 17 || y > 8)
     return;
   LcdGotoXYFont(x, y);
   for (i = 0; i < 17 - x; i++)
-    if (lcd_buf[i])
+    if(lcd_buf[i])
       LcdChrInv(lcd_buf[i]);
   clean_lcd_buf();
 }
@@ -349,7 +349,7 @@ void LcdChrBold(int ch)         //Displays a bold character at current cursor lo
 
   for (i = 0; i < 5; i++)
   {
-    if (ch > 0x7f)
+    if(ch > 0x7f)
     {
       c = lcd_font_table_rus[(ch * 5 + i - 0x3C0)];     //выдел€ем столбец из символа
     } else
@@ -381,11 +381,11 @@ void LcdChrBold(int ch)         //Displays a bold character at current cursor lo
 void LcdStringBold(unsigned char x, unsigned char y)    //Displays a string at current cursor location
 {
   unsigned char i = 0;
-  if (x > 17 || y > 8)
+  if(x > 17 || y > 8)
     return;
   LcdGotoXYFont(x, y);
   for (i = 0; i < 17 - x; i++)
-    if (lcd_buf[i])
+    if(lcd_buf[i])
       LcdChrBold(lcd_buf[i]);
   clean_lcd_buf();
 }
@@ -397,7 +397,7 @@ void LcdChrBig(int ch)          //Displays a character at current cursor locatio
 
   for (i = 0; i < 5; i++)
   {
-    if (ch > 0x7f)
+    if(ch > 0x7f)
     {
       c = lcd_font_table_rus[(ch * 5 + i - 0x3C0)];     //выдел€ем столбец из символа                       
     } else
@@ -427,11 +427,11 @@ void LcdStringBig(unsigned char x, unsigned char y)     //Displays a string at c
 {
   unsigned char i = 0;
 
-  if (x > 17 || y > 8)
+  if(x > 17 || y > 8)
     return;
   LcdGotoXYFont(x, y);
   for (i = 0; i < 17 - x; i++)
-    if (lcd_buf[i])
+    if(lcd_buf[i])
       LcdChrBig(lcd_buf[i]);
   clean_lcd_buf();
 }
@@ -459,12 +459,12 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
   y_lenght = y_end - y_start;
 
 
-  if ((Settings.Second_count / 4) > 100)
+  if((Settings.Second_count / 4) > 100)
   {                             // если врем€ счета большое, то рисуем тонкие линии
     scalling_factor = y_lenght / 10;
     for (q = 0; q < x_lenght + 1; q++)
     {
-      if (Detector_massive_pointer >= q)
+      if(Detector_massive_pointer >= q)
       {
         pointer = Detector_massive_pointer - q;
       } else
@@ -472,13 +472,13 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
         pointer = (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
       }
 
-      if (Detector_massive[pointer] > scalling_factor)
+      if(Detector_massive[pointer] > scalling_factor)
         scalling_factor = Detector_massive[pointer];
     }
 
     for (q = x_end; q > x_start; q--)
     {
-      if (Detector_massive_pointer >= (x_end - q))
+      if(Detector_massive_pointer >= (x_end - q))
       {
         pointer = Detector_massive_pointer - (x_end - q);
       } else
@@ -487,7 +487,7 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
       }
 
       i = Detector_massive[pointer];
-      if (i > 0)
+      if(i > 0)
         LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
     }
   } else
@@ -495,7 +495,7 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
     scalling_factor = y_lenght / 10;
     for (q = 0; q < (x_lenght / 2) + 1; q++)
     {
-      if (Detector_massive_pointer >= q)
+      if(Detector_massive_pointer >= q)
       {
         pointer = Detector_massive_pointer - q;
       } else
@@ -503,13 +503,13 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
         pointer = (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
       }
 
-      if (Detector_massive[pointer] > scalling_factor)
+      if(Detector_massive[pointer] > scalling_factor)
         scalling_factor = Detector_massive[pointer];
     }
 
     for (q = x_end; q > x_start; q--)
     {
-      if (Detector_massive_pointer >= ((x_end - q) / 2))
+      if(Detector_massive_pointer >= ((x_end - q) / 2))
       {
         pointer = Detector_massive_pointer - ((x_end - q) / 2);
       } else
@@ -518,7 +518,7 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
       }
 
       i = Detector_massive[pointer];
-      if (i > 0)
+      if(i > 0)
         LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
     }
   }
@@ -535,18 +535,18 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
 
   for (j = x_lenght; j > 0; j--)
   {
-    if ((j % 4) == 0)
+    if((j % 4) == 0)
     {
       LcdPixel(x_start + j, y_start, 1);        // up line
       LcdPixel(x_start + j, y_start + (y_lenght / 2), 1);       // middle line
       LcdPixel(x_start + j, y_end, 1);  // down line
     }
 
-    if ((j % 8) == 0)
+    if((j % 8) == 0)
     {
       for (q = y_lenght; q > 0; q--)
       {
-        if ((q % 3) == 0)
+        if((q % 3) == 0)
           LcdPixel(x_start + j, y_end - q, 1);  // vertical line
       }
     }
@@ -566,7 +566,7 @@ void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end
   int recalc_len = massive_len / auto_speedup_factor;   // 62/9 = 6
 
 
-  if ((Settings.Second_count / 4) > 100)
+  if((Settings.Second_count / 4) > 100)
   {                             // если врем€ счета большое, то рисуем тонкие линии
     i = x_start + recalc_len;
 
@@ -575,7 +575,7 @@ void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end
     i = x_start + (recalc_len * 2);
   }
 
-  if ((i + 2) <= x_end)
+  if((i + 2) <= x_end)
   {
     LcdLine(i, y_start - 2, i + 2, y_start - 2, 1);
     LcdLine(i, y_start - 3, i + 2, y_start - 3, 1);
@@ -591,7 +591,7 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 
 
   i = (line * 2) - 1;
-  if (!Settings.units)
+  if(!Settings.units)
   {
     sprintf(lcd_buf, "%6i", fon_level);
     LcdStringBold(start_char, i);
@@ -601,12 +601,12 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
     LcdString(((start_char + 6) * 2), i);
   } else
   {
-    if (fon_level <= 100000)    // 999.99 мк«в/ч
+    if(fon_level <= 100000)     // 999.99 мк«в/ч
     {
       sprintf(lcd_buf, "%6.2f", convert_mkr_sv(fon_level));
     } else
     {
-      if (fon_level <= 1000000) // 9999.9 мк«в/ч
+      if(fon_level <= 1000000)  // 9999.9 мк«в/ч
       {
         sprintf(lcd_buf, "%6.1f", convert_mkr_sv(fon_level));
       } else
@@ -645,7 +645,7 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 {
   // отрисовка едениц
-  if (Settings.AB_mode < 2)
+  if(Settings.AB_mode < 2)
   {
     sprintf(lcd_buf, LANG_BETA1);
     LcdStringInv(((start_char + 6) * 2), line);
@@ -663,7 +663,7 @@ void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 
   LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
 
-  if (AB_fon < 1000000)
+  if(AB_fon < 1000000)
   {
     sprintf(lcd_buf, "%6i", AB_fon);
     LcdStringBold(start_char, line);
@@ -682,7 +682,7 @@ void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 void LcdBatt(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t persent)      //рисуем батарейку с заполнением в %
 {
   uint32_t horizon_line = 0, horizon_line2 = 0, i = 0;
-  if (persent > 100)
+  if(persent > 100)
     persent = 100;
   LcdLine(x1, y2, x2, y2, 1);   //down
   LcdLine(x2, y1, x2, y2, 1);   //right

@@ -145,7 +145,7 @@ void set_pll_for_usb()
   FLASH_PrefetchBufferCmd(ENABLE);
   FLASH_SetLatency(FLASH_Latency_1);
 
-  if (!RCC_GetFlagStatus(RCC_FLAG_HSERDY))
+  if(!RCC_GetFlagStatus(RCC_FLAG_HSERDY))
   {
     RCC_HSEConfig(RCC_HSE_ON);  // ¬ключить HSE
     while (RCC_GetFlagStatus(RCC_FLAG_HSERDY) != SET);  // ждем старта HSE

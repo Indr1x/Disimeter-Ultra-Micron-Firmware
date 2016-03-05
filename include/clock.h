@@ -1,6 +1,6 @@
 #ifndef __clock_user_H
 #define __clock_user_H
-#include "STM32L1xx.h"                  // Device header
+#include "STM32L1xx.h"          // Device header
 
 void set_msi(void);
 void set_pll_for_usb(void);

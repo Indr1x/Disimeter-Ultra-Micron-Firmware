@@ -23,7 +23,7 @@ uint8_t prepare_data(uint32_t mode, uint16_t * massive_pointer, uint8_t start_ke
 
   while (used_lenght <= (VIRTUAL_COM_PORT_DATA_SIZE - 7))
   {
-    if (*massive_pointer >= FLASH_MAX_ELEMENT - 1 - 4)
+    if(*massive_pointer >= FLASH_MAX_ELEMENT - 1 - 4)
     {
       *massive_pointer = FLASH_MAX_ELEMENT - 1;
       return used_lenght;
@@ -32,9 +32,9 @@ uint8_t prepare_data(uint32_t mode, uint16_t * massive_pointer, uint8_t start_ke
     address_lo = *massive_pointer & 0xff;
     address_hi = (*massive_pointer >> 8) & 0xff;
 
-    if (flash_read_massive((*massive_pointer), mode) < 0xff &&
-        flash_read_massive((*massive_pointer) + 1, mode) < 0xff &&
-        flash_read_massive((*massive_pointer) + 2, mode) < 0xff && flash_read_massive((*massive_pointer) + 3, mode) < 0xff)
+    if(flash_read_massive((*massive_pointer), mode) < 0xff &&
+       flash_read_massive((*massive_pointer) + 1, mode) < 0xff &&
+       flash_read_massive((*massive_pointer) + 2, mode) < 0xff && flash_read_massive((*massive_pointer) + 3, mode) < 0xff)
     {                           // Если возможно сжатие массива
       data_key = start_key - 0x70;
       fon_1_4 = flash_read_massive((*massive_pointer), mode) & 0xff;
@@ -173,15 +173,15 @@ void time_loading(uint32_t current_rcvd_pointer)
   //-----------------------------------------------------------------------------------------
   RTC_TimeStructInit(&RTC_TimeStructure);
   RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
-  if (current_rcvd_pointer + 6 >= VIRTUAL_COM_PORT_DATA_SIZE)
+  if(current_rcvd_pointer + 6 >= VIRTUAL_COM_PORT_DATA_SIZE)
     return;
-  if ((RTC_TimeStructure.RTC_Hours !=
-       (Receive_Buffer[current_rcvd_pointer + 4] & 0xff))
-      || (RTC_TimeStructure.RTC_Minutes !=
-          (Receive_Buffer[current_rcvd_pointer + 5] & 0xff))
-      ||
-      (!(((RTC_TimeStructure.RTC_Seconds + 1) >=
-          Receive_Buffer[current_rcvd_pointer + 6]) && ((RTC_TimeStructure.RTC_Seconds - 1) <= Receive_Buffer[current_rcvd_pointer + 6]))))
+  if((RTC_TimeStructure.RTC_Hours !=
+      (Receive_Buffer[current_rcvd_pointer + 4] & 0xff))
+     || (RTC_TimeStructure.RTC_Minutes !=
+         (Receive_Buffer[current_rcvd_pointer + 5] & 0xff))
+     ||
+     (!(((RTC_TimeStructure.RTC_Seconds + 1) >=
+         Receive_Buffer[current_rcvd_pointer + 6]) && ((RTC_TimeStructure.RTC_Seconds - 1) <= Receive_Buffer[current_rcvd_pointer + 6]))))
   {                             // Если время не совпадает, устанавливаем новое (+-1 секунда)
     RTC_TimeStructInit(&RTC_TimeStructure);
     RTC_TimeStructure.RTC_Hours = Receive_Buffer[current_rcvd_pointer + 4] & 0xff;
@@ -201,10 +201,10 @@ void time_loading(uint32_t current_rcvd_pointer)
   RTC_DateStructInit(&RTC_DateStructure);
   RTC_GetDate(RTC_Format_BIN, &RTC_DateStructure);
 
-  if ((RTC_DateStructure.RTC_Date !=
-       (Receive_Buffer[current_rcvd_pointer + 3] & 0xff))
-      || (RTC_DateStructure.RTC_Month !=
-          (Receive_Buffer[current_rcvd_pointer + 2] & 0xff)) || (RTC_DateStructure.RTC_Year != (Receive_Buffer[current_rcvd_pointer + 1] & 0xff)))
+  if((RTC_DateStructure.RTC_Date !=
+      (Receive_Buffer[current_rcvd_pointer + 3] & 0xff))
+     || (RTC_DateStructure.RTC_Month !=
+         (Receive_Buffer[current_rcvd_pointer + 2] & 0xff)) || (RTC_DateStructure.RTC_Year != (Receive_Buffer[current_rcvd_pointer + 1] & 0xff)))
   {                             // Если дата не совпадает, устанавливаем новую
     RTC_DateStructInit(&RTC_DateStructure);
     RTC_DateStructure.RTC_Date = Receive_Buffer[current_rcvd_pointer + 3] & 0xff;
@@ -220,7 +220,7 @@ void time_loading(uint32_t current_rcvd_pointer)
   }
   //-----------------------------------------------------------------------------------------
 
-  if (need_update_wakeup == ENABLE)
+  if(need_update_wakeup == ENABLE)
   {
     RTC_WaitForSynchro();
     Set_next_alarm_wakeup();    // установить таймер просыпания на +4 секунды
@@ -237,7 +237,7 @@ void USB_work()
   uint32_t current_rcvd_pointer = 0;
 
 //---------------------------------------------Передача данных------------------------------------
-  if (bDeviceState == CONFIGURED)
+  if(bDeviceState == CONFIGURED)
   {
     CDC_Receive_DATA();
 
@@ -245,14 +245,14 @@ void USB_work()
     //while((packet_receive != 1) && (wait_count<=1000))wait_count++; // Ждем принятия пакета
 
 #ifndef version_401             // Версия платы дозиметра 4.01+
-    if (Settings.USB == 1)      // MadOrc
+    if(Settings.USB == 1)       // MadOrc
 #endif
-      if (Receive_length != 0)
+      if(Receive_length != 0)
       {
         current_rcvd_pointer = 0;       // сброс счетчика текущей позиции приема
 
         // Предотвращение загрузки старых неверных блоков данных.
-        if (DataUpdate.Need_erase_flash == ENABLE)
+        if(DataUpdate.Need_erase_flash == ENABLE)
         {
           full_erase_flash();
           DataUpdate.Need_erase_flash = DISABLE;
@@ -261,7 +261,7 @@ void USB_work()
 
         while (Receive_length > current_rcvd_pointer)
         {
-          if (current_rcvd_pointer >= VIRTUAL_COM_PORT_DATA_SIZE)
+          if(current_rcvd_pointer >= VIRTUAL_COM_PORT_DATA_SIZE)
             return;
           switch (Receive_Buffer[current_rcvd_pointer])
           {
@@ -316,13 +316,13 @@ void USB_work()
 
           case 0x31:           // передача массива максимального фона (RCV 1 байт)
             Send_length = prepare_data(max_fon_select, &USB_maxfon_massive_pointer, 0xF1);      // Подготовка массива данных к передаче
-            if (Send_length == 0)
+            if(Send_length == 0)
               current_rcvd_pointer++;   // Если массив исчерпан
             break;
 
           case 0x32:           // передача массива дозы (RCV 1 байт)
             Send_length = prepare_data(dose_select, &USB_doze_massive_pointer, 0xF3);   // Подготовка массива данных к передаче
-            if (Send_length == 0)
+            if(Send_length == 0)
               current_rcvd_pointer++;   // Если массив исчерпан
             break;
 
@@ -340,7 +340,7 @@ void USB_work()
             break;
 
           case 0xE4:           // Загрузка времени (RCV 7 байт)
-            if ((current_rcvd_pointer + 7) <= Receive_length)   // Проверка длинны принятого участка
+            if((current_rcvd_pointer + 7) <= Receive_length)    // Проверка длинны принятого участка
             {
               time_loading(current_rcvd_pointer);
               current_rcvd_pointer += 7;
@@ -351,9 +351,9 @@ void USB_work()
             break;
 
           case 0xE3:           // Ключ разблокировки (RCV 5 байт)
-            if ((current_rcvd_pointer + 5) <= Receive_length)   // Проверка длинны принятого участка
+            if((current_rcvd_pointer + 5) <= Receive_length)    // Проверка длинны принятого участка
             {
-              if (current_rcvd_pointer + 4 >= VIRTUAL_COM_PORT_DATA_SIZE)
+              if(current_rcvd_pointer + 4 >= VIRTUAL_COM_PORT_DATA_SIZE)
                 return;
               eeprom_write(unlock_0_address, Receive_Buffer[current_rcvd_pointer + 1]);
               eeprom_write(unlock_1_address, Receive_Buffer[current_rcvd_pointer + 2]);
@@ -373,7 +373,7 @@ void USB_work()
             break;
           }
 
-          if (Send_length > 0)  // Если пакет на передачу сформитован
+          if(Send_length > 0)   // Если пакет на передачу сформитован
           {
             wait_count = 0;
             while ((packet_sent != 1) && (wait_count < 0xFFFF))
@@ -387,9 +387,9 @@ void USB_work()
       }
   }
 #ifdef version_401
-  if (!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9))        // если 5В на USB не подается, то отключаем его
+  if(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)) // если 5В на USB не подается, то отключаем его
 #else
-  if ((USB_not_active > 60) && (Settings.USB == 1))     // если 4 минуты USB не активно, то отключаем его
+  if((USB_not_active > 60) && (Settings.USB == 1))      // если 4 минуты USB не активно, то отключаем его
 #endif
   {
 

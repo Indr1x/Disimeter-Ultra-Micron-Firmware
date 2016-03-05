@@ -11,7 +11,7 @@
 void Pump_now(FunctionalState pump)
 {
 
-  if (pump == ENABLE && !Power.Pump_deny)
+  if(pump == ENABLE && !Power.Pump_deny)
   {
     Power.Pump_active = ENABLE;
     dac_on();                   // Включаем ЦАП
@@ -39,7 +39,7 @@ void Pump_now(FunctionalState pump)
 
 void check_wakeup_keys(void)
 {
-  if ((Power.led_sleep_time > 0) && (Power.Display_active))     // Управление подсветкой
+  if((Power.led_sleep_time > 0) && (Power.Display_active))      // Управление подсветкой
   {
     GPIO_ResetBits(GPIOC, GPIO_Pin_13); // Включаем подсветку 
   } else
@@ -47,10 +47,10 @@ void check_wakeup_keys(void)
     GPIO_SetBits(GPIOC, GPIO_Pin_13);   // Выключаем подсветку                                  
   }
 
-  if ((!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3)
-       && GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) && !GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6)) || Power.Display_active)
+  if((!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3)
+      && GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) && !GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6)) || Power.Display_active)
   {
-    if ((Settings.Sound == 1) || (Settings.Sound == 2))
+    if((Settings.Sound == 1) || (Settings.Sound == 2))
       sound_activate();
     Power.sleep_time = Settings.Sleep_time;
     Power.led_sleep_time = Settings.Sleep_time - 3;
@@ -147,7 +147,7 @@ uint32_t calc_ab(void)
   }
   gamma_level = (float) fon_level / ((float) Settings.Second_count / 60);       // 198 имп/м
 
-  if (AB_level <= gamma_level)
+  if(AB_level <= gamma_level)
     return 0;
 
   AB_level -= gamma_level;
@@ -177,7 +177,7 @@ void recalculate_fon(void)
 
   for (i = 0; i < recalc_len; i++)
   {
-    if (Detector_massive_pointer >= i)
+    if(Detector_massive_pointer >= i)
     {
       pointer = Detector_massive_pointer - i;
     } else
@@ -197,14 +197,14 @@ void recalculate_fon(void)
 // ===============================================================================================
 void sleep_mode(FunctionalState sleep)
 {
-  if (Settings.Sleep_time > 0 && !Power.USB_active)
+  if(Settings.Sleep_time > 0 && !Power.USB_active)
   {
     Power.Pump_deny = ENABLE;
-    if (Power.Pump_active)
+    if(Power.Pump_active)
       Pump_now(DISABLE);
 
     set_msi();
-    if (sleep)
+    if(sleep)
     {
       RTC_ITConfig(RTC_IT_WUT, DISABLE);
 
@@ -246,11 +246,11 @@ void geiger_calc_fon(void)
 {
   DataUpdate.Need_fon_update = DISABLE;
   DataUpdate.Need_display_update = ENABLE;
-  if (fon_level > Settings.Alarm_level && Settings.Alarm_level > 0 && Alarm.Alarm_active == DISABLE)
+  if(fon_level > Settings.Alarm_level && Settings.Alarm_level > 0 && Alarm.Alarm_active == DISABLE)
   {
     Alarm.Alarm_active = ENABLE;
     Alarm.User_cancel = DISABLE;
-    if (Power.Display_active == DISABLE)
+    if(Power.Display_active == DISABLE)
     {
       screen = 1;
       Power.sleep_time = Settings.Sleep_time;
@@ -261,7 +261,7 @@ void geiger_calc_fon(void)
       sound_activate();
 
   }
-  if ((Alarm.Alarm_active && fon_level < Settings.Alarm_level) || (Alarm.Alarm_active && Settings.Alarm_level == 0))
+  if((Alarm.Alarm_active && fon_level < Settings.Alarm_level) || (Alarm.Alarm_active && Settings.Alarm_level == 0))
   {
     sound_deactivate();
     Power.Sound_active = DISABLE;

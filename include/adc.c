@@ -3,7 +3,7 @@
 //************************************************************************************************************
 void adc_check_event(void)
 {
-  if (DataUpdate.Need_batt_voltage_update)
+  if(DataUpdate.Need_batt_voltage_update)
   {
     adc_init();
     adc_calibration();
