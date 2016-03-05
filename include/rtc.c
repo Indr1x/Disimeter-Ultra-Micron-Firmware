@@ -54,8 +54,7 @@ void Set_next_alarm_wakeup(void)
 
   RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
 
-  RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds =
-      RTC_TimeStructure.RTC_Seconds + 4;
+  RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds = RTC_TimeStructure.RTC_Seconds + 4;
   if (RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds > 59)
     RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds -= 60;
 

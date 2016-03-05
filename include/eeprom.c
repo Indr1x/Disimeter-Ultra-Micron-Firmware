@@ -140,9 +140,7 @@ void eeprom_read_settings(void)
 
   // Если не установленны какие-то из важных параметров, то произвести сброс.
   if ((Settings.VRef == 0) ||
-      (Settings.v4_target_pump == 0) ||
-      (Settings.Geiger_voltage == 0) ||
-      (Settings.Beta_procent == 0) || (Settings.Beta_window == 0))
+      (Settings.v4_target_pump == 0) || (Settings.Geiger_voltage == 0) || (Settings.Beta_procent == 0) || (Settings.Beta_window == 0))
   {
     Settings.Geiger_voltage = 360;
     Settings.v4_target_pump = 8;
@@ -162,9 +160,7 @@ void eeprom_erase(void)
   DATA_EEPROM_Unlock();         // разблокировка перед записью
 
   /* Clear all pending flags */
-  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                  | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR |
-                  FLASH_FLAG_OPTVERRUSR);
+  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
 
   /*  Data EEPROM Fast Word program of FAST_DATA_32 at addresses defined by 
      DATA_EEPROM_START_ADDR and DATA_EEPROM_END_ADDR */
@@ -200,9 +196,7 @@ uint32_t eeprom_read(uint32_t address_of_read)
 {
 
   /* Clear all pending flags */
-  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                  | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR |
-                  FLASH_FLAG_OPTVERRUSR);
+  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
 
   /*  Data EEPROM Fast Word program of FAST_DATA_32 at addresses defined by 
      DATA_EEPROM_START_ADDR and DATA_EEPROM_END_ADDR */
@@ -226,9 +220,7 @@ void eeprom_write(uint32_t address_of_read, uint32_t data)
   DATA_EEPROM_Unlock();         // разблокировка перед записью
 
   /* Clear all pending flags */
-  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                  | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR |
-                  FLASH_FLAG_OPTVERRUSR);
+  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
 
   /*  Data EEPROM Fast Word program of FAST_DATA_32 at addresses defined by 
      DATA_EEPROM_START_ADDR and DATA_EEPROM_END_ADDR */
@@ -248,8 +240,7 @@ void eeprom_write(uint32_t address_of_read, uint32_t data)
     // ОШИБКА записи eeprom !!!!
     return;
   }
-  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                  | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR);
+  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR);
 
 
   // Проверка записанных данных 

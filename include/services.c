@@ -48,9 +48,7 @@ void check_wakeup_keys(void)
   }
 
   if ((!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3)
-       && GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4)
-       && !GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6))
-      || Power.Display_active)
+       && GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) && !GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6)) || Power.Display_active)
   {
     if ((Settings.Sound == 1) || (Settings.Sound == 2))
       sound_activate();
@@ -248,8 +246,7 @@ void geiger_calc_fon(void)
 {
   DataUpdate.Need_fon_update = DISABLE;
   DataUpdate.Need_display_update = ENABLE;
-  if (fon_level > Settings.Alarm_level && Settings.Alarm_level > 0
-      && Alarm.Alarm_active == DISABLE)
+  if (fon_level > Settings.Alarm_level && Settings.Alarm_level > 0 && Alarm.Alarm_active == DISABLE)
   {
     Alarm.Alarm_active = ENABLE;
     Alarm.User_cancel = DISABLE;
@@ -264,8 +261,7 @@ void geiger_calc_fon(void)
       sound_activate();
 
   }
-  if ((Alarm.Alarm_active && fon_level < Settings.Alarm_level)
-      || (Alarm.Alarm_active && Settings.Alarm_level == 0))
+  if ((Alarm.Alarm_active && fon_level < Settings.Alarm_level) || (Alarm.Alarm_active && Settings.Alarm_level == 0))
   {
     sound_deactivate();
     Power.Sound_active = DISABLE;

@@ -12,9 +12,7 @@ void adc_check_event(void)
     ADC_Cmd(ADC1, DISABLE);     // ВЫКЛ!
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, DISABLE);
     RCC_HSICmd(DISABLE);        // Выключаем HSI
-    ADCData.Batt_voltage =
-        ((ADCData.Calibration_bit_voltage * ADCData.Batt_voltage_raw) /
-         1000) * 2;
+    ADCData.Batt_voltage = ((ADCData.Calibration_bit_voltage * ADCData.Batt_voltage_raw) / 1000) * 2;
 
     reset_TIM_prescallers_and_Compare();
 
@@ -48,8 +46,7 @@ void adc_calibration(void)
   x /= 10;
 
   ADCData.Calibration_bit_voltage = ((Settings.VRef * 1000) / x);       // битовое значение соотв. напряжению референса 1.22в, из него вычисляем скольким микровольтам соответствует 1 бит.
-  ADCData.Power_voltage =
-      ((ADCData.Calibration_bit_voltage * 4095) / 1000);
+  ADCData.Power_voltage = ((ADCData.Calibration_bit_voltage * 4095) / 1000);
 
   dac_reload();                 //перезагрузить в ЦАП новое напряжение отсечки накачки
 }

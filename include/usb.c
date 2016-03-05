@@ -34,8 +34,7 @@ uint8_t prepare_data(uint32_t mode, uint16_t * massive_pointer, uint8_t start_ke
 
     if (flash_read_massive((*massive_pointer), mode) < 0xff &&
         flash_read_massive((*massive_pointer) + 1, mode) < 0xff &&
-        flash_read_massive((*massive_pointer) + 2, mode) < 0xff &&
-        flash_read_massive((*massive_pointer) + 3, mode) < 0xff)
+        flash_read_massive((*massive_pointer) + 2, mode) < 0xff && flash_read_massive((*massive_pointer) + 3, mode) < 0xff)
     {                           // Если возможно сжатие массива
       data_key = start_key - 0x70;
       fon_1_4 = flash_read_massive((*massive_pointer), mode) & 0xff;
@@ -182,17 +181,12 @@ void time_loading(uint32_t current_rcvd_pointer)
           (Receive_Buffer[current_rcvd_pointer + 5] & 0xff))
       ||
       (!(((RTC_TimeStructure.RTC_Seconds + 1) >=
-          Receive_Buffer[current_rcvd_pointer + 6])
-         && ((RTC_TimeStructure.RTC_Seconds - 1) <=
-             Receive_Buffer[current_rcvd_pointer + 6]))))
+          Receive_Buffer[current_rcvd_pointer + 6]) && ((RTC_TimeStructure.RTC_Seconds - 1) <= Receive_Buffer[current_rcvd_pointer + 6]))))
   {                             // Если время не совпадает, устанавливаем новое (+-1 секунда)
     RTC_TimeStructInit(&RTC_TimeStructure);
-    RTC_TimeStructure.RTC_Hours =
-        Receive_Buffer[current_rcvd_pointer + 4] & 0xff;
-    RTC_TimeStructure.RTC_Minutes =
-        Receive_Buffer[current_rcvd_pointer + 5] & 0xff;
-    RTC_TimeStructure.RTC_Seconds =
-        Receive_Buffer[current_rcvd_pointer + 6] & 0xff;
+    RTC_TimeStructure.RTC_Hours = Receive_Buffer[current_rcvd_pointer + 4] & 0xff;
+    RTC_TimeStructure.RTC_Minutes = Receive_Buffer[current_rcvd_pointer + 5] & 0xff;
+    RTC_TimeStructure.RTC_Seconds = Receive_Buffer[current_rcvd_pointer + 6] & 0xff;
 
     need_update_wakeup = ENABLE;
 
@@ -210,17 +204,12 @@ void time_loading(uint32_t current_rcvd_pointer)
   if ((RTC_DateStructure.RTC_Date !=
        (Receive_Buffer[current_rcvd_pointer + 3] & 0xff))
       || (RTC_DateStructure.RTC_Month !=
-          (Receive_Buffer[current_rcvd_pointer + 2] & 0xff))
-      || (RTC_DateStructure.RTC_Year !=
-          (Receive_Buffer[current_rcvd_pointer + 1] & 0xff)))
+          (Receive_Buffer[current_rcvd_pointer + 2] & 0xff)) || (RTC_DateStructure.RTC_Year != (Receive_Buffer[current_rcvd_pointer + 1] & 0xff)))
   {                             // Если дата не совпадает, устанавливаем новую
     RTC_DateStructInit(&RTC_DateStructure);
-    RTC_DateStructure.RTC_Date =
-        Receive_Buffer[current_rcvd_pointer + 3] & 0xff;
-    RTC_DateStructure.RTC_Month =
-        Receive_Buffer[current_rcvd_pointer + 2] & 0xff;
-    RTC_DateStructure.RTC_Year =
-        Receive_Buffer[current_rcvd_pointer + 1] & 0xff;
+    RTC_DateStructure.RTC_Date = Receive_Buffer[current_rcvd_pointer + 3] & 0xff;
+    RTC_DateStructure.RTC_Month = Receive_Buffer[current_rcvd_pointer + 2] & 0xff;
+    RTC_DateStructure.RTC_Year = Receive_Buffer[current_rcvd_pointer + 1] & 0xff;
 
     need_update_wakeup = ENABLE;
 
@@ -366,14 +355,10 @@ void USB_work()
             {
               if (current_rcvd_pointer + 4 >= VIRTUAL_COM_PORT_DATA_SIZE)
                 return;
-              eeprom_write(unlock_0_address,
-                           Receive_Buffer[current_rcvd_pointer + 1]);
-              eeprom_write(unlock_1_address,
-                           Receive_Buffer[current_rcvd_pointer + 2]);
-              eeprom_write(unlock_2_address,
-                           Receive_Buffer[current_rcvd_pointer + 3]);
-              eeprom_write(unlock_3_address,
-                           Receive_Buffer[current_rcvd_pointer + 4]);
+              eeprom_write(unlock_0_address, Receive_Buffer[current_rcvd_pointer + 1]);
+              eeprom_write(unlock_1_address, Receive_Buffer[current_rcvd_pointer + 2]);
+              eeprom_write(unlock_2_address, Receive_Buffer[current_rcvd_pointer + 3]);
+              eeprom_write(unlock_3_address, Receive_Buffer[current_rcvd_pointer + 4]);
               current_rcvd_pointer += 5;
               LcdClear_massive();
               LcdUpdate();

@@ -15,9 +15,7 @@ void full_erase_flash(void)     // Erase full dataflash
   FLASH_Unlock();
 
   /* Clear all pending flags */
-  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                  | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR |
-                  FLASH_FLAG_OPTVERRUSR);
+  FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
 
   Address = FLASH_START_ADDR;
   NbrOfPage = ((FLASH_END_ADDR - Address) + 1) >> 8;
@@ -43,9 +41,7 @@ void full_erase_flash(void)     // Erase full dataflash
       MemoryProgramStatus_eeprom = FAILED;
     } else
     {
-      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR |
-                      FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR |
-                      FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
+      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
     }
   }
 
@@ -63,9 +59,7 @@ void page_erase_flash(uint32_t page)    // Erase 32 elements
     FLASH_Unlock();
 
     /* Clear all pending flags */
-    FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                    | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR |
-                    FLASH_FLAG_OPTVERRUSR);
+    FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
 
     Address = FLASH_START_ADDR + (page * FLASH_PAGE_SIZE);
     /* Erase the FLASH Program memory pages */
@@ -88,9 +82,7 @@ void page_erase_flash(uint32_t page)    // Erase 32 elements
       MemoryProgramStatus_eeprom = FAILED;
     } else
     {
-      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR |
-                      FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR |
-                      FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
+      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
     }
 
     FLASH_Lock();
@@ -113,9 +105,7 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
     FLASH_Unlock();
 
     /* Clear all pending flags */
-    FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                    | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR |
-                    FLASH_FLAG_OPTVERRUSR);
+    FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
 
     /* Write the FLASH Program memory using HalfPage operation */
 
@@ -136,9 +126,7 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
     {
     } else
     {
-      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR |
-                      FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR |
-                      FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
+      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
     }
 
     Address += FLASH_PAGE_SIZE >> 1;
@@ -155,16 +143,13 @@ void flash_write_page(uint32_t page)    // Write 32 element of massive ram_Doze_
       return;
     }
 
-    FLASHStatus_eeprom =
-        FLASH_ProgramHalfPage(Address, ram_max_fon_massive);
+    FLASHStatus_eeprom = FLASH_ProgramHalfPage(Address, ram_max_fon_massive);
 
     if (FLASHStatus_eeprom == FLASH_COMPLETE)
     {
     } else
     {
-      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR |
-                      FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR |
-                      FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
+      FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
     }
 
     FLASH_Lock();

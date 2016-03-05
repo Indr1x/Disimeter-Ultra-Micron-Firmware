@@ -119,12 +119,9 @@ void main_screen()
       RTC_GetDate(RTC_Format_BIN, &RTC_DateStructure);
       RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
 
-      sprintf(lcd_buf, "%0.2d.%0.2d.%0.2d", RTC_DateStructure.RTC_Date,
-              RTC_DateStructure.RTC_Month, RTC_DateStructure.RTC_Year);
+      sprintf(lcd_buf, "%0.2d.%0.2d.%0.2d", RTC_DateStructure.RTC_Date, RTC_DateStructure.RTC_Month, RTC_DateStructure.RTC_Year);
       LcdString(7, 5);          // // Выводим обычным текстом содержание буфера
-      sprintf(lcd_buf, "%0.2d:%0.2d:%0.2d", RTC_TimeStructure.RTC_Hours,
-              RTC_TimeStructure.RTC_Minutes,
-              RTC_TimeStructure.RTC_Seconds);
+      sprintf(lcd_buf, "%0.2d:%0.2d:%0.2d", RTC_TimeStructure.RTC_Hours, RTC_TimeStructure.RTC_Minutes, RTC_TimeStructure.RTC_Seconds);
       LcdString(7, 4);          // // Выводим обычным текстом содержание буфера
 
       break;
@@ -366,16 +363,13 @@ void menu_screen()
       }
 
     default:                   // во всех остальных случиях выводим по шаблону
-      sprintf(para_string, Menu_list[menu_struct_index].Param_is_N,
-              *Menu_list[menu_struct_index].Parameter_value);
+      sprintf(para_string, Menu_list[menu_struct_index].Param_is_N, *Menu_list[menu_struct_index].Parameter_value);
       break;
     }
 
     // Заплатка на мкЗв
     if ((menu_struct_index == 0) && Settings.units)
-      sprintf(para_string, LANG_UMKZV,
-              convert_mkr_sv(*Menu_list
-                             [menu_struct_index].Parameter_value));
+      sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value));
 
     // Заплатка на бета окно
     if (menu_struct_index == 15)
@@ -495,8 +489,7 @@ void stat_screen()
     LcdString(1, 6);
     sprintf(lcd_buf, "DAC V/R   %5i", ADCData.DAC_voltage_raw);
     LcdString(1, 7);
-    sprintf(lcd_buf, "DAC OUT   %5i",
-            DAC_GetDataOutputValue(DAC_Channel_2));
+    sprintf(lcd_buf, "DAC OUT   %5i", DAC_GetDataOutputValue(DAC_Channel_2));
     LcdString(1, 8);
 
 

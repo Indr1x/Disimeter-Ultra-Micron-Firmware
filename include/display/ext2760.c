@@ -36,8 +36,7 @@ void display_on()               // Инициализация порта LCD дисплея
   // ===============================================================================================  
   // LCD дисплей
   GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin =
-      GPIO_Pin_3 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
@@ -75,8 +74,7 @@ void display_off()              // Инициализация порта LCD дисплея
   // ===============================================================================================  
   // LCD дисплей
   GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin =
-      GPIO_Pin_3 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
@@ -443,8 +441,7 @@ void LcdStringBig(unsigned char x, unsigned char y)     //Displays a string at c
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,
-                    uint8_t y_end)
+void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end)
 {
   uint32_t x_lenght = 0, y_lenght = 0;
   uint32_t q = 0, i = 0, j = 0, pointer = 0;
@@ -472,8 +469,7 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,
         pointer = Detector_massive_pointer - q;
       } else
       {
-        pointer =
-            (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
+        pointer = (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
       }
 
       if (Detector_massive[pointer] > scalling_factor)
@@ -487,15 +483,12 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,
         pointer = Detector_massive_pointer - (x_end - q);
       } else
       {
-        pointer =
-            (Settings.Second_count >> 2) - ((x_end - q) -
-                                            Detector_massive_pointer);
+        pointer = (Settings.Second_count >> 2) - ((x_end - q) - Detector_massive_pointer);
       }
 
       i = Detector_massive[pointer];
       if (i > 0)
-        LcdLine(x_end - q, y_end, x_end - q,
-                y_end - ((i * y_lenght) / scalling_factor), 1);
+        LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
     }
   } else
   {                             // если время счета маленькое, то рисуем толстые линии
@@ -507,8 +500,7 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,
         pointer = Detector_massive_pointer - q;
       } else
       {
-        pointer =
-            (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
+        pointer = (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
       }
 
       if (Detector_massive[pointer] > scalling_factor)
@@ -522,15 +514,12 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,
         pointer = Detector_massive_pointer - ((x_end - q) / 2);
       } else
       {
-        pointer =
-            (Settings.Second_count >> 2) - (((x_end - q) / 2) -
-                                            Detector_massive_pointer);
+        pointer = (Settings.Second_count >> 2) - (((x_end - q) / 2) - Detector_massive_pointer);
       }
 
       i = Detector_massive[pointer];
       if (i > 0)
-        LcdLine(x_end - q, y_end, x_end - q,
-                y_end - ((i * y_lenght) / scalling_factor), 1);
+        LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
     }
   }
 
@@ -570,8 +559,7 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start,
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start,
-                  uint8_t y_end)
+void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end)
 {
   uint32_t i = 0;
   int massive_len = Settings.Second_count >> 2; // 50@200 62@250
@@ -636,22 +624,15 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
   sprintf(lcd_buf, LANG_H);
   LcdString(((start_char + 6) * 2), i + 1);
 
-  LcdLine(((start_char + 5) * 12) + 5, i * 8,
-          ((start_char + 5) * 12) + 18 + 5, i * 8, 1);
+  LcdLine(((start_char + 5) * 12) + 5, i * 8, ((start_char + 5) * 12) + 18 + 5, i * 8, 1);
   for (digit_num = 0; digit_num < 6; digit_num++)
   {
     LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num),
-            line * 16,
-            ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10,
-            line * 16, 1);
+            line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10, line * 16, 1);
     LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num),
-            line * 16,
-            ((start_char + digit_num - 1) * 10) + (2 * digit_num),
-            (line * 16) - 3, 1);
+            line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num), (line * 16) - 3, 1);
     LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10,
-            line * 16,
-            ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10,
-            (line * 16) - 3, 1);
+            line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10, (line * 16) - 3, 1);
   }
 }
 
@@ -680,8 +661,7 @@ void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
     LcdString(((start_char + 6) * 2), line + 1);
   }
 
-  LcdLine(((start_char + 5) * 12) + 5, line * 8,
-          ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
+  LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
 
   if (AB_fon < 1000000)
   {

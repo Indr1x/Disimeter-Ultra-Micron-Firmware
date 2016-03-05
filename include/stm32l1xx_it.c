@@ -357,8 +357,7 @@ void RTC_Alarm_IRQHandler(void)
 
         if (!Power.USB_active)
           madorc_impulse = 0;
-        pump_counter_avg_impulse_by_1sec[1] =
-            pump_counter_avg_impulse_by_1sec[0];
+        pump_counter_avg_impulse_by_1sec[1] = pump_counter_avg_impulse_by_1sec[0];
         pump_counter_avg_impulse_by_1sec[0] = 0;
         DataUpdate.pump_counter_update_time = 0;
 

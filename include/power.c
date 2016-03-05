@@ -13,8 +13,7 @@ void set_bor(void)
     FLASH_OB_Unlock();
 
     /* Clears the FLASH pending flags */
-    FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR
-                    | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR);
+    FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR);
 
     /* Select the desired V(BOR) Level --------------------------------------- */
     FLASH_OB_BORConfig(BOR_LEVEL);

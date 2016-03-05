@@ -47,8 +47,7 @@ void dac_reload()
     // 1000 - приведение к милливольтам, для минимизации ошибки целочисленного расчета
     // Расчет кофэицентов смотри в XLS файле !!!
     // ADCData.DAC_voltage_raw=(((Settings.Geiger_voltage*(1000-K3 ))/K4)-K1 )/K2; 
-    ADCData.DAC_voltage_raw =
-        (((Settings.Geiger_voltage * (1000 - 21)) / 11) - 200) / 34;
+    ADCData.DAC_voltage_raw = (((Settings.Geiger_voltage * (1000 - 21)) / 11) - 200) / 34;
   }
 #else
   ADCData.DAC_voltage_raw = ((Settings.Geiger_voltage * 1000) / 30 / 11);       // напряжение датчика/Ктансформации/коэффицент резистивного делителя

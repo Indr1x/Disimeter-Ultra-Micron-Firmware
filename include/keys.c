@@ -12,11 +12,9 @@ void plus_alarm(uint32_t * param)       // +
   if (*param == 0)
     return;
 
-  if ((*Menu_list[*param - 1].Parameter_value >= 1000)
-      && (*Menu_list[*param - 1].Parameter_value < 9999))
+  if ((*Menu_list[*param - 1].Parameter_value >= 1000) && (*Menu_list[*param - 1].Parameter_value < 9999))
     *Menu_list[*param - 1].Parameter_value += 500;
-  if ((*Menu_list[*param - 1].Parameter_value >= 100)
-      && (*Menu_list[*param - 1].Parameter_value < 1000))
+  if ((*Menu_list[*param - 1].Parameter_value >= 100) && (*Menu_list[*param - 1].Parameter_value < 1000))
     *Menu_list[*param - 1].Parameter_value += 100;
   if (*Menu_list[*param - 1].Parameter_value < 100)
     *Menu_list[*param - 1].Parameter_value += 25;
@@ -34,11 +32,9 @@ void minus_alarm(uint32_t * param)      // -
 
   if (*Menu_list[*param - 1].Parameter_value <= 100)
     *Menu_list[*param - 1].Parameter_value -= 25;
-  if ((*Menu_list[*param - 1].Parameter_value > 100)
-      && (*Menu_list[*param - 1].Parameter_value <= 1000))
+  if ((*Menu_list[*param - 1].Parameter_value > 100) && (*Menu_list[*param - 1].Parameter_value <= 1000))
     *Menu_list[*param - 1].Parameter_value -= 100;
-  if ((*Menu_list[*param - 1].Parameter_value > 1000)
-      && (*Menu_list[*param - 1].Parameter_value < 9999))
+  if ((*Menu_list[*param - 1].Parameter_value > 1000) && (*Menu_list[*param - 1].Parameter_value < 9999))
     *Menu_list[*param - 1].Parameter_value -= 500;
   if (*Menu_list[*param - 1].Parameter_value > 9999)
     *Menu_list[*param - 1].Parameter_value = 9500;
@@ -57,11 +53,9 @@ void plus_sleep(uint32_t * param)       //+
     return;
 
   //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if (*Menu_list[*param - 1].Parameter_value >=
-      Menu_list[*param - 1].Max_limit)
+  if (*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Min_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value * 2;        //*2
@@ -75,11 +69,9 @@ void minus_sleep(uint32_t * param)      //-
   if (*param == 0)
     return;
 
-  if (*Menu_list[*param - 1].Parameter_value <=
-      Menu_list[*param - 1].Min_limit)
+  if (*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Max_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value / 2;        // /2
@@ -192,11 +184,9 @@ void plus_one(uint32_t * param) // +1
     return;
 
   //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if (*Menu_list[*param - 1].Parameter_value >=
-      Menu_list[*param - 1].Max_limit)
+  if (*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Min_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 1;        //+1
@@ -211,11 +201,9 @@ void minus_one(uint32_t * param)        // -1
     return;
 
   //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-  if (*Menu_list[*param - 1].Parameter_value <=
-      Menu_list[*param - 1].Min_limit)
+  if (*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Max_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 1;        // -1
@@ -275,11 +263,9 @@ void plus_ten(uint32_t * param) // +10
     return;
 
   //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if (*Menu_list[*param - 1].Parameter_value >=
-      Menu_list[*param - 1].Max_limit)
+  if (*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Min_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 10;       //+10
@@ -295,11 +281,9 @@ void minus_ten(uint32_t * param)        // -10
     return;
 
   //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-  if (*Menu_list[*param - 1].Parameter_value <=
-      Menu_list[*param - 1].Min_limit)
+  if (*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Max_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 10;       // -10
@@ -318,11 +302,9 @@ void plus_50(uint32_t * param)  // +50
     return;
 
   //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if (*Menu_list[*param - 1].Parameter_value >=
-      Menu_list[*param - 1].Max_limit)
+  if (*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Min_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 50;       //+50
@@ -337,11 +319,9 @@ void minus_50(uint32_t * param) // -50
     return;
 
   //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-  if (*Menu_list[*param - 1].Parameter_value <=
-      Menu_list[*param - 1].Min_limit)
+  if (*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Max_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 50;       // -50
@@ -361,11 +341,9 @@ void plus_500(uint32_t * param) // +50
     return;
 
   //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if (*Menu_list[*param - 1].Parameter_value >=
-      Menu_list[*param - 1].Max_limit)
+  if (*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Min_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 500;      //+500
@@ -380,11 +358,9 @@ void minus_500(uint32_t * param)        // -500
     return;
 
   //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-  if (*Menu_list[*param - 1].Parameter_value <=
-      Menu_list[*param - 1].Min_limit)
+  if (*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
   {
-    *Menu_list[*param - 1].Parameter_value =
-        Menu_list[*param - 1].Max_limit;
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 500;      // -500
@@ -656,7 +632,6 @@ void keys_proccessing(void)
       }
     }
   }
-
 
 
   /////////////////////////////////
