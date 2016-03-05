@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "STM32L1xx.h"                  // Device header
+#include "STM32L1xx.h"          // Device header
 #include "main.h"
 
 #define DOR_OFFSET                 ((uint32_t)0x0000002C)
@@ -11,26 +11,27 @@
 void Pump_now(FunctionalState pump)
 {
 
-	if(pump==ENABLE && !Power.Pump_deny)
-	{
-		Power.Pump_active=ENABLE;
-		dac_on();  // Включаем ЦАП
-		TIM9->EGR |= 0x0001;  // Устанавливаем бит UG для принудительного сброса счетчика
-		TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
+  if (pump == ENABLE && !Power.Pump_deny)
+  {
+    Power.Pump_active = ENABLE;
+    dac_on();                   // Включаем ЦАП
+    TIM9->EGR |= 0x0001;        // Устанавливаем бит UG для принудительного сброса счетчика
+    TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
 
-		TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Enable); // разрешить накачку	
-		TIM_ITConfig(TIM9, TIM_IT_Update, ENABLE);
+    TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Enable);    // разрешить накачку   
+    TIM_ITConfig(TIM9, TIM_IT_Update, ENABLE);
 
-		comp_on(); // Включаем компаратор
-	} else {
-		TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable); // запретить накачку
-		TIM_ITConfig(TIM9, TIM_IT_Update, DISABLE);
-		//pump_counter_avg_impulse_by_1sec[0]++;
-		comp_off();              // Выключаем компаратор
-		dac_off(); // Выключаем ЦАП
-		TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
-		Power.Pump_active=DISABLE;
-	}
+    comp_on();                  // Включаем компаратор
+  } else
+  {
+    TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);   // запретить накачку
+    TIM_ITConfig(TIM9, TIM_IT_Update, DISABLE);
+    //pump_counter_avg_impulse_by_1sec[0]++;
+    comp_off();                 // Выключаем компаратор
+    dac_off();                  // Выключаем ЦАП
+    TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
+    Power.Pump_active = DISABLE;
+  }
 }
 
 // ===============================================================================================
@@ -38,20 +39,25 @@ void Pump_now(FunctionalState pump)
 
 void check_wakeup_keys(void)
 {
-		if((Power.led_sleep_time>0)&&(Power.Display_active)) // Управление подсветкой
-		{
-			GPIO_ResetBits(GPIOC,GPIO_Pin_13);// Включаем подсветку 
-		} else {
-			GPIO_SetBits(GPIOC,GPIO_Pin_13);// Выключаем подсветку  				
-		}			
+  if ((Power.led_sleep_time > 0) && (Power.Display_active))     // Управление подсветкой
+  {
+    GPIO_ResetBits(GPIOC, GPIO_Pin_13); // Включаем подсветку 
+  } else
+  {
+    GPIO_SetBits(GPIOC, GPIO_Pin_13);   // Выключаем подсветку                                  
+  }
 
-	if ((!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3) && GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) && !GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6)) || Power.Display_active)
-	{
-		if((Settings.Sound == 1) || (Settings.Sound == 2))sound_activate();
-    Power.sleep_time=Settings.Sleep_time;
-		Power.led_sleep_time=Settings.Sleep_time-3;
-	}
-	
+  if ((!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3)
+       && GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4)
+       && !GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6))
+      || Power.Display_active)
+  {
+    if ((Settings.Sound == 1) || (Settings.Sound == 2))
+      sound_activate();
+    Power.sleep_time = Settings.Sleep_time;
+    Power.led_sleep_time = Settings.Sleep_time - 3;
+  }
+
 }
 
 // ===============================================================================================
@@ -117,10 +123,10 @@ FunctionalState check_license(void)
 // ===============================================================================================
 float convert_mkr_sv(uint32_t mkrn)
 {
-	float sv=0;
-	sv=mkrn;
-	sv*=0.0098;
-	return sv;
+  float sv = 0;
+  sv = mkrn;
+  sv *= 0.0098;
+  return sv;
 }
 
 
@@ -129,109 +135,110 @@ float convert_mkr_sv(uint32_t mkrn)
 // ===============================================================================================
 uint32_t calc_ab(void)
 {
-	uint32_t i;
-	float gamma_level=0;
-	float AB_level=0;
-	float pi4=0.78539815;  // Пи/4
-	float S=0;  //
-	float S_multipiller=0;  //
+  uint32_t i;
+  float gamma_level = 0;
+  float AB_level = 0;
+  float pi4 = 0.78539815;       // Пи/4
+  float S = 0;                  //
+  float S_multipiller = 0;      //
 // fon_level - гамма фон мкР/ч
 // fon_level/(Settings.Second_count/60) - частиц в минуту по гамме
-	for(i=0;i<15;i++)
-	{
-		AB_level+=Detector_AB_massive[i]; // подсчет импульсов за минуту
-	}
-	gamma_level=(float)fon_level/((float)Settings.Second_count/60);  // 198 имп/м
-	
-	if(AB_level<=gamma_level) return 0;
-	
-	AB_level-=gamma_level;
-	
-	// Компенсация процента регистрации счетчика
-	AB_level*=100;
-	AB_level=AB_level/(float)Settings.Beta_procent;
-	
-	
-	S=pi4*((float)Settings.Beta_window/10)*((float)Settings.Beta_window/10); //площадь отверстия
-	S_multipiller=100/S; // на сколько надо умножить частицы чтобы выйки на "частиц на см2 за минуту"
-	S=AB_level*S_multipiller;
-	
-	return (uint32_t)S;
+  for (i = 0; i < 15; i++)
+  {
+    AB_level += Detector_AB_massive[i]; // подсчет импульсов за минуту
+  }
+  gamma_level = (float) fon_level / ((float) Settings.Second_count / 60);       // 198 имп/м
+
+  if (AB_level <= gamma_level)
+    return 0;
+
+  AB_level -= gamma_level;
+
+  // Компенсация процента регистрации счетчика
+  AB_level *= 100;
+  AB_level = AB_level / (float) Settings.Beta_procent;
+
+
+  S = pi4 * ((float) Settings.Beta_window / 10) * ((float) Settings.Beta_window / 10);  //площадь отверстия
+  S_multipiller = 100 / S;      // на сколько надо умножить частицы чтобы выйки на "частиц на см2 за минуту"
+  S = AB_level * S_multipiller;
+
+  return (uint32_t) S;
 }
 
 
 // ===============================================================================================
 void recalculate_fon(void)
 {
-	int i,pointer;
-	int massive_len=Settings.Second_count>>2; // 50@200 62@250
-	int recalc_len=massive_len/auto_speedup_factor; // 62/9 = 6.8
-	float tmp;
-	
-	fon_level=0;				  
-					
-	for(i=0;i<recalc_len;i++)
-	{
-		if(Detector_massive_pointer>=i)
-		{
-			pointer=Detector_massive_pointer-i;
-		}else
-		{
-			pointer=massive_len-(i-Detector_massive_pointer);
-		}
-		fon_level+=Detector_massive[pointer];
-	}
-	tmp=fon_level; // фон 6-ти ячеек (при ускорении 9)... 24 000
-	tmp=tmp*auto_speedup_factor;
-	tmp=tmp+(((tmp/recalc_len)/auto_speedup_factor)*(massive_len % auto_speedup_factor)); // ячейка 24000/6=4000; остаток от деления 8
-																																												// (4000/9*)8=3552; 24000+3552=27552
-	fon_level=(uint32_t)tmp;
+  int i, pointer;
+  int massive_len = Settings.Second_count >> 2; // 50@200 62@250
+  int recalc_len = massive_len / auto_speedup_factor;   // 62/9 = 6.8
+  float tmp;
+
+  fon_level = 0;
+
+  for (i = 0; i < recalc_len; i++)
+  {
+    if (Detector_massive_pointer >= i)
+    {
+      pointer = Detector_massive_pointer - i;
+    } else
+    {
+      pointer = massive_len - (i - Detector_massive_pointer);
+    }
+    fon_level += Detector_massive[pointer];
+  }
+  tmp = fon_level;              // фон 6-ти ячеек (при ускорении 9)... 24 000
+  tmp = tmp * auto_speedup_factor;
+  tmp = tmp + (((tmp / recalc_len) / auto_speedup_factor) * (massive_len % auto_speedup_factor));       // ячейка 24000/6=4000; остаток от деления 8
+  // (4000/9*)8=3552; 24000+3552=27552
+  fon_level = (uint32_t) tmp;
 }
 
 
 // ===============================================================================================
 void sleep_mode(FunctionalState sleep)
-{ 
-  if(Settings.Sleep_time>0 && !Power.USB_active)
+{
+  if (Settings.Sleep_time > 0 && !Power.USB_active)
   {
-		Power.Pump_deny=ENABLE;
-		if(Power.Pump_active)Pump_now(DISABLE);
-		
-		set_msi();
-    if(sleep)
+    Power.Pump_deny = ENABLE;
+    if (Power.Pump_active)
+      Pump_now(DISABLE);
+
+    set_msi();
+    if (sleep)
     {
-			RTC_ITConfig(RTC_IT_WUT, DISABLE);
+      RTC_ITConfig(RTC_IT_WUT, DISABLE);
 
-			Power.led_sleep_time=0;
-			GPIO_SetBits(GPIOC,GPIO_Pin_13);// Выключаем подсветку  				
+      Power.led_sleep_time = 0;
+      GPIO_SetBits(GPIOC, GPIO_Pin_13); // Выключаем подсветку                                  
 
-      display_off(); // выключить дисплей
- 			GPIO_ResetBits(GPIOA,GPIO_Pin_7);// Фиксируем режим 1.8 вольта, с низким потреблением ножки
+      display_off();            // выключить дисплей
+      GPIO_ResetBits(GPIOA, GPIO_Pin_7);        // Фиксируем режим 1.8 вольта, с низким потреблением ножки
 
-			delay_ms(1000); // подождать установки напряжения
-			DataUpdate.Need_batt_voltage_update=ENABLE; // разрешить работу АЦП
-			adc_check_event(); // запустить преобразование
-			delay_ms(100); // подождать установки напряжения
+      delay_ms(1000);           // подождать установки напряжения
+      DataUpdate.Need_batt_voltage_update = ENABLE;     // разрешить работу АЦП
+      adc_check_event();        // запустить преобразование
+      delay_ms(100);            // подождать установки напряжения
 
-			PWR_FastWakeUpCmd(DISABLE);
-			PWR_UltraLowPowerCmd(ENABLE); 
-			PWR_PVDCmd(DISABLE);
-			RTC_ITConfig(RTC_IT_WUT, ENABLE);
-    }
-    else
+      PWR_FastWakeUpCmd(DISABLE);
+      PWR_UltraLowPowerCmd(ENABLE);
+      PWR_PVDCmd(DISABLE);
+      RTC_ITConfig(RTC_IT_WUT, ENABLE);
+    } else
     {
-			RTC_ITConfig(RTC_IT_WUT, DISABLE);
-			GPIO_SetBits(GPIOA,GPIO_Pin_7);// Переключаем в режим 3 вольта
-			delay_ms(400); // подождать установки напряжения
-      display_on(); // включить дисплей
-			DataUpdate.Need_batt_voltage_update=ENABLE; // разрешить работу АЦП
-			DataUpdate.Need_display_update=ENABLE;
-			adc_check_event(); // запустить преобразование
-			RTC_ITConfig(RTC_IT_WUT, ENABLE);
-			sound_deactivate();
+      RTC_ITConfig(RTC_IT_WUT, DISABLE);
+      GPIO_SetBits(GPIOA, GPIO_Pin_7);  // Переключаем в режим 3 вольта
+      delay_ms(400);            // подождать установки напряжения
+      display_on();             // включить дисплей
+      DataUpdate.Need_batt_voltage_update = ENABLE;     // разрешить работу АЦП
+      DataUpdate.Need_display_update = ENABLE;
+      adc_check_event();        // запустить преобразование
+      RTC_ITConfig(RTC_IT_WUT, ENABLE);
+      sound_deactivate();
     }
-		Power.Pump_deny=DISABLE;
-  } 
+    Power.Pump_deny = DISABLE;
+  }
 }
 
 
@@ -239,32 +246,34 @@ void sleep_mode(FunctionalState sleep)
 // ===============================================================================================
 void geiger_calc_fon(void)
 {
-	DataUpdate.Need_fon_update=DISABLE;  
-	DataUpdate.Need_display_update=ENABLE;
-  if(fon_level>Settings.Alarm_level && Settings.Alarm_level>0 && Alarm.Alarm_active==DISABLE)
+  DataUpdate.Need_fon_update = DISABLE;
+  DataUpdate.Need_display_update = ENABLE;
+  if (fon_level > Settings.Alarm_level && Settings.Alarm_level > 0
+      && Alarm.Alarm_active == DISABLE)
   {
-    Alarm.Alarm_active=ENABLE;
-		Alarm.User_cancel=DISABLE;
-		if(Power.Display_active==DISABLE)
-		{
-			screen=1;
-			Power.sleep_time=Settings.Sleep_time;
-			Power.led_sleep_time=Settings.Sleep_time-3;
-			sleep_mode(DISABLE);
-			sound_activate();
-		} else sound_activate();
-    
+    Alarm.Alarm_active = ENABLE;
+    Alarm.User_cancel = DISABLE;
+    if (Power.Display_active == DISABLE)
+    {
+      screen = 1;
+      Power.sleep_time = Settings.Sleep_time;
+      Power.led_sleep_time = Settings.Sleep_time - 3;
+      sleep_mode(DISABLE);
+      sound_activate();
+    } else
+      sound_activate();
+
   }
-  if((Alarm.Alarm_active && fon_level<Settings.Alarm_level) || (Alarm.Alarm_active && Settings.Alarm_level==0))
+  if ((Alarm.Alarm_active && fon_level < Settings.Alarm_level)
+      || (Alarm.Alarm_active && Settings.Alarm_level == 0))
   {
-		sound_deactivate();
-    Power.Sound_active=DISABLE;
-    Alarm.Alarm_active=DISABLE;
-    Alarm.User_cancel=DISABLE;
-    Alarm.Alarm_beep_count=0;
-    
+    sound_deactivate();
+    Power.Sound_active = DISABLE;
+    Alarm.Alarm_active = DISABLE;
+    Alarm.User_cancel = DISABLE;
+    Alarm.Alarm_beep_count = 0;
+
   }
 }
+
 // ===============================================================================================
-
-
