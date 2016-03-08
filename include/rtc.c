@@ -7,40 +7,6 @@ __IO uint32_t LsiFreq = 0;
 __IO uint32_t CaptureNumber = 0, PeriodValue = 0;
 
 
-
-
-void RTC_TimeRegulate(void)
-{
-  RTC_TimeTypeDef RTC_TimeStructure;
-
-  uint32_t tmp_hh = 0xFF, tmp_mm = 0xFF, tmp_ss = 0xFF;
-
-
-  RTC_TimeStructure.RTC_H12 = RTC_H12_AM;
-
-  tmp_hh = 21;
-  RTC_TimeStructure.RTC_Hours = tmp_hh;
-
-  tmp_mm = 55;
-  RTC_TimeStructure.RTC_Minutes = tmp_mm;
-  tmp_ss = 1;
-  RTC_TimeStructure.RTC_Seconds = tmp_ss;
-
-  /* Configure the RTC time register */
-  if(RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure) == ERROR)
-  {
-    //    printf("\n\r>> !! RTC Set Time failed. !! <<\n\r");
-  } else
-  {
-    //    printf("\n\r>> !! RTC Set Time success. !! <<\n\r");
-    //    RTC_TimeShow();
-    /* Indicator for the RTC configuration */
-    RTC_WriteBackupRegister(RTC_BKP_DR0, 0x32F2);
-  }
-
-}
-
-
 #define RTC_AlarmMask_Exept_seconds                 ((uint32_t)0x80808000)      // Все кроме секунд
 
 void Set_next_alarm_wakeup(void)
@@ -68,9 +34,11 @@ void Set_next_alarm_wakeup(void)
 
 }
 
+
 void RTC_Config(void)
 {
   uint32_t SynchPrediv;
+  FunctionalState old_rtc = DISABLE;
 
   NVIC_InitTypeDef NVIC_InitStructure;
   EXTI_InitTypeDef EXTI_InitStructure;
@@ -78,12 +46,17 @@ void RTC_Config(void)
   /* Enable the PWR clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 
+  if(RTC_ReadBackupRegister(RTC_BKP_DR0) == 0x32F2)
+    old_rtc = ENABLE;
+
   /* Allow access to RTC */
   PWR_RTCAccessCmd(ENABLE);
 
-  RCC_RTCResetCmd(ENABLE);
-  RCC_RTCResetCmd(DISABLE);
-
+  if(old_rtc == DISABLE)
+  {
+    RCC_RTCResetCmd(ENABLE);
+    RCC_RTCResetCmd(DISABLE);
+  }
 #ifdef version_204              // версия без кварца
   if(Settings.LSI_freq == 0x00)
     Settings.LSI_freq = 37000;
@@ -103,11 +76,13 @@ void RTC_Config(void)
 
   /* Enable the RTC Clock */
   RCC_RTCCLKCmd(ENABLE);
-
-  RTC_InitStructure.RTC_AsynchPrediv = 0x7F;
-  RTC_InitStructure.RTC_SynchPrediv = SynchPrediv;
-  RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
-  RTC_Init(&RTC_InitStructure);
+  if(old_rtc == DISABLE)
+  {
+    RTC_InitStructure.RTC_AsynchPrediv = 0x7F;
+    RTC_InitStructure.RTC_SynchPrediv = SynchPrediv;
+    RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
+    RTC_Init(&RTC_InitStructure);
+  }
 
   /* Wait for RTC APB registers synchronisation */
   RTC_WaitForSynchro();

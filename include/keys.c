@@ -385,8 +385,7 @@ void plus_reboot(uint32_t * param)      // перезагрузка
   LcdString(1, 8);              // // Выводим обычным текстом содержание буфера
 
   LcdUpdate();                  // записываем данные из сформированного фрейм-буфера на дисплей
-
-  delay_ms(6000);
+  delay_ms(3000);
   IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
   IWDG_SetPrescaler(IWDG_Prescaler_4);
   IWDG_SetReload(2);
@@ -411,8 +410,9 @@ void minus_poweroff(uint32_t * param)   // выключение
   LcdString(1, 8);              // // Выводим обычным текстом содержание буфера
 
   LcdUpdate();                  // записываем данные из сформированного фрейм-буфера на дисплей
-  delay_ms(6000);
 
+  RTC_WriteBackupRegister(RTC_BKP_DR0, 0x0);
+  delay_ms(3000);
 
   sleep_mode(ENABLE);
   poweroff_state = ENABLE;

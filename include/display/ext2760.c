@@ -146,8 +146,9 @@ void LcdInit()
   if(Settings.Display_reverse & 0x01)
     LcdSend(0xC8, lcd_CMD);     // зеркалит развертку по Y
   if(Settings.Display_reverse & 0x02)
-    LcdSend(0xA1, lcd_CMD);     // зеркалит развертку по ’
-  //LcdSend(0xA1,lcd_CMD);
+    LcdSend(0xA1, lcd_CMD);     // зеркалит развертку по ’ на новых диспле€х
+  if(Settings.Display_reverse & 0x04)
+    LcdSend(0xA0, lcd_CMD);     // зеркалит развертку по ’ на старых диспле€х
 
 }
 

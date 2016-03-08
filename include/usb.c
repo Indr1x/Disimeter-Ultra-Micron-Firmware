@@ -217,6 +217,7 @@ void time_loading(uint32_t current_rcvd_pointer)
     RTC_ClearFlag(RTC_FLAG_ALRAF);
 
     RTC_SetDate(RTC_Format_BIN, &RTC_DateStructure);
+    RTC_WriteBackupRegister(RTC_BKP_DR0, 0x32F2);
   }
   //-----------------------------------------------------------------------------------------
 
