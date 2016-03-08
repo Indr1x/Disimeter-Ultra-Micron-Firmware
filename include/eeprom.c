@@ -25,6 +25,7 @@ void eeprom_write_default_settings(void)
     Settings.Beta_window = 20;
     Settings.Beta_procent = 37;
     Settings.VRef = 1224;
+    Settings.Pump_aggressive = 0;
     eeprom_write_settings();    // Запись
   }
 }
@@ -61,6 +62,8 @@ void eeprom_write_settings(void)
     eeprom_write(Beta_procent_address, Settings.Beta_procent);
   if(eeprom_read(VRef_address) != Settings.VRef)
     eeprom_write(VRef_address, Settings.VRef);
+  if(eeprom_read(Pump_aggressive_address) != Settings.Pump_aggressive)
+    eeprom_write(Pump_aggressive_address, Settings.Pump_aggressive);
   if(eeprom_read(units_address) != Settings.units)
     eeprom_write(units_address, Settings.units);
   if(Settings.LSI_freq != 0x00) // если запустился кварц, попытки сохранения игнорировать
@@ -137,6 +140,7 @@ void eeprom_read_settings(void)
   Settings.Beta_window = eeprom_read(Beta_window_address);
   Settings.Beta_procent = eeprom_read(Beta_procent_address);
   Settings.VRef = eeprom_read(VRef_address);
+  Settings.Pump_aggressive = eeprom_read(Pump_aggressive_address);
 
   // Если не установленны какие-то из важных параметров, то произвести сброс.
   if((Settings.VRef == 0) ||

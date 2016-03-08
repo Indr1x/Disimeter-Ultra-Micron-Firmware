@@ -43,6 +43,7 @@ typedef enum
 #define Beta_window_address																			0x6C
 #define Beta_procent_address																		0x70
 #define VRef_address																		        0x74
+#define Pump_aggressive_address																		        0x78
 
 extern uint32_t NbrOfPage, Address;
 

@@ -135,6 +135,7 @@ typedef struct
 
   uint32_t AB_mode;             // 0-גûךכ 1-דאללא 2-אכüפא-בועא
   uint32_t VRef;                // 0-גûךכ 1-דאללא 2-אכüפא-בועא
+  uint32_t Pump_aggressive;
 } SettingsDef;
 
 

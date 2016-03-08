@@ -27,7 +27,8 @@ MenuItem Menu_list[max_struct_index] = {
 // «аплатка на бета окно if(menu_struct_index == 15) ! »справить в коде при изменении пор€дка пунктов меню!
 {0x01, LANG_BWINDOW,	"",					"",			LANG_BWINDOW_,		&Settings.Beta_window,			1,			100,		20,		&plus_one,				&minus_one},
 {0x01, LANG_BPROCENT,	"",					"",			LANG_BPROCENT_,		&Settings.Beta_procent,			1,			100,		37,		&plus_one,				&minus_one},
-{0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref}
+{0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
+{0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            	&Settings.Pump_aggressive,		0,	    	1,  		0,  	&plus_one,		    	&minus_one}
 /*	{  0x01, "»ндукци€",	    "",		  						"",			        	"%uм“л",	     &Settings.Pump_Energy,                                  150,     450,      250,     &plus_50,                 &minus_50},
   {  0x00, "ѕодсветка",		  "откл",							"",			        	"%uсек",	     &Settings.Led_Sleep_time,                               0,       300,      30,      &plus_sleep,              &minus_sleep},
   {  0x01, "«вук",	        "",		  						"",			        	"%uк√ц",	     &Settings.Sound_freq,                                   1,       10,       8,       &plus_one,                &minus_one}

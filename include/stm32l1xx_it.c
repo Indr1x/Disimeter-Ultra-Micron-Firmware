@@ -529,16 +529,24 @@ void RTC_Alarm_IRQHandler(void)
     }
     if(Pump_on_alarm == ENABLE)
     {
-      if(Pump_on_alarm_count > 1)
+      if(Settings.Pump_aggressive == ENABLE)
       {
-        Pump_now(ENABLE);       // оптимизируем накачку вынося из вейкап таймера
-        Pump_on_alarm_count = 0;
+        Pump_now(ENABLE);
       } else
-        Pump_on_alarm_count++;
+      {
+        if(Pump_on_alarm_count > 1)
+        {
+          Pump_now(ENABLE);     // оптимизируем накачку вынося из вейкап таймера
+          Pump_on_alarm_count = 0;
+        } else
+        {
+          Pump_on_alarm_count++;
+        }
+      }
     }
-
   }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -631,7 +639,6 @@ void COMP_IRQHandler(void)
 #ifdef debug
           debug_wutr = i;
 #endif
-
 #ifdef version_401              // Для версии 4+
           if(i == 0x2000)
           {

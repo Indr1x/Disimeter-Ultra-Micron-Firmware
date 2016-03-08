@@ -37,6 +37,7 @@
 #define LANG_BETA_MEAS "Замер A-B"
 #define LANG_REF_VOLT  "кал.ИОН"
 #define LANG_REF_VOLT_ "%uмВ"
+#define LANG_PUMP_AGR  "Нак.Агрес."
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
@@ -131,6 +132,8 @@
 #define LANG_BETA_MEAS "A-B meas."
 #define LANG_REF_VOLT  "cal Vref"
 #define LANG_REF_VOLT_ "%umV"
+#define LANG_PUMP_AGR  "Pump AGR"
+
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
