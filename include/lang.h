@@ -127,12 +127,13 @@
 #define LANG_BWINDOW  "Window"
 #define LANG_BWINDOW_ "%2.1fDmm"
 #define LANG_BPROCENT "B-proc."
-#define LANG_BPROCENT_ "%9u%%"
+#define LANG_BPROCENT_ "%3u"
 #define LANG_CLEAR_FON "Clear rad"
 #define LANG_BETA_MEAS "A-B meas."
 #define LANG_REF_VOLT  "cal Vref"
 #define LANG_REF_VOLT_ "%umV"
 #define LANG_PUMP_AGR  "Pump AGR"
+
 
 ///////////////////////////////////////////////////////
 
