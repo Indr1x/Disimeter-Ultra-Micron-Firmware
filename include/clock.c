@@ -48,6 +48,11 @@ void set_msi()
   GPIO_InitTypeDef GPIO_InitStructure;
 
   TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);     // запретить накачку
+
+  FLASH_SetLatency(FLASH_Latency_1);
+  FLASH_PrefetchBufferCmd(ENABLE);
+  FLASH_ReadAccess64Cmd(ENABLE);
+
   RCC_MSICmd(ENABLE);           // Включить MSI
   while (RCC_GetFlagStatus(RCC_FLAG_MSIRDY) == RESET);  // Ждем включения MSI
 
@@ -63,8 +68,8 @@ void set_msi()
   /* PCLK2 = HCLK /1 */
   RCC->CFGR |= (uint32_t) RCC_CFGR_PPRE2_DIV1;
 
-  /* PCLK1 = HCLK /4 */
-  RCC->CFGR |= (uint32_t) RCC_CFGR_PPRE1_DIV4;
+  /* PCLK1 = HCLK /2 *///4
+  RCC->CFGR |= (uint32_t) RCC_CFGR_PPRE1_DIV2;
 
   RCC_MSIRangeConfig(RCC_MSIRange_6);   // 4.194 MHz
 
@@ -106,14 +111,16 @@ void set_msi()
     while (1);
   }
 
+
 // Переконфигурируем FLASH
-  FLASH_SetLatency(FLASH_Latency_0);
-  FLASH_PrefetchBufferCmd(DISABLE);
-  FLASH_ReadAccess64Cmd(DISABLE);
+  /*
+     FLASH_SetLatency(FLASH_Latency_0);
+     FLASH_PrefetchBufferCmd(DISABLE);
+     FLASH_ReadAccess64Cmd(DISABLE);
+   */
 
   PWR_VoltageScalingConfig(PWR_VoltageScaling_Range3);  // Voltage Scaling Range 3 (VCORE = 1.2V)
   while (PWR_GetFlagStatus(PWR_FLAG_VOS) != RESET);     // Wait Until the Voltage Regulator is ready
-
 
   reset_TIM_prescallers_and_Compare();
 

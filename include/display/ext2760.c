@@ -595,7 +595,13 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
   i = (line * 2) - 1;
   if(!Settings.units)
   {
-    sprintf(lcd_buf, "%6i", fon_level);
+    if(fon_level <= 999999)     // 1Ð/÷
+    {
+      sprintf(lcd_buf, "%6i", fon_level);
+    } else
+    {
+      sprintf(lcd_buf, "%5iK", fon_level / 1000);
+    }
     LcdStringBold(start_char, i);
 
 

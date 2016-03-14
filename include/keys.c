@@ -709,6 +709,7 @@ void keys_proccessing(void)
     if(Settings.AB_mode > 0)
     {
       Settings.AB_mode = 0;     // отмена режима Альфа-Бета
+      AB_fon = 0;
     } else
     {
       if(menu_select > 0)

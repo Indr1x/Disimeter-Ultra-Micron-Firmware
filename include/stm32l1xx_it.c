@@ -192,6 +192,7 @@ void EXTI9_5_IRQHandler(void)
         if(last_count_pump_on_impulse > 10)
         {
           pump_on_impulse = ENABLE;
+          last_count_pump_on_impulse = 0;
           Pump_now(ENABLE);
         } else
           last_count_pump_on_impulse++;
@@ -270,9 +271,9 @@ void TIM2_IRQHandler(void)
       if(Alarm.Alarm_active && !Alarm.User_cancel)
       {
         Alarm.Alarm_beep_count++;
-        if(Alarm.Alarm_beep_count == 50)
-          TIM_SetAutoreload(TIM10, 32);
         if(Alarm.Alarm_beep_count == 100)
+          TIM_SetAutoreload(TIM10, 32);
+        if(Alarm.Alarm_beep_count == 200)
         {
           TIM_SetAutoreload(TIM10, 16);
           Alarm.Alarm_beep_count = 0;
@@ -285,14 +286,14 @@ void TIM2_IRQHandler(void)
         {
           if(Sound_key_pressed) // нажатие кнопки
           {
-            if(Alarm.Tick_beep_count > 40)
+            if(Alarm.Tick_beep_count > 80)
             {
               Alarm.Tick_beep_count = 0;
               sound_deactivate();
             } else
               Alarm.Tick_beep_count++;
 
-          } else if(Alarm.Tick_beep_count > 3)  // тик датчика
+          } else if(Alarm.Tick_beep_count > 6)  // тик датчика
           {
             Alarm.Tick_beep_count = 0;
             sound_deactivate();
@@ -662,7 +663,7 @@ void COMP_IRQHandler(void)
           current_pulse_count = 0;
         } else
         {
-          last_count_pump_on_impulse = current_pulse_count;
+          //last_count_pump_on_impulse = current_pulse_count;
           pump_on_impulse = DISABLE;
         }
       }

@@ -6,20 +6,18 @@ void sound_activate(void)
 {
   if(!Power.USB_active)
   {
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+    //RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     if(Power.Display_active == ENABLE)
     {
+      Alarm.Tick_beep_count = 0;
       TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
       TIM10->EGR |= 0x0001;     // ”станавливаем бит UG дл€ принудительного сброса счетчика
       TIM2->EGR |= 0x0001;      // ”станавливаем бит UG дл€ принудительного сброса счетчика
       TIM_CCxCmd(TIM10, TIM_Channel_1, TIM_CCx_Enable); // разрешить подачу импульсов
       TIM_Cmd(TIM2, ENABLE);
-      Alarm.Tick_beep_count = 0;
       Power.Sound_active = ENABLE;
 #ifdef version_401
-      if(Settings.Vibro == 1)
-        GPIO_SetBits(GPIOA, GPIO_Pin_15);       // јктивируем вибромотор
-      if((Settings.Vibro > 1) && (Alarm.Alarm_active == ENABLE))
+      if((Settings.Vibro == 1) || ((Settings.Vibro > 1) && (Alarm.Alarm_active == ENABLE)))
         GPIO_SetBits(GPIOA, GPIO_Pin_15);       // јктивируем вибромотор
 #endif
     }
@@ -40,8 +38,9 @@ void sound_deactivate(void)
 
   TIM_SetAutoreload(TIM10, 16);
 
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, DISABLE);
+  //RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, DISABLE);
 
+  Alarm.Tick_beep_count = 0;
   Power.Sound_active = DISABLE;
   Sound_key_pressed = DISABLE;
 
@@ -60,9 +59,9 @@ void reset_TIM_prescallers_and_Compare(void)
 {
   uint32_t pump_period;
 
-  delay_ms(20);
+  //delay_ms(20);
   SystemCoreClockUpdate();
-
+  //sound_activate();
   TIM_PrescalerConfig(TIM10, (uint32_t) (SystemCoreClock / 128000) - 1, TIM_PSCReloadMode_Immediate);   // частота таймера 128 к√ц
   TIM_PrescalerConfig(TIM2, (uint32_t) (SystemCoreClock / 800) - 1, TIM_PSCReloadMode_Immediate);       // ƒелитель (1 тик = 1.25мс)
   TIM_PrescalerConfig(TIM9, (uint32_t) (SystemCoreClock / 4000000) - 1, TIM_PSCReloadMode_Immediate);   // 0.25 мкс
@@ -105,6 +104,7 @@ void timer9_Config(void)        // генераци€ накачки
   TIM_BaseConfig.TIM_ClockDivision = 0;
 #ifdef version_401
   TIM_BaseConfig.TIM_Period = 560;      // »«ћ≈–≈ЌЌќ ќ—÷џЋќћ, 560!  ќбщее количество тиков (скваженность) 140мкс (частота накачки 1с/140мкс=** к√ц)
+  //TIM_BaseConfig.TIM_Period = 300;      // »«ћ≈–≈ЌЌќ ќ—÷џЋќћ, 560!  ќбщее количество тиков (скваженность) 75мкс (частота накачки 1с/140мкс=** к√ц)
 #else
   TIM_BaseConfig.TIM_Period = 560;      // ќбщее количество тиков (скваженность) 140мкс
 #endif

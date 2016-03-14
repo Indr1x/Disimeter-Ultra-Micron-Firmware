@@ -486,11 +486,11 @@ void stat_screen()
     LcdString(1, 5);
     //sprintf (lcd_buf, LANG_DTIME,   debug_wutr/2);                        LcdString(1,7);
     //sprintf (lcd_buf, LANG_DSENS,   Wakeup.sensor_wakeup);                LcdString(1,8);
-    sprintf(lcd_buf, "ADC CAL   %5i", ADCData.Calibration_bit_voltage);
+    sprintf(lcd_buf, "Clk %8i", SystemCoreClock);
     LcdString(1, 6);
-    sprintf(lcd_buf, "DAC V/R   %5i", ADCData.DAC_voltage_raw);
+    sprintf(lcd_buf, "tim2pre %5i", TIM_GetPrescaler(TIM2));
     LcdString(1, 7);
-    sprintf(lcd_buf, "DAC OUT   %5i", DAC_GetDataOutputValue(DAC_Channel_2));
+    sprintf(lcd_buf, "tim10pr %5i", TIM_GetPrescaler(TIM10));
     LcdString(1, 8);
 
 
