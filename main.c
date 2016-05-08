@@ -52,7 +52,7 @@ uint32_t working_days = 0;
 uint32_t madorc_impulse = 0;
 
 uint32_t Detector_AB_massive[15];       // 1 минута, интервалами по 4 сек
-uint32_t AB_fon=0;                // Фон Альфа-Бета
+uint32_t AB_fon = 0;            // Фон Альфа-Бета
 
 
 FunctionalState Sound_key_pressed = DISABLE;
@@ -207,9 +207,9 @@ int main(void)
         //if(DataUpdate.RTC_tick_update==ENABLE)        RTC_tick_processing();
       } else
       {                         // Если фон очень высокий, переключаем частоту МК на максимум
-          if(ADCData.Power_voltage>2800)
-        if(SystemCoreClock < 20000000)  // Если частота ниже 20 мгц, поднять частоту
-          set_pll_for_usb();
+        if(ADCData.Power_voltage > 2800)
+          if(SystemCoreClock < 20000000)        // Если частота ниже 20 мгц, поднять частоту
+            set_pll_for_usb();
       }
     } else
       USB_work();               // если USB активен, попробовать передать данные

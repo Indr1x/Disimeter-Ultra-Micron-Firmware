@@ -168,10 +168,9 @@ uint32_t calc_ab(void)
 // ===============================================================================================
 void recalculate_fon(void)
 {
-  int i, pointer;
-  int massive_len = Settings.Second_count >> 2; // 50@200 62@250
-  int recalc_len = massive_len / auto_speedup_factor;   // 62/9 = 6.8
-  float tmp;
+  uint32_t i, pointer;
+  uint32_t massive_len = Settings.Second_count >> 2;    // 50@200 62@250
+  uint32_t recalc_len = massive_len / auto_speedup_factor;      // 62/9 = 6.8
 
   fon_level = 0;
 
@@ -186,11 +185,9 @@ void recalculate_fon(void)
     }
     fon_level += Detector_massive[pointer];
   }
-  tmp = fon_level;              // фон 6-ти €чеек (при ускорении 9)... 24 000
-  tmp = tmp * auto_speedup_factor;
-  tmp = tmp + (((tmp / recalc_len) / auto_speedup_factor) * (massive_len % auto_speedup_factor));       // €чейка 24000/6=4000; остаток от делени€ 8
+
+  fon_level = (fon_level * auto_speedup_factor) + ((fon_level / recalc_len) * (massive_len % auto_speedup_factor));   // фон 6-ти €чеек * 9 + €чейка 24000/6=4000; остаток от делени€ 8
   // (4000/9*)8=3552; 24000+3552=27552
-  fon_level = (uint32_t) tmp;
 }
 
 
