@@ -20,7 +20,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x00, LANG_BETA_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_ab_engage,		0x00},
 {0x01, LANG_CONTRAST,	"",					"",			"%u",				&Settings.contrast,				0,			15,			0,		&plus_one,				&minus_one},
 {0x01, LANG_REVERSE,	LANG_OFF,			"",			"%u",				&Settings.Display_reverse,		0,			5,			0,		&plus_one,				&minus_one},
-{0x01, LANG_COUNT,		"",					"",			LANG_USEC,			&Settings.Second_count,			200,		1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_COUNT,		"",					"",			LANG_USEC,			&Settings.Second_count,			100,		1450,		250,	&plus_ten,				&minus_ten},
 {0x01, "LSI",			LANG_QUARTZ,		"",			LANG_UHZ,			&Settings.LSI_freq,				26000,		56000,		38000,	&plus_500,				&minus_500},
 {0x01, LANG_V4PUMP,		"",					"",			LANG_UV4PUMP,		&Settings.v4_target_pump,		4,			14,			11,		&plus_one,				&minus_one},
 {0x01, LANG_VOLTAGE,	"",					"",			LANG_UV,			&Settings.Geiger_voltage,		300,		450,		380,	&plus_ten,				&minus_ten},
@@ -28,7 +28,8 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_BWINDOW,	"",					"",			LANG_BWINDOW_,		&Settings.Beta_window,			1,			100,		20,		&plus_one,				&minus_one},
 {0x01, LANG_BPROCENT,	"",					"",			LANG_BPROCENT_,		&Settings.Beta_procent,			1,			100,		37,		&plus_one,				&minus_one},
 {0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
-{0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            	&Settings.Pump_aggressive,		0,	    	1,  		0,  	&plus_one,		    	&minus_one}
+{0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            	&Settings.Pump_aggressive,		0,	    	1,  		0,  	&plus_one,		    	&minus_one},
+{0x01, LANG_SPEED,		LANG_OFF,			LANG_ON,	"",					&Settings.Speedup,				0x00,		0x01,		0x00,	&plus_one,				&minus_one}
 /*	{  0x01, "»ндукци€",	    "",		  						"",			        	"%uм“л",	     &Settings.Pump_Energy,                                  150,     450,      250,     &plus_50,                 &minus_50},
   {  0x00, "ѕодсветка",		  "откл",							"",			        	"%uсек",	     &Settings.Led_Sleep_time,                               0,       300,      30,      &plus_sleep,              &minus_sleep},
   {  0x01, "«вук",	        "",		  						"",			        	"%uк√ц",	     &Settings.Sound_freq,                                   1,       10,       8,       &plus_one,                &minus_one}

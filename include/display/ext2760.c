@@ -518,8 +518,9 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
       {
         pointer = (Settings.Second_count >> 2) - (((x_end - q) / 2) - Detector_massive_pointer);
       }
-
-      i = Detector_massive[pointer];
+      i = 0;
+      if(((x_end - q) / 2) < (Settings.Second_count / 4))
+        i = Detector_massive[pointer];
       if(i > 0)
         LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
     }

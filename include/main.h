@@ -124,6 +124,7 @@ typedef struct
   uint32_t USB;
 #endif
   uint32_t v4_target_pump;
+  uint32_t Speedup;
   uint32_t units;
   uint32_t Vibro;
   uint32_t Beta_window;

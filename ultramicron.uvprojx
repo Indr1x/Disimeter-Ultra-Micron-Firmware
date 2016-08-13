@@ -457,11 +457,6 @@
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_crc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32l1xx_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dac.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32l1xx_dbgmcu.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dbgmcu.c</FilePath>
@@ -1540,11 +1535,6 @@
               <FileName>stm32l1xx_crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32l1xx_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32l1xx_dbgmcu.c</FileName>
@@ -2627,11 +2617,6 @@
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_crc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32l1xx_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dac.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32l1xx_dbgmcu.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dbgmcu.c</FilePath>
@@ -3712,11 +3697,6 @@
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_crc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32l1xx_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dac.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32l1xx_dbgmcu.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dbgmcu.c</FilePath>
@@ -4795,11 +4775,6 @@
               <FileName>stm32l1xx_crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32l1xx_dac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32l1xx_dbgmcu.c</FileName>

@@ -2116,8 +2116,8 @@ if (fBuf[0] = $e5) then begin // Дата прошивки
                  ' 201'+
                  Char(Ord(fBuf[6]));
   HW_Label.Caption:='Ultra-Micron HW:'+hardware_version+'  FW:'+firmware_date;
-  if(Need_build<>firmware_date) then
-    showmessage('Unsupported device detected! Reload firmeare NOW!');
+//  if(Need_build<>firmware_date) then
+//    showmessage('Unsupported device detected! Reload firmeare NOW!');
 
 end;
 

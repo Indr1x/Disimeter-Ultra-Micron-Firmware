@@ -5,6 +5,7 @@ void adc_check_event(void)
 {
   if(DataUpdate.Need_batt_voltage_update)
   {
+    while (PWR_GetFlagStatus(PWR_FLAG_VREFINTRDY) == DISABLE);
     adc_init();
     adc_calibration();
     ADC_Batt_Read();
@@ -27,6 +28,7 @@ void adc_calibration(void)
 {
   uint32_t i, x = 0;
 
+  while (PWR_GetFlagStatus(PWR_FLAG_VREFINTRDY) == DISABLE);
   ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 1, ADC_SampleTime_384Cycles);  // Конфигурирование канала
 
   ADC_DelaySelectionConfig(ADC1, ADC_DelayLength_Freeze);       // Задержка до момента чтения данных из АЦП
@@ -48,7 +50,7 @@ void adc_calibration(void)
   ADCData.Calibration_bit_voltage = ((Settings.VRef * 1000) / x);       // битовое значение соотв. напряжению референса 1.22в, из него вычисляем скольким микровольтам соответствует 1 бит.
   ADCData.Power_voltage = ((ADCData.Calibration_bit_voltage * 4095) / 1000);
 
-  dac_reload();                 //перезагрузить в ЦАП новое напряжение отсечки накачки
+//  dac_reload();                 //перезагрузить в ЦАП новое напряжение отсечки накачки
 }
 
 //************************************************************************************************************
@@ -93,6 +95,7 @@ void ADC_Batt_Read(void)
   GPIO_InitTypeDef GPIO_InitStructure;
   uint32_t i;
 
+  while (PWR_GetFlagStatus(PWR_FLAG_VREFINTRDY) == DISABLE);
   // Ножка изиерения напряжения АКБ
   GPIO_StructInit(&GPIO_InitStructure);
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;    // Ножка

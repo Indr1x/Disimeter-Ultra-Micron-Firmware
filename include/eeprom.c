@@ -19,6 +19,7 @@ void eeprom_write_default_settings(void)
     Settings.LSI_freq = 37000;
     Settings.Geiger_voltage = 360;
     Settings.Power_comp = 0;
+    Settings.Speedup = 0;
     Settings.Vibro = 0;
     Settings.v4_target_pump = 8;
     Settings.units = 0;
@@ -60,6 +61,8 @@ void eeprom_write_settings(void)
     eeprom_write(Beta_window_address, Settings.Beta_window);
   if(eeprom_read(Beta_procent_address) != Settings.Beta_procent)
     eeprom_write(Beta_procent_address, Settings.Beta_procent);
+  if(eeprom_read(Speedup_address) != Settings.Speedup)
+    eeprom_write(Speedup_address, Settings.Speedup);
   if(eeprom_read(VRef_address) != Settings.VRef)
     eeprom_write(VRef_address, Settings.VRef);
   if(eeprom_read(Pump_aggressive_address) != Settings.Pump_aggressive)
@@ -103,7 +106,7 @@ void eeprom_apply_settings(void)
   // -------------------------------------------------------------------
   if(eeprom_read(Geiger_voltage_address) != Settings.Geiger_voltage)
   {
-    dac_reload();               //перезагрузить в ЦАП новое напряжение отсечки накачки
+//    dac_reload();               //перезагрузить в ЦАП новое напряжение отсечки накачки
   }
   // -------------------------------------------------------------------
   if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
@@ -141,6 +144,7 @@ void eeprom_read_settings(void)
   Settings.Beta_procent = eeprom_read(Beta_procent_address);
   Settings.VRef = eeprom_read(VRef_address);
   Settings.Pump_aggressive = eeprom_read(Pump_aggressive_address);
+  Settings.Speedup = eeprom_read(Speedup_address);
 
   // Если не установленны какие-то из важных параметров, то произвести сброс.
   if((Settings.VRef == 0) ||

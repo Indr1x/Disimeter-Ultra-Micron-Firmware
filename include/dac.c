@@ -1,5 +1,5 @@
 #include "main.h"
-
+/*
 void dac_init()
 {
   DAC_InitTypeDef DAC_InitStructure;
@@ -14,7 +14,7 @@ void dac_init()
 
   DAC_Init(DAC_Channel_2, &DAC_InitStructure);
   DAC_Cmd(DAC_Channel_2, ENABLE);
-  DAC_SetChannel2Data(DAC_Align_12b_R, ADCData.DAC_voltage_raw);        /* Set DAC Channel2 DHR register: DAC_OUT2 = (1.224 * 128) / 256 = 0.612 V */
+  DAC_SetChannel2Data(DAC_Align_12b_R, ADCData.DAC_voltage_raw);        // Set DAC Channel2 DHR register: DAC_OUT2 = (1.224 * 128) / 256 = 0.612 V 
 
 }
 
@@ -55,6 +55,7 @@ void dac_reload()
 
   ADCData.DAC_voltage_raw = (ADCData.DAC_voltage_raw * 1000) / ADCData.Calibration_bit_voltage; // коррекция значения по напряжению опоры
 
-  DAC_SetChannel2Data(DAC_Align_12b_R, ADCData.DAC_voltage_raw);        /* Set DAC Channel2 DHR register: DAC_OUT2 = (1.224 * 128) / 256 = 0.612 V */
+  DAC_SetChannel2Data(DAC_Align_12b_R, ADCData.DAC_voltage_raw);        // Set DAC Channel2 DHR register: DAC_OUT2 = (1.224 * 128) / 256 = 0.612 V 
   DAC_SoftwareTriggerCmd(DAC_Channel_2, ENABLE);
 }
+*/

@@ -96,9 +96,9 @@ int main(void)
   Power.sleep_time = Settings.Sleep_time;
   Power.Display_active = ENABLE;
 
-  ADCData.DAC_voltage_raw = 0x4FD;
+//  ADCData.DAC_voltage_raw = 0x4FD;
 
-  dac_init();
+//  dac_init();
   comp_init();
   comp_on();
   timer9_Config();              // Конфигурируем таймер накачки        
@@ -189,7 +189,9 @@ int main(void)
         if(!Power.Pump_active && !Power.Sound_active)
         {
 //#ifndef debug
+          PWR_FastWakeUpCmd(ENABLE);
           PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI); // Переходим в сон
+          PWR_FastWakeUpCmd(DISABLE);
 //#endif
 #ifdef debug
           Wakeup.total_wakeup++;

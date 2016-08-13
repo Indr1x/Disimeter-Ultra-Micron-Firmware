@@ -13,8 +13,9 @@ void Pump_now(FunctionalState pump)
 
   if(pump == ENABLE && !Power.Pump_deny)
   {
+    while (PWR_GetFlagStatus(PWR_FLAG_VREFINTRDY) == DISABLE);
     Power.Pump_active = ENABLE;
-    dac_on();                   // Включаем ЦАП
+//    dac_on();                   // Включаем ЦАП
     TIM9->EGR |= 0x0001;        // Устанавливаем бит UG для принудительного сброса счетчика
     TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
 
@@ -28,7 +29,7 @@ void Pump_now(FunctionalState pump)
     TIM_ITConfig(TIM9, TIM_IT_Update, DISABLE);
     //pump_counter_avg_impulse_by_1sec[0]++;
     comp_off();                 // Выключаем компаратор
-    dac_off();                  // Выключаем ЦАП
+//    dac_off();                  // Выключаем ЦАП
     TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
     Power.Pump_active = DISABLE;
   }
@@ -186,7 +187,7 @@ void recalculate_fon(void)
     fon_level += Detector_massive[pointer];
   }
 
-  fon_level = (fon_level * auto_speedup_factor) + ((fon_level / recalc_len) * (massive_len % auto_speedup_factor));   // фон 6-ти ячеек * 9 + ячейка 24000/6=4000; остаток от деления 8
+  fon_level = (fon_level * auto_speedup_factor) + ((fon_level / recalc_len) * (massive_len % auto_speedup_factor));     // фон 6-ти ячеек * 9 + ячейка 24000/6=4000; остаток от деления 8
   // (4000/9*)8=3552; 24000+3552=27552
 }
 
@@ -216,7 +217,7 @@ void sleep_mode(FunctionalState sleep)
       adc_check_event();        // запустить преобразование
       delay_ms(100);            // подождать установки напряжения
 
-      PWR_FastWakeUpCmd(DISABLE);
+      //PWR_FastWakeUpCmd(ENABLE);
       PWR_UltraLowPowerCmd(ENABLE);
       PWR_PVDCmd(DISABLE);
       RTC_ITConfig(RTC_IT_WUT, ENABLE);

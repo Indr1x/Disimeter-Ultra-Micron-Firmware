@@ -372,7 +372,7 @@ void RTC_Alarm_IRQHandler(void)
 
         if(pump_counter_avg_impulse_by_1sec[1] == 0)    //затычка на случай глюка с накачкой
         {
-          dac_init();
+//          dac_init();
           Pump_now(DISABLE);
           while (RTC_WakeUpCmd(DISABLE) != SUCCESS);
           RTC_SetWakeUpCounter(0xF96);  // Установить таймаут просыпания = 2 секунды
@@ -438,8 +438,9 @@ void RTC_Alarm_IRQHandler(void)
         Detector_AB_massive[0] = 0;
       }
       ////////////////////////////////////////////////////    
+      // Ускорение
       if(Settings.AB_mode < 2)
-        if(Detector_massive[Detector_massive_pointer] >= 10)
+        if(Detector_massive[Detector_massive_pointer] >= 10 && Settings.Speedup == 1)
         {
           auto_speedup_factor = 1;
           if(Detector_massive[Detector_massive_pointer] > 300)  // деление на 9 при фоне более 10 000

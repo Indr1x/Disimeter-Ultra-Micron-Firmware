@@ -20,11 +20,17 @@ void comp_off()
 void comp_on()
 {
   EXTI_InitTypeDef EXTI_InitStructure;
+  COMP_InitTypeDef COMP_InitStructure;
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_COMP, ENABLE);
 
-  COMP->CSR = (uint32_t) 0x00FC1000;    // COMP_InvertingInput_DAC2 + COMP_OutputSelect_None + COMP_Speed_Fast
+//  COMP->CSR = (uint32_t) 0x00FC1000;    // COMP_InvertingInput_DAC2 + COMP_OutputSelect_None + COMP_Speed_Fast
+
+  COMP_InitStructure.COMP_InvertingInput = COMP_InvertingInput_3_4VREFINT;
+  COMP_InitStructure.COMP_OutputSelect = COMP_OutputSelect_None;
+  COMP_InitStructure.COMP_Speed = COMP_Speed_Fast;
+  COMP_Init(&COMP_InitStructure);
 
   EXTI_StructInit(&EXTI_InitStructure);
   EXTI_InitStructure.EXTI_Line = EXTI_Line22;
@@ -45,7 +51,7 @@ void comp_init()
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
   SYSCFG_RIIOSwitchConfig(RI_IOSwitch_GR6_1, ENABLE);
 
-  COMP_InitStructure.COMP_InvertingInput = COMP_InvertingInput_DAC2;
+  COMP_InitStructure.COMP_InvertingInput = COMP_InvertingInput_3_4VREFINT;
   COMP_InitStructure.COMP_OutputSelect = COMP_OutputSelect_None;
   COMP_InitStructure.COMP_Speed = COMP_Speed_Fast;
   COMP_Init(&COMP_InitStructure);
