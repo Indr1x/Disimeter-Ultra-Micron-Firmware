@@ -156,6 +156,18 @@ void plus_ab_engage(uint32_t * param)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void plus_cal(uint32_t * param)
+{
+  Cal_count = 0;
+  Cal_count_time = 0;
+  Settings.Cal_mode = 1;
+  menu_select = 0;
+  enter_menu_item = DISABLE;
+  screen = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void plus_doze_reset(uint32_t * param)  // Сброс дозы
 {
   int i;
@@ -579,6 +591,8 @@ void keys_proccessing(void)
     while (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6));
     delay_ms(10);
     DataUpdate.Need_display_update = ENABLE;
+    if(Settings.Cal_mode == 1)
+      plus_cal(0x00);
     if(Settings.AB_mode > 0)
     {
       ab_meas_on();
@@ -640,6 +654,8 @@ void keys_proccessing(void)
     while (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6));
     delay_ms(10);
     DataUpdate.Need_display_update = ENABLE;
+    if(Settings.Cal_mode == 1)
+      Settings.Cal_mode = 0;
     if(Settings.AB_mode > 0)
     {
       ab_meas_off();
@@ -706,6 +722,10 @@ void keys_proccessing(void)
     key = 0;
 
     ///////////
+    if(Settings.Cal_mode == 1)
+      Settings.Cal_mode = 0;
+
+
     if(Settings.AB_mode > 0)
     {
       Settings.AB_mode = 0;     // отмена режима Альфа-Бета

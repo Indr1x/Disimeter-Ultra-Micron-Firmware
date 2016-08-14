@@ -329,6 +329,14 @@ void RTC_Alarm_IRQHandler(void)
 
       DataUpdate.Need_display_update = ENABLE;
 
+      // Калибровка 4 интервала счета
+      if(Settings.Cal_mode == 1)
+        if((Settings.Second_count << 2) > Cal_count_time)
+        {
+          Cal_count_time += 4;
+          Cal_count += Detector_massive[Detector_massive_pointer];
+        }
+
       if(Power.USB_active)
       {
         USB_not_active++;       // Счетчик неактивности USB

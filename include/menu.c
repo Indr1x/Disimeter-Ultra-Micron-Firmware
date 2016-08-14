@@ -29,6 +29,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_BPROCENT,	"",					"",			LANG_BPROCENT_,		&Settings.Beta_procent,			1,			100,		37,		&plus_one,				&minus_one},
 {0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
 {0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            	&Settings.Pump_aggressive,		0,	    	1,  		0,  	&plus_one,		    	&minus_one},
+{0x01, LANG_CAL,		"*",			    "*",	    "*",				0x00,	            			0x00,		0x00,		0x00,	&plus_cal,				0x00},
 {0x01, LANG_SPEED,		LANG_OFF,			LANG_ON,	"",					&Settings.Speedup,				0x00,		0x01,		0x00,	&plus_one,				&minus_one}
 /*	{  0x01, "Индукция",	    "",		  						"",			        	"%uмТл",	     &Settings.Pump_Energy,                                  150,     450,      250,     &plus_50,                 &minus_50},
   {  0x00, "Подсветка",		  "откл",							"",			        	"%uсек",	     &Settings.Led_Sleep_time,                               0,       300,      30,      &plus_sleep,              &minus_sleep},
@@ -281,7 +282,18 @@ void main_screen()
     Draw_AB_digit(4, 1, 0);
   }
 
-  Draw_fon_digit(1, 1, 0);
+  if(Settings.Cal_mode == 1)
+  {
+    sprintf(lcd_buf, "%5i", (Settings.Second_count << 2) - Cal_count_time);     // Пишем в буфер значение счетчика
+    LcdString(1, 1);            // // Выводим обычным текстом содержание буфера
+
+    sprintf(lcd_buf, LANG_FON_UMKZV, convert_mkr_sv(Cal_count >> 2));   // Пишем в буфер значение счетчика
+    LcdString(1, 2);            // // Выводим обычным текстом содержание буфера    
+  } else
+  {
+    Draw_fon_digit(1, 1, 0);
+  }
+
   Draw_fon_graph(2, 94, 67 - 25, 67);
 
   if(auto_speedup_factor > 1)

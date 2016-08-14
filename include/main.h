@@ -134,6 +134,7 @@ typedef struct
   uint32_t serial2;
   uint32_t serial3;
 
+  uint32_t Cal_mode;
   uint32_t AB_mode;             // 0-גûךכ 1-דאללא 2-אכüפא-בועא
   uint32_t VRef;                // 0-גûךכ 1-דאללא 2-אכüפא-בועא
   uint32_t Pump_aggressive;
@@ -241,6 +242,9 @@ extern uint32_t unlock_0_serial;
 extern uint32_t unlock_1_serial;
 extern uint32_t unlock_2_serial;
 extern uint32_t unlock_3_serial;
+
+extern uint32_t Cal_count;
+extern uint32_t Cal_count_time;
 
 extern uint8_t Pump_on_alarm_count;
 
