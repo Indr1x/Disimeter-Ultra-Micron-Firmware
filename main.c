@@ -92,6 +92,7 @@ int main(void)
 
   eeprom_write_default_settings();      // Проверка, заполнен ли EEPROM
   eeprom_read_settings();       // Чтение настроек из EEPROM
+  reload_active_isotop_time();  // Перезагрузка времени счета по изотопам
   screen = 1;
   AB_fon = 0;
   Power.USB_active = DISABLE;

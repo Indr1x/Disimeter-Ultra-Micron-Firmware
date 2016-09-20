@@ -44,7 +44,12 @@ typedef enum
 #define Beta_procent_address																		0x70
 #define VRef_address																		        0x74
 #define Pump_aggressive_address																		        0x78
-#define Speedup_address																		        0x7C
+#define Speedup_address				       0x7C
+#define Isotop_address                     0x80
+#define Isotop_count_cs137_address         0x84
+#define Isotop_count_eu152_address         0x88
+#define Isotop_count_na22_address          0x8C
+#define Isotop_count_cd109_address         0x90
 
 extern uint32_t NbrOfPage, Address;
 

@@ -9,17 +9,15 @@ uint32_t NbrOfPage = 0, j = 0, Address = 0;
 // Запись параметров по умолчанию
 void eeprom_write_default_settings(void)
 {
-  if(eeprom_read(Second_count_address) == 0x00)
+  if(eeprom_read(Isotop_count_cs137_address) == 0x00)
   {
     Settings.Alarm_level = 50;
     Settings.Sound = ENABLE;
     Settings.Sleep_time = 80;
     Settings.Display_reverse = 2;
-    Settings.Second_count = 250;
     Settings.LSI_freq = 37000;
     Settings.Geiger_voltage = 360;
     Settings.Power_comp = 0;
-    Settings.Speedup = 0;
     Settings.Vibro = 0;
     Settings.v4_target_pump = 8;
     Settings.units = 0;
@@ -27,6 +25,12 @@ void eeprom_write_default_settings(void)
     Settings.Beta_procent = 37;
     Settings.VRef = 1224;
     Settings.Pump_aggressive = 0;
+    Settings.Speedup = 0;
+    Settings.Isotop = 0;
+    Settings.Isotop_count_cs137 = 250;
+    Settings.Isotop_count_eu152 = 250;
+    Settings.Isotop_count_na22 = 250;
+    Settings.Isotop_count_cd109 = 250;
     eeprom_write_settings();    // Запись
   }
 }
@@ -45,8 +49,6 @@ void eeprom_write_settings(void)
     eeprom_write(contrast_address, Settings.contrast);
   if(eeprom_read(Display_reverse_address) != Settings.Display_reverse)
     eeprom_write(Display_reverse_address, Settings.Display_reverse);
-  if(eeprom_read(Second_count_address) != Settings.Second_count)
-    eeprom_write(Second_count_address, Settings.Second_count);
   if(eeprom_read(Sound_address) != Settings.Sound)
     eeprom_write(Sound_address, Settings.Sound);
   if(eeprom_read(Power_comp_address) != Settings.Power_comp)
@@ -61,14 +63,27 @@ void eeprom_write_settings(void)
     eeprom_write(Beta_window_address, Settings.Beta_window);
   if(eeprom_read(Beta_procent_address) != Settings.Beta_procent)
     eeprom_write(Beta_procent_address, Settings.Beta_procent);
-  if(eeprom_read(Speedup_address) != Settings.Speedup)
-    eeprom_write(Speedup_address, Settings.Speedup);
   if(eeprom_read(VRef_address) != Settings.VRef)
     eeprom_write(VRef_address, Settings.VRef);
   if(eeprom_read(Pump_aggressive_address) != Settings.Pump_aggressive)
     eeprom_write(Pump_aggressive_address, Settings.Pump_aggressive);
   if(eeprom_read(units_address) != Settings.units)
     eeprom_write(units_address, Settings.units);
+  if(eeprom_read(Speedup_address) != Settings.Speedup)
+    eeprom_write(Speedup_address, Settings.Speedup);
+
+  if(eeprom_read(Isotop_address) != Settings.Isotop)
+    eeprom_write(Isotop_address, Settings.Isotop);
+  if(eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137)
+    eeprom_write(Isotop_count_cs137_address, Settings.Isotop_count_cs137);
+  if(eeprom_read(Isotop_count_eu152_address) != Settings.Isotop_count_eu152)
+    eeprom_write(Isotop_count_eu152_address, Settings.Isotop_count_eu152);
+  if(eeprom_read(Isotop_count_na22_address) != Settings.Isotop_count_na22)
+    eeprom_write(Isotop_count_na22_address, Settings.Isotop_count_na22);
+  if(eeprom_read(Isotop_count_cd109_address) != Settings.Isotop_count_cd109)
+    eeprom_write(Isotop_count_cd109_address, Settings.Isotop_count_cd109);
+
+
   if(Settings.LSI_freq != 0x00) // если запустился кварц, попытки сохранения игнорировать
   {
     if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
@@ -117,6 +132,32 @@ void eeprom_apply_settings(void)
       NVIC_SystemReset();
     }
   }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_address) != Settings.Isotop)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_eu152_address) != Settings.Isotop_count_eu152)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_na22_address) != Settings.Isotop_count_na22)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_cd109_address) != Settings.Isotop_count_cd109)
+  {
+    reload_active_isotop_time();
+  }
+
 }
 
 //**************************************************************************
@@ -128,7 +169,6 @@ void eeprom_read_settings(void)
   Settings.Sleep_time = eeprom_read(Sleep_time_address);
   Settings.contrast = eeprom_read(contrast_address);
   Settings.Display_reverse = eeprom_read(Display_reverse_address);
-  Settings.Second_count = eeprom_read(Second_count_address);
   Settings.Sound = eeprom_read(Sound_address);
   Settings.LSI_freq = eeprom_read(LSI_freq_address);
   Settings.Power_comp = eeprom_read(Power_comp_address);
@@ -145,6 +185,12 @@ void eeprom_read_settings(void)
   Settings.VRef = eeprom_read(VRef_address);
   Settings.Pump_aggressive = eeprom_read(Pump_aggressive_address);
   Settings.Speedup = eeprom_read(Speedup_address);
+
+  Settings.Isotop = eeprom_read(Isotop_address);
+  Settings.Isotop_count_cs137 = eeprom_read(Isotop_count_cs137_address);
+  Settings.Isotop_count_eu152 = eeprom_read(Isotop_count_eu152_address);
+  Settings.Isotop_count_na22 = eeprom_read(Isotop_count_na22_address);
+  Settings.Isotop_count_cd109 = eeprom_read(Isotop_count_cd109_address);
 
   // Если не установленны какие-то из важных параметров, то произвести сброс.
   if((Settings.VRef == 0) ||

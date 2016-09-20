@@ -5,6 +5,27 @@
 
 #define DOR_OFFSET                 ((uint32_t)0x0000002C)
 
+// ===============================================================================================
+
+void reload_active_isotop_time()
+{
+  switch (Settings.Isotop)
+  {
+  case 0x0:
+    Settings.Second_count = Settings.Isotop_count_cs137;
+    break;
+  case 0x1:
+    Settings.Second_count = Settings.Isotop_count_eu152;
+    break;
+  case 0x2:
+    Settings.Second_count = Settings.Isotop_count_na22;
+    break;
+  case 0x3:
+    Settings.Second_count = Settings.Isotop_count_cd109;
+    break;
+  }
+  plus_rad_reset(0x00);
+}
 
 // ===============================================================================================
 

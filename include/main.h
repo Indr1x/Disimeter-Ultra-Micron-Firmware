@@ -135,6 +135,14 @@ typedef struct
   uint32_t serial3;
 
   uint32_t Cal_mode;
+  uint32_t Isotop;
+
+  uint32_t Isotop_count_cs137;
+  uint32_t Isotop_count_eu152;
+  uint32_t Isotop_count_na22;
+  uint32_t Isotop_count_cd109;
+
+
   uint32_t AB_mode;             // 0-גûךכ 1-דאללא 2-אכüפא-בועא
   uint32_t VRef;                // 0-גûךכ 1-דאללא 2-אכüפא-בועא
   uint32_t Pump_aggressive;

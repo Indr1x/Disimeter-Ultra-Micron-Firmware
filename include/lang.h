@@ -41,6 +41,13 @@
 #define LANG_REF_VOLT  "кал.ИОН"
 #define LANG_REF_VOLT_ "%uмВ"
 #define LANG_PUMP_AGR  "Нак.Агрес."
+#define LANG_ISOTOP    "Изотоп"
+
+#define LANG_ISOTOP_CS137    "Cs-137"
+#define LANG_ISOTOP_EU152    "Eu-152"
+#define LANG_ISOTOP_NA22     "Na-22"
+#define LANG_ISOTOP_CD109    "Cd-109"
+
 ///////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////
@@ -139,7 +146,12 @@
 #define LANG_REF_VOLT  "cal Vref"
 #define LANG_REF_VOLT_ "%umV"
 #define LANG_PUMP_AGR  "Pump AGR"
+#define LANG_ISOTOP    "Isotop"
 
+#define LANG_ISOTOP_CS137    "Cs-137"
+#define LANG_ISOTOP_EU152    "Eu-152"
+#define LANG_ISOTOP_NA22     "Na-22"
+#define LANG_ISOTOP_CD109    "Cd-109"
 
 ///////////////////////////////////////////////////////
 
