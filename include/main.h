@@ -137,14 +137,24 @@ typedef struct
   uint32_t Cal_mode;
   uint32_t Isotop;
 
+
   uint32_t Isotop_count_cs137;
   uint32_t Isotop_count_eu152;
   uint32_t Isotop_count_na22;
   uint32_t Isotop_count_cd109;
 
+  uint32_t Isotop_ACAL_cs137;
+  uint32_t Isotop_ACAL_eu152;
+  uint32_t Isotop_ACAL_na22;
+  uint32_t Isotop_ACAL_cd109;
 
+
+  uint32_t AMODUL_mode;         // 0-выкл 1-Модуль-А
+  uint32_t AMODUL_time;
+  uint32_t AMODUL_unit;         // 0-Кванты 1-мкЗвч
+  uint32_t ACAL_count;
   uint32_t AB_mode;             // 0-выкл 1-гамма 2-альфа-бета
-  uint32_t VRef;                // 0-выкл 1-гамма 2-альфа-бета
+  uint32_t VRef;
   uint32_t Pump_aggressive;
 } SettingsDef;
 
@@ -199,7 +209,9 @@ extern uint32_t ix_update;
 extern uint16_t Detector_massive[Detector_massive_pointer_max + 1];
 
 extern uint32_t Detector_AB_massive[15];        // 1 минута, интервалами по 4 сек
+
 extern uint32_t AB_fon;         // Фон Альфа-Бета
+extern uint32_t AMODULE_fon[100];       // Фон Альфа-Бета
 
 #define FLASH_PAGE_SIZE                 0x100   // (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 #define FLASH_START_ADDR                0x0800F000

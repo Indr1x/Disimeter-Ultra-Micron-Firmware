@@ -703,6 +703,21 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>stm32l1xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\stm32l1xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\timers.c</FilePath>
+            </File>
+            <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\adc.c</FilePath>
@@ -1014,21 +1029,6 @@
               <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\eeprom.c</FilePath>
-            </File>
-            <File>
-              <FileName>timers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\timers.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32l1xx_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\stm32l1xx_it.c</FilePath>
             </File>
             <File>
               <FileName>flash_save.c</FileName>
@@ -1783,6 +1783,21 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>stm32l1xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\stm32l1xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\timers.c</FilePath>
+            </File>
+            <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\adc.c</FilePath>
@@ -2094,21 +2109,6 @@
               <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\eeprom.c</FilePath>
-            </File>
-            <File>
-              <FileName>timers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\timers.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32l1xx_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\stm32l1xx_it.c</FilePath>
             </File>
             <File>
               <FileName>flash_save.c</FileName>
@@ -2863,6 +2863,21 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>stm32l1xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\stm32l1xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\timers.c</FilePath>
+            </File>
+            <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\adc.c</FilePath>
@@ -3174,21 +3189,6 @@
               <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\eeprom.c</FilePath>
-            </File>
-            <File>
-              <FileName>timers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\timers.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32l1xx_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\stm32l1xx_it.c</FilePath>
             </File>
             <File>
               <FileName>flash_save.c</FileName>
@@ -3943,6 +3943,21 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>stm32l1xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\stm32l1xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\timers.c</FilePath>
+            </File>
+            <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\adc.c</FilePath>
@@ -4254,21 +4269,6 @@
               <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\eeprom.c</FilePath>
-            </File>
-            <File>
-              <FileName>timers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\timers.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32l1xx_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\stm32l1xx_it.c</FilePath>
             </File>
             <File>
               <FileName>flash_save.c</FileName>
@@ -5023,6 +5023,21 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>stm32l1xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\stm32l1xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\timers.c</FilePath>
+            </File>
+            <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\adc.c</FilePath>
@@ -5334,21 +5349,6 @@
               <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\eeprom.c</FilePath>
-            </File>
-            <File>
-              <FileName>timers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\timers.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32l1xx_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\stm32l1xx_it.c</FilePath>
             </File>
             <File>
               <FileName>flash_save.c</FileName>

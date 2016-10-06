@@ -24,6 +24,7 @@
 #define LANG_ON        "вкл"
 #define LANG_ALARM2    "трев"
 #define LANG_USEC      "%uсек"
+#define LANG_ACAL      "%uи/ф"
 #define LANG_UMKR      "%uмкР"
 #define LANG_UMKZV     "%4.2fмкЗ"
 #define LANG_FON_UMKZV "Фон %4.2fмкЗ"
@@ -38,10 +39,12 @@
 #define LANG_BPROCENT_ "%3u"
 #define LANG_CLEAR_FON "Сброс фона"
 #define LANG_BETA_MEAS "Замер A-B"
+#define LANG_SCINT_MEAS "Модуль-А"
 #define LANG_REF_VOLT  "кал.ИОН"
 #define LANG_REF_VOLT_ "%uмВ"
 #define LANG_PUMP_AGR  "Нак.Агрес."
 #define LANG_ISOTOP    "Изотоп"
+#define LANG_AMODUL    "Актив. Модуль-А"
 
 #define LANG_ISOTOP_CS137    "Cs-137"
 #define LANG_ISOTOP_EU152    "Eu-152"
@@ -100,6 +103,8 @@
 
 #define LANG_BETA1    "час"
 #define LANG_BETA2    "см2"
+#define LANG_GAMMA1   "ква"
+#define LANG_GAMMA2   "сек"
 #define LANG_UR       "мкР"
 #define LANG_UZ       "мкЗ"
 #define LANG_UZV      "мкЗв"
@@ -129,6 +134,7 @@
 #define LANG_QUARTZ   "Quarz"
 #define LANG_ALARM2   "alrm"
 #define LANG_USEC     "%usec"
+#define LANG_ACAL     "%ui/dr"
 #define LANG_UMKR     "%uuRh"
 #define LANG_UMKZV    "%4.2fuSv"
 #define LANG_FON_UMKZV "Dose %4.2fuSv"
@@ -143,6 +149,7 @@
 #define LANG_BPROCENT_ "%3u"
 #define LANG_CLEAR_FON "Clear rad"
 #define LANG_BETA_MEAS "A-B meas."
+#define LANG_SCINT_MEAS "Module-A"
 #define LANG_REF_VOLT  "cal Vref"
 #define LANG_REF_VOLT_ "%umV"
 #define LANG_PUMP_AGR  "Pump AGR"
@@ -152,6 +159,8 @@
 #define LANG_ISOTOP_EU152    "Eu-152"
 #define LANG_ISOTOP_NA22     "Na-22"
 #define LANG_ISOTOP_CD109    "Cd-109"
+
+#define LANG_AMODUL    "Module-A act."
 
 ///////////////////////////////////////////////////////
 
@@ -206,6 +215,8 @@
 
 #define LANG_BETA1    "par"
 #define LANG_BETA2    "cm2"
+#define LANG_GAMMA1   "par"
+#define LANG_GAMMA2   "sec"
 #define LANG_UR       "uR"
 #define LANG_UZ       "uSv"
 #define LANG_UZV      "uSv"

@@ -261,11 +261,11 @@ void TIM9_IRQHandler(void)
 
 // ========================================================
 // генерация звука на динамик
-void TIM2_IRQHandler(void)
+void TIM3_IRQHandler(void)
 {
-  if(TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
+  if(TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)
   {
-    TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+    TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
     if(!poweroff_state)
     {
       if(Alarm.Alarm_active && !Alarm.User_cancel)
@@ -308,6 +308,19 @@ void TIM2_IRQHandler(void)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Модуль-А
+
+void TIM2_IRQHandler(void)
+{
+  if(TIM_GetITStatus(TIM2, TIM_IT_CC2) != RESET)
+  {
+    TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
+    AMODULE_fon[0]++;
+  }
+}
+
+
 
 ////////////////////////////////////////
 // Секундный тик
@@ -319,6 +332,29 @@ void RTC_Alarm_IRQHandler(void)
 #ifdef debug
   Wakeup.rtc_wakeup++;
 #endif
+
+  // Модуль-А
+  if(RTC_GetITStatus(RTC_IT_ALRB) != RESET)
+  {
+    RTC_ClearITPendingBit(RTC_IT_ALRB);
+    EXTI_ClearITPendingBit(EXTI_Line17);
+
+    if(!poweroff_state)
+    {
+      Set_next_B_alarm_wakeup();        // установить таймер просыпания на +1 секунду
+
+      for (i = 99; i > 0; i--)
+      {
+        AMODULE_fon[i] = AMODULE_fon[i - 1];
+      }
+      AMODULE_fon[0] = 0;
+
+      DataUpdate.Need_display_update = ENABLE;
+
+    }
+
+  }
+  // Основной счет времени
   if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
   {
     RTC_ClearITPendingBit(RTC_IT_ALRA);

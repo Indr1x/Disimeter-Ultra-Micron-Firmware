@@ -34,6 +34,31 @@ void Set_next_alarm_wakeup(void)
 
 }
 
+void Set_next_B_alarm_wakeup(void)
+{
+  RTC_TimeTypeDef RTC_TimeStructure;
+
+  RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
+
+  RTC_AlarmStructInit(&RTC_AlarmStructure);
+  RTC_TimeStructInit(&RTC_TimeStructure);
+
+  RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
+
+  RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds = RTC_TimeStructure.RTC_Seconds + 1;
+  if(RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds > 59)
+    RTC_AlarmStructure.RTC_AlarmTime.RTC_Seconds -= 60;
+
+  RTC_AlarmStructure.RTC_AlarmMask = RTC_AlarmMask_Exept_seconds;
+
+  /* Configure the RTC Alarm B register */
+  RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_B, &RTC_AlarmStructure);
+
+  RTC_ClearFlag(RTC_FLAG_ALRBF);
+  RTC_AlarmCmd(RTC_Alarm_B, ENABLE);
+
+}
+
 
 void RTC_Config(void)
 {

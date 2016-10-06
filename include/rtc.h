@@ -6,5 +6,6 @@ void RTC_Config(void);
 void RTC_Alarm_IRQHandler(void);
 void init_rtc(void);
 void Set_next_alarm_wakeup(void);
+void Set_next_B_alarm_wakeup(void);
 
 #endif

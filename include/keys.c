@@ -156,6 +156,29 @@ void plus_ab_engage(uint32_t * param)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void plus_amodul_engage(uint32_t * param)
+{
+  int i;
+
+  Settings.AMODUL_mode = 1;
+  for (i = 99; i > 0; i--)
+  {
+    AMODULE_fon[i] = 0;
+  }
+  AMODULE_fon[0] = 0;
+
+  Set_next_B_alarm_wakeup();
+  RTC_ITConfig(RTC_IT_ALRB, ENABLE);
+  RTC_AlarmCmd(RTC_Alarm_B, ENABLE);
+  RTC_ClearFlag(RTC_FLAG_ALRBF);
+
+  menu_select = 0;
+  enter_menu_item = DISABLE;
+  screen = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void plus_cal(uint32_t * param)
 {
   Cal_count = 0;
@@ -593,6 +616,20 @@ void keys_proccessing(void)
     DataUpdate.Need_display_update = ENABLE;
     if(Settings.Cal_mode == 1)
       plus_cal(0x00);
+
+    if(Settings.AMODUL_mode > 0)
+    {
+      if(Settings.AMODUL_time <= 2)
+      {
+        Settings.AMODUL_time = 5;
+      } else
+      {
+        Settings.AMODUL_time += 5;
+      }
+      if(Settings.AMODUL_time > 30)
+        Settings.AMODUL_time = 2;
+    }
+
     if(Settings.AB_mode > 0)
     {
       ab_meas_on();
@@ -656,6 +693,14 @@ void keys_proccessing(void)
     DataUpdate.Need_display_update = ENABLE;
     if(Settings.Cal_mode == 1)
       Settings.Cal_mode = 0;
+
+    if(Settings.AMODUL_mode > 0)
+    {
+      Settings.AMODUL_unit++;
+      if(Settings.AMODUL_unit > 1)
+        Settings.AMODUL_unit = 0;
+    }
+
     if(Settings.AB_mode > 0)
     {
       ab_meas_off();
@@ -725,6 +770,15 @@ void keys_proccessing(void)
     if(Settings.Cal_mode == 1)
       Settings.Cal_mode = 0;
 
+
+    if(Settings.AMODUL_mode > 0)
+    {
+      Settings.AMODUL_mode = 0;
+      RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
+      RTC_ITConfig(RTC_IT_ALRB, DISABLE);
+      RTC_ClearFlag(RTC_FLAG_ALRBF);
+
+    }
 
     if(Settings.AB_mode > 0)
     {

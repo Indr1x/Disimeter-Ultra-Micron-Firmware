@@ -6,15 +6,15 @@ void sound_activate(void)
 {
   if(!Power.USB_active)
   {
-    //RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+    //RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
     if(Power.Display_active == ENABLE)
     {
       Alarm.Tick_beep_count = 0;
-      TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+      TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
       TIM10->EGR |= 0x0001;     // Устанавливаем бит UG для принудительного сброса счетчика
-      TIM2->EGR |= 0x0001;      // Устанавливаем бит UG для принудительного сброса счетчика
+      TIM3->EGR |= 0x0001;      // Устанавливаем бит UG для принудительного сброса счетчика
       TIM_CCxCmd(TIM10, TIM_Channel_1, TIM_CCx_Enable); // разрешить подачу импульсов
-      TIM_Cmd(TIM2, ENABLE);
+      TIM_Cmd(TIM3, ENABLE);
       Power.Sound_active = ENABLE;
 #ifdef version_401
       if((Settings.Vibro == 1) || ((Settings.Vibro > 1) && (Alarm.Alarm_active == ENABLE)))
@@ -31,14 +31,14 @@ void sound_activate(void)
 void sound_deactivate(void)
 {
 
-  TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
-  TIM_Cmd(TIM2, DISABLE);
+  TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+  TIM_Cmd(TIM3, DISABLE);
 
   TIM_CCxCmd(TIM10, TIM_Channel_1, TIM_CCx_Disable);    // запретить подачу импульсов
 
   TIM_SetAutoreload(TIM10, 16);
 
-  //RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, DISABLE);
+  //RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, DISABLE);
 
   Alarm.Tick_beep_count = 0;
   Power.Sound_active = DISABLE;
@@ -63,7 +63,7 @@ void reset_TIM_prescallers_and_Compare(void)
   SystemCoreClockUpdate();
   //sound_activate();
   TIM_PrescalerConfig(TIM10, (uint32_t) (SystemCoreClock / 128000) - 1, TIM_PSCReloadMode_Immediate);   // частота таймера 128 кГц
-  TIM_PrescalerConfig(TIM2, (uint32_t) (SystemCoreClock / 800) - 1, TIM_PSCReloadMode_Immediate);       // Делитель (1 тик = 1.25мс)
+  TIM_PrescalerConfig(TIM3, (uint32_t) (SystemCoreClock / 800) - 1, TIM_PSCReloadMode_Immediate);       // Делитель (1 тик = 1.25мс)
   TIM_PrescalerConfig(TIM9, (uint32_t) (SystemCoreClock / 4000000) - 1, TIM_PSCReloadMode_Immediate);   // 0.25 мкс
 
 #ifdef version_401
@@ -195,8 +195,44 @@ void tim2_Config()
 {
   TIM_TimeBaseInitTypeDef TIM_BaseConfig;
   NVIC_InitTypeDef NVIC_InitStructure;
+  TIM_ICInitTypeDef TIM_ICInitStructure;
 
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+
+  TIM_TimeBaseStructInit(&TIM_BaseConfig);
+
+  TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
+  TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
+  TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+  TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+  TIM_ICInitStructure.TIM_ICFilter = 0x1;
+  TIM_ICInit(TIM2, &TIM_ICInitStructure);
+
+
+  TIM_ITConfig(TIM2, TIM_IT_CC2, ENABLE);
+
+  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+
+
+  TIM2->EGR |= 0x0001;          // Устанавливаем бит UG для принудительного сброса счетчика
+  TIM_Cmd(TIM2, ENABLE);
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+void tim3_Config()
+{
+  TIM_TimeBaseInitTypeDef TIM_BaseConfig;
+  NVIC_InitTypeDef NVIC_InitStructure;
+
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 
   TIM_TimeBaseStructInit(&TIM_BaseConfig);
 
@@ -205,19 +241,19 @@ void tim2_Config()
   TIM_BaseConfig.TIM_Period = 1;        // Общее количество тиков
   TIM_BaseConfig.TIM_CounterMode = TIM_CounterMode_Up;
 
-  TIM_ARRPreloadConfig(TIM2, ENABLE);
-  TIM_TimeBaseInit(TIM2, &TIM_BaseConfig);
+  TIM_ARRPreloadConfig(TIM3, ENABLE);
+  TIM_TimeBaseInit(TIM3, &TIM_BaseConfig);
 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
-  TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+  TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
 
-  TIM2->EGR |= 0x0001;          // Устанавливаем бит UG для принудительного сброса счетчика
-  TIM_Cmd(TIM2, ENABLE);
+  TIM3->EGR |= 0x0001;          // Устанавливаем бит UG для принудительного сброса счетчика
+  TIM_Cmd(TIM3, ENABLE);
 
 }
 

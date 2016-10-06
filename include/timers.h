@@ -3,6 +3,7 @@
 
 
 void tim2_Config(void);
+void tim3_Config(void);
 void timer9_Config(void);
 void timer10_Config(void);
 void sound_activate(void);

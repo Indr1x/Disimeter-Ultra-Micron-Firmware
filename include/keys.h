@@ -36,6 +36,7 @@ void usb_deactivate(uint32_t * param);
 void plus_rad_reset(uint32_t * param);
 
 void plus_ab_engage(uint32_t * param);
+void plus_amodul_engage(uint32_t * param);
 void plus_cal(uint32_t * param);
 void ab_meas_on(void);
 void ab_meas_off(void);

@@ -55,6 +55,7 @@ uint32_t madorc_impulse = 0;
 
 uint32_t Detector_AB_massive[15];       // 1 минута, интервалами по 4 сек
 uint32_t AB_fon = 0;            // Фон Альфа-Бета
+uint32_t AMODULE_fon[100];      // Фон Модуля-А
 
 
 FunctionalState Sound_key_pressed = DISABLE;
@@ -86,6 +87,7 @@ int main(void)
 
   Settings.Geiger_voltage = 360;        // Напряжение на датчике 360 вольт
   Settings.Pump_Energy = 350;   // энергия накачки 350 мТл
+  Settings.AMODUL_time = 5;
   DataUpdate.current_flash_page = 0;
 
   io_init();                    // Инициализация потров МК
@@ -107,6 +109,7 @@ int main(void)
   timer9_Config();              // Конфигурируем таймер накачки        
   timer10_Config();
   tim2_Config();
+  tim3_Config();
   sound_activate();
   delay_ms(100);
   sound_deactivate();
@@ -183,7 +186,7 @@ int main(void)
 
     if(!Power.USB_active)       // если USB не активен, можно уходить в сон
     {
-      if((current_pulse_count < 30) && (fon_level < 10000) && (AB_fon < 10000)) // Если счетчик не зашкаливает, то можно уйти в сон
+      if((current_pulse_count < 30) && (fon_level < 10000) && (AB_fon < 10000) && (Settings.AMODUL_mode == 0))  // Если счетчик не зашкаливает, то можно уйти в сон
       {
         if(SystemCoreClock > 20000000)  // Если частота выше 20 мгц, понизить частоту
           set_msi();

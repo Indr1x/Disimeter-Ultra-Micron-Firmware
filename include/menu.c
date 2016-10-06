@@ -18,8 +18,9 @@ MenuItem Menu_list[max_struct_index] = {
 {0x00, LANG_UNITS,		LANG_UR,			LANG_UZV,	"",					&Settings.units,				0x00,		0x01,		0x00,	&plus_one,				&minus_one},
 {0x00, LANG_CLEAR_FON,	"*",				"*", 		"*",				0x00,							0x00,		0x00,		0x00,	&plus_rad_reset,		0x00},
 {0x00, LANG_BETA_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_ab_engage,		0x00},
+{0x00, LANG_SCINT_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_amodul_engage,		0x00},
 {0x01, LANG_SPEED,		LANG_OFF,			LANG_ON,	"",					&Settings.Speedup,				0x00,		0x01,		0x00,	&plus_one,				&minus_one},
-// Заплатка на изотоп if(menu_struct_index == 10) ! Исправить в коде при изменении порядка пунктов меню!
+// Заплатка на изотоп if(menu_struct_index == 11) ! Исправить в коде при изменении порядка пунктов меню!
 {0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,				0x00,		0x03,		0x00,	&plus_one,				&minus_one},
 
 // Приватные пункты меню
@@ -28,7 +29,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, "LSI",			LANG_QUARTZ,		"",			LANG_UHZ,			&Settings.LSI_freq,				26000,		56000,		38000,	&plus_500,				&minus_500},
 {0x01, LANG_V4PUMP,		"",					"",			LANG_UV4PUMP,		&Settings.v4_target_pump,		4,			14,			11,		&plus_one,				&minus_one},
 {0x01, LANG_VOLTAGE,	"",					"",			LANG_UV,			&Settings.Geiger_voltage,		300,		450,		380,	&plus_ten,				&minus_ten},
-// Заплатка на бета окно if(menu_struct_index == 16) ! Исправить в коде при изменении порядка пунктов меню!
+// Заплатка на бета окно if(menu_struct_index == 17) ! Исправить в коде при изменении порядка пунктов меню!
 {0x01, LANG_BWINDOW,	"",					"",			LANG_BWINDOW_,		&Settings.Beta_window,			1,			100,		20,		&plus_one,				&minus_one},
 {0x01, LANG_BPROCENT,	"",					"",			LANG_BPROCENT_,		&Settings.Beta_procent,			1,			100,		37,		&plus_one,				&minus_one},
 {0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
@@ -38,7 +39,11 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_ISOTOP_CS137,"",				"",			LANG_USEC,			&Settings.Isotop_count_cs137,			100,		1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_EU152,"",				"",			LANG_USEC,			&Settings.Isotop_count_eu152,			100,		1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_NA22, "",				"",			LANG_USEC,			&Settings.Isotop_count_na22,			100,		1450,		250,	&plus_ten,				&minus_ten},
-{0x01, LANG_ISOTOP_CD109,"",				"",			LANG_USEC,			&Settings.Isotop_count_cd109,			100,		1450,		250,	&plus_ten,				&minus_ten}
+{0x01, LANG_ISOTOP_CD109,"",				"",			LANG_USEC,			&Settings.Isotop_count_cd109,			100,		1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_CS137,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cs137,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_EU152,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_eu152,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_NA22, "",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_na22,	    		10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_CD109,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cd109,			10,	    	1450,		250,	&plus_ten,				&minus_ten}
 
 /*	{  0x01, "Индукция",	    "",		  						"",			        	"%uмТл",	     &Settings.Pump_Energy,                                  150,     450,      250,     &plus_50,                 &minus_50},
   {  0x00, "Подсветка",		  "откл",							"",			        	"%uсек",	     &Settings.Led_Sleep_time,                               0,       300,      30,      &plus_sleep,              &minus_sleep},
@@ -70,7 +75,7 @@ void main_screen()
   uint32_t battery_procent, i = 0, x = 0;
 
   //Рачсет процента батарейки 3.5В = 0% 4.0В = 100%
-  if(Settings.AB_mode == 0)
+  if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
   {
     battery_procent = ADCData.Batt_voltage;
     battery_procent -= 3500;
@@ -118,7 +123,7 @@ void main_screen()
     }
   }
 
-  if(Settings.AB_mode == 0)
+  if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
   {
     switch (main_menu_stat)
     {
@@ -288,7 +293,21 @@ void main_screen()
     }
   } else
   {
-    Draw_AB_digit(4, 1, 0);
+    // Режим "Замер А-В"
+    if(Settings.AB_mode > 0)
+      Draw_AB_digit(4, 1, 0);
+
+    // Режим "Модуль-А"
+    if(Settings.AMODUL_mode > 0)
+      Draw_AMODUL_digit(1, 1, 0);
+
+    sprintf(lcd_buf, LANG_AMODUL);      // Пишем в буфер значение счетчика
+    LcdString(1, 4);            // // Выводим обычным текстом содержание буфера
+
+    sprintf(lcd_buf, LANG_TIME);        // Пишем в буфер значение счетчика
+    LcdString(1, 5);            // // Выводим обычным текстом содержание буфера
+    sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);  // Пишем в буфер значение счетчика
+    LcdString(7, 5);            // // Выводим обычным текстом содержание буфера
   }
 
   if(Settings.Cal_mode == 1)
@@ -300,10 +319,17 @@ void main_screen()
     LcdString(1, 2);            // // Выводим обычным текстом содержание буфера    
   } else
   {
-    Draw_fon_digit(1, 1, 0);
+    if(Settings.AMODUL_mode == 0)
+      Draw_fon_digit(1, 1, 0);
   }
 
-  Draw_fon_graph(2, 94, 67 - 25, 67);
+  if(Settings.AMODUL_mode > 0)
+  {
+    Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+  } else
+  {
+    Draw_fon_graph(2, 94, 67 - 25, 67);
+  }
 
   if(auto_speedup_factor > 1)
   {
@@ -396,7 +422,7 @@ void menu_screen()
       sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value));
 
     // Заплатка на изотоп
-    if(menu_struct_index == 10)
+    if(menu_struct_index == 11)
     {
       tmpi = *Menu_list[menu_struct_index].Parameter_value;
       switch (tmpi)
@@ -416,7 +442,7 @@ void menu_screen()
       }
     }
     // Заплатка на бета окно
-    if(menu_struct_index == 16)
+    if(menu_struct_index == 17)
     {
       tmp = *Menu_list[menu_struct_index].Parameter_value;
       tmp = tmp / 10;
@@ -532,7 +558,7 @@ void stat_screen()
     //sprintf (lcd_buf, LANG_DSENS,   Wakeup.sensor_wakeup);                LcdString(1,8);
     sprintf(lcd_buf, "Clk %8i", SystemCoreClock);
     LcdString(1, 6);
-    sprintf(lcd_buf, "tim2pre %5i", TIM_GetPrescaler(TIM2));
+    sprintf(lcd_buf, "tim3pre %5i", TIM_GetPrescaler(TIM3));
     LcdString(1, 7);
     sprintf(lcd_buf, "tim10pr %5i", TIM_GetPrescaler(TIM10));
     LcdString(1, 8);
