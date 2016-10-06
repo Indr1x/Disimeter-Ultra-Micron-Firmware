@@ -20,7 +20,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x00, LANG_BETA_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_ab_engage,		0x00},
 {0x00, LANG_SCINT_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_amodul_engage,		0x00},
 {0x01, LANG_SPEED,		LANG_OFF,			LANG_ON,	"",					&Settings.Speedup,				0x00,		0x01,		0x00,	&plus_one,				&minus_one},
-// Заплатка на изотоп if(menu_struct_index == 11) ! Исправить в коде при изменении порядка пунктов меню!
+// Заплатка на изотоп if(menu_struct_index == 10) ! Исправить в коде при изменении порядка пунктов меню!
 {0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,				0x00,		0x03,		0x00,	&plus_one,				&minus_one},
 
 // Приватные пункты меню
@@ -29,7 +29,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, "LSI",			LANG_QUARTZ,		"",			LANG_UHZ,			&Settings.LSI_freq,				26000,		56000,		38000,	&plus_500,				&minus_500},
 {0x01, LANG_V4PUMP,		"",					"",			LANG_UV4PUMP,		&Settings.v4_target_pump,		4,			14,			11,		&plus_one,				&minus_one},
 {0x01, LANG_VOLTAGE,	"",					"",			LANG_UV,			&Settings.Geiger_voltage,		300,		450,		380,	&plus_ten,				&minus_ten},
-// Заплатка на бета окно if(menu_struct_index == 17) ! Исправить в коде при изменении порядка пунктов меню!
+// Заплатка на бета окно if(menu_struct_index == 16) ! Исправить в коде при изменении порядка пунктов меню!
 {0x01, LANG_BWINDOW,	"",					"",			LANG_BWINDOW_,		&Settings.Beta_window,			1,			100,		20,		&plus_one,				&minus_one},
 {0x01, LANG_BPROCENT,	"",					"",			LANG_BPROCENT_,		&Settings.Beta_procent,			1,			100,		37,		&plus_one,				&minus_one},
 {0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
@@ -299,6 +299,7 @@ void main_screen()
 
     // Режим "Модуль-А"
     if(Settings.AMODUL_mode > 0)
+    {
       Draw_AMODUL_digit(1, 1, 0);
 
     sprintf(lcd_buf, LANG_AMODUL);      // Пишем в буфер значение счетчика
@@ -308,6 +309,7 @@ void main_screen()
     LcdString(1, 5);            // // Выводим обычным текстом содержание буфера
     sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);  // Пишем в буфер значение счетчика
     LcdString(7, 5);            // // Выводим обычным текстом содержание буфера
+    }
   }
 
   if(Settings.Cal_mode == 1)
