@@ -170,9 +170,6 @@ void EXTI9_5_IRQHandler(void)
   extern __IO uint8_t Receive_Buffer[64];
   extern __IO uint32_t Receive_length;
   extern __IO uint32_t length;
-#ifdef debug
-  Wakeup.sensor_wakeup++;
-#endif
   if(EXTI_GetITStatus(EXTI_Line8) != RESET)
   {
     EXTI_ClearITPendingBit(EXTI_Line8);
@@ -240,9 +237,6 @@ void EXTI9_5_IRQHandler(void)
 // Прерывание при конце интервала одного импульса накачки
 void TIM9_IRQHandler(void)
 {
-#ifdef debug
-  Wakeup.tim9_wakeup++;
-#endif
   if((TIM9->CCER & (TIM_CCx_Enable << TIM_Channel_1)) && !poweroff_state)
   {
     current_pulse_count++;
@@ -313,13 +307,46 @@ void TIM3_IRQHandler(void)
 
 void TIM2_IRQHandler(void)
 {
+  uint32_t i = 0;
   if(TIM_GetITStatus(TIM2, TIM_IT_CC2) != RESET)
   {
     TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
-    AMODULE_fon[0]++;
+    if(spect_impulse == DISABLE)
+    {
+      if(!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1))
+      {
+        spect_impulse = ENABLE;
+        AMODULE_timstart = TIM_GetCapture2(TIM2);
+        AMODULE_fon[0]++;
+      }
+    } else
+    {
+      spect_impulse = DISABLE;
+      AMODULE_timend = TIM_GetCapture2(TIM2);
+
+      /* Capture computation */
+      if(AMODULE_timend > AMODULE_timstart)
+      {
+        i = (AMODULE_timend - AMODULE_timstart) - 1;
+      } else if(AMODULE_timend < AMODULE_timstart)
+      {
+        i = ((0xFFFF - AMODULE_timstart) + AMODULE_timend) - 1;
+      } else
+      {
+        i = 0;
+      }
+//////////////////////////////////////////////////      
+
+      i = i - Settings.AMODUL_spect_start;
+      i = i / Settings.AMODUL_spect_multi;
+
+      if(i < 100)
+      {
+        AMODULE_len[i]++;       // Фон Модуля-А
+      }
+    }
   }
 }
-
 
 
 ////////////////////////////////////////
@@ -329,15 +356,12 @@ void TIM2_IRQHandler(void)
 void RTC_Alarm_IRQHandler(void)
 {                               // Тик каждые 4 секунды
   int i;
-#ifdef debug
-  Wakeup.rtc_wakeup++;
-#endif
 
+  EXTI_ClearITPendingBit(EXTI_Line17);
   // Модуль-А
   if(RTC_GetITStatus(RTC_IT_ALRB) != RESET)
   {
     RTC_ClearITPendingBit(RTC_IT_ALRB);
-    EXTI_ClearITPendingBit(EXTI_Line17);
 
     if(!poweroff_state)
     {
@@ -351,6 +375,8 @@ void RTC_Alarm_IRQHandler(void)
 
       DataUpdate.Need_display_update = ENABLE;
 
+      Power.sleep_time = Settings.Sleep_time;
+      Power.led_sleep_time = Settings.Sleep_time - 3;
     }
 
   }
@@ -358,7 +384,6 @@ void RTC_Alarm_IRQHandler(void)
   if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
   {
     RTC_ClearITPendingBit(RTC_IT_ALRA);
-    EXTI_ClearITPendingBit(EXTI_Line17);
     if(!poweroff_state)
     {
       Set_next_alarm_wakeup();  // установить таймер просыпания на +4 секунды
@@ -390,16 +415,6 @@ void RTC_Alarm_IRQHandler(void)
       // Счетчик времени для обновления счетчика импульсов накачки
       if(DataUpdate.pump_counter_update_time > 14)
       {
-#ifdef debug
-        Wakeup.total_wakeup = 0;
-        Wakeup.total_cycle = 0;
-        Wakeup.rtc_wakeup = 0;
-        Wakeup.tim9_wakeup = 0;
-        Wakeup.pump_wakeup = 0;
-        Wakeup.comp_wakeup = 0;
-        Wakeup.sensor_wakeup = 0;
-#endif
-
         if(!Power.USB_active)
           madorc_impulse = 0;
         pump_counter_avg_impulse_by_1sec[1] = pump_counter_avg_impulse_by_1sec[0];
@@ -600,9 +615,6 @@ void RTC_Alarm_IRQHandler(void)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void RTC_WKUP_IRQHandler(void)
 {
-#ifdef debug
-  Wakeup.pump_wakeup++;
-#endif
   EXTI_ClearITPendingBit(EXTI_Line20);
   if(!poweroff_state)
   {
@@ -625,9 +637,6 @@ void COMP_IRQHandler(void)
 {
   uint32_t i;
   extern uint16_t current_pulse_count;
-#ifdef debug
-  Wakeup.comp_wakeup++;
-#endif
   if(EXTI_GetITStatus(EXTI_Line22) != RESET)
   {
     if(!poweroff_state)
@@ -682,9 +691,6 @@ void COMP_IRQHandler(void)
 #endif
 
           }
-#ifdef debug
-          debug_wutr = i;
-#endif
 #ifdef version_401              // Для версии 4+
           if(i == 0x2000)
           {

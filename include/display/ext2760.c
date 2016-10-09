@@ -580,7 +580,6 @@ void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t 
   x_lenght = x_end - x_start;
   y_lenght = y_end - y_start;
 
-
   scalling_factor = y_lenght / 10;
   for (q = 0; q < x_lenght + 1; q++)
   {
@@ -602,6 +601,91 @@ void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t 
 
   LcdLine(x_end, y_start, x_end, y_start - 2, 1);
   LcdLine(x_end, y_end, x_end, y_end + 2, 1);
+
+  LcdPixel(x_start, y_start + (y_lenght / 2), 1);
+  LcdPixel(x_end, y_start + (y_lenght / 2), 1);
+
+  for (j = x_lenght; j > 0; j--)
+  {
+    if((j % 4) == 0)
+    {
+      LcdPixel(x_start + j, y_start, 1);        // up line
+      LcdPixel(x_start + j, y_start + (y_lenght / 2), 1);       // middle line
+      LcdPixel(x_start + j, y_end, 1);  // down line
+    }
+
+    if((j % 8) == 0)
+    {
+      for (q = y_lenght; q > 0; q--)
+      {
+        if((q % 3) == 0)
+          LcdPixel(x_start + j, y_end - q, 1);  // vertical line
+      }
+    }
+  }
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+void Draw_AMODUL_graph_spectr(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end, uint8_t page)
+{
+  uint32_t x_lenght = 0, y_lenght = 0;
+  uint32_t q = 0, i = 0, j = 0;
+  uint32_t scalling_factor = 0;
+
+  for (i = x_start; i <= x_end; i++)
+  {
+    for (j = y_start; j <= y_end; j++)
+    {
+      LcdPixel(i, j, 0);
+    }
+  }
+
+  x_lenght = x_end - x_start;
+  y_lenght = y_end - y_start;
+
+  scalling_factor = y_lenght / 10;
+  for (q = 0; q < 100; q++)
+  {
+    if(AMODULE_len[q] > scalling_factor)
+      scalling_factor = AMODULE_len[q];
+  }
+
+  for (q = x_end; q >= x_start; q--)
+  {
+    i = AMODULE_len[(page * x_lenght) + (x_end - q)];
+    if(i > 0)
+      LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
+  }
+
+  // –исуем маркеры над графиком
+
+  LcdLine(Settings.AMODUL_spect_mark1, y_start - 3, Settings.AMODUL_spect_mark1 + 1, y_start - 3, 1);
+  LcdLine(Settings.AMODUL_spect_mark1, y_start - 2, Settings.AMODUL_spect_mark1 + 1, y_start - 2, 1);
+
+  LcdLine(Settings.AMODUL_spect_mark2, y_start - 3, Settings.AMODUL_spect_mark2 + 1, y_start - 3, 1);
+  LcdLine(Settings.AMODUL_spect_mark2, y_start - 2, Settings.AMODUL_spect_mark2 + 1, y_start - 2, 1);
+
+  LcdLine(Settings.AMODUL_spect_mark3, y_start - 3, Settings.AMODUL_spect_mark3 + 1, y_start - 3, 1);
+  LcdLine(Settings.AMODUL_spect_mark3, y_start - 2, Settings.AMODUL_spect_mark3 + 1, y_start - 2, 1);
+
+  LcdLine(Settings.AMODUL_spect_mark4, y_start - 3, Settings.AMODUL_spect_mark4 + 1, y_start - 3, 1);
+  LcdLine(Settings.AMODUL_spect_mark4, y_start - 2, Settings.AMODUL_spect_mark4 + 1, y_start - 2, 1);
+
+  LcdLine(Settings.AMODUL_spect_mark5, y_start - 3, Settings.AMODUL_spect_mark5 + 1, y_start - 3, 1);
+  LcdLine(Settings.AMODUL_spect_mark5, y_start - 2, Settings.AMODUL_spect_mark5 + 1, y_start - 2, 1);
+
+
+  //risuem setku
+//  LcdLine(x_start, y_start, x_start, y_start - 2, 1);
+//  LcdLine(x_start, y_end, x_start, y_end + 2, 1);
+
+//  LcdLine(x_end, y_start, x_end, y_start - 2, 1);
+//  LcdLine(x_end, y_end, x_end, y_end + 2, 1);
 
   LcdPixel(x_start, y_start + (y_lenght / 2), 1);
   LcdPixel(x_end, y_start + (y_lenght / 2), 1);
@@ -792,7 +876,7 @@ void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
     LcdStringBold(start_char, line);
   } else
   {
-    fonusvh =  fonmodule;
+    fonusvh = fonmodule;
     fonusvh /= Settings.ACAL_count;
 
     sprintf(lcd_buf, LANG_UZ);
@@ -801,15 +885,15 @@ void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
     sprintf(lcd_buf, LANG_H);
     LcdString(((start_char + 6) * 2), line + 1);
 
-LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
-      
-      
-    if(fonusvh <= 1000)     // 999.99 мк«в/ч
+    LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
+
+
+    if(fonusvh <= 1000)         // 999.99 мк«в/ч
     {
       sprintf(lcd_buf, "%6.2f", fonusvh);
     } else
     {
-      if(fonusvh <= 1000)  // 9999.9 мк«в/ч
+      if(fonusvh <= 1000)       // 9999.9 мк«в/ч
       {
         sprintf(lcd_buf, "%6.1f", fonusvh);
       } else

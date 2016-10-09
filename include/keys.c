@@ -605,6 +605,7 @@ void keys_proccessing(void)
 {
   extern uint16_t key;
   extern SettingsDef Settings;
+  int i;
 
   /////////////////////////////////
   if(key & 0x2)                 // Êíîïêà +
@@ -619,15 +620,23 @@ void keys_proccessing(void)
 
     if(Settings.AMODUL_mode > 0)
     {
-      if(Settings.AMODUL_time <= 2)
+      if(Settings.AMODUL_unit < 2)
       {
-        Settings.AMODUL_time = 5;
+        if(Settings.AMODUL_time <= 2)
+        {
+          Settings.AMODUL_time = 5;
+        } else
+        {
+          Settings.AMODUL_time += 5;
+        }
+        if(Settings.AMODUL_time > 30)
+          Settings.AMODUL_time = 2;
       } else
       {
-        Settings.AMODUL_time += 5;
+        AMODULE_page++;
+        if(AMODULE_page >= 5)
+          AMODULE_page = 0;
       }
-      if(Settings.AMODUL_time > 30)
-        Settings.AMODUL_time = 2;
     }
 
     if(Settings.AB_mode > 0)
@@ -643,11 +652,7 @@ void keys_proccessing(void)
         main_menu_stat++;
       if(screen == 3)
       {
-#ifdef debug
-        if(stat_screen_number == 2)
-#else
         if(stat_screen_number == 1)
-#endif
         {
           stat_screen_number = 0;
         } else
@@ -697,7 +702,12 @@ void keys_proccessing(void)
     if(Settings.AMODUL_mode > 0)
     {
       Settings.AMODUL_unit++;
-      if(Settings.AMODUL_unit > 1)
+      if(Settings.AMODUL_unit == 2)
+      {
+        for (i = 0; i < 100; i++)
+          AMODULE_len[i] = 0;
+      }
+      if(Settings.AMODUL_unit > 2)
         Settings.AMODUL_unit = 0;
     }
 
@@ -716,11 +726,7 @@ void keys_proccessing(void)
         if(stat_screen_number == 0)
         {
 
-#ifdef debug
-          stat_screen_number = 2;
-#else
           stat_screen_number = 1;
-#endif
         } else
         {
           stat_screen_number--;

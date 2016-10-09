@@ -32,9 +32,6 @@ uint32_t USB_not_active = 0;
 uint32_t last_count_pump_on_impulse = 0;
 FunctionalState pump_on_impulse = DISABLE;
 uint32_t menu_select = 0;
-#ifdef debug
-uint32_t debug_wutr = 0;
-#endif
 FunctionalState enter_menu_item = DISABLE;
 uint8_t screen = 1;
 uint8_t stat_screen_number = 0;
@@ -44,10 +41,22 @@ FunctionalState poweroff_state = DISABLE;
 FunctionalState hidden_menu = DISABLE;
 FunctionalState Pump_on_alarm = DISABLE;
 
+FunctionalState spect_impulse = DISABLE;
+
 uint32_t unlock_0_serial = 0;
 uint32_t unlock_1_serial = 0;
 uint32_t unlock_2_serial = 0;
 uint32_t unlock_3_serial = 0;
+
+uint32_t AMODULE_timend = 0;
+uint32_t AMODULE_timstart = 0;
+uint32_t AMODULE_Capture = 0;
+uint8_t AMODULE_page = 0;
+
+uint16_t AMODULE_fon[100];      // Фон Модуля-А
+uint16_t AMODULE_len[100];
+uint32_t AMODULE_count = 0;
+
 
 uint32_t working_days = 0;
 
@@ -55,7 +64,6 @@ uint32_t madorc_impulse = 0;
 
 uint32_t Detector_AB_massive[15];       // 1 минута, интервалами по 4 сек
 uint32_t AB_fon = 0;            // Фон Альфа-Бета
-uint32_t AMODULE_fon[100];      // Фон Модуля-А
 
 
 FunctionalState Sound_key_pressed = DISABLE;
@@ -65,9 +73,6 @@ ADCDataDef ADCData;
 SettingsDef Settings;
 AlarmDef Alarm;
 PowerDef Power;
-#ifdef debug
-WakeupDef Wakeup;
-#endif
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -190,42 +195,25 @@ int main(void)
       {
         if(SystemCoreClock > 20000000)  // Если частота выше 20 мгц, понизить частоту
           set_msi();
-        //if(DataUpdate.RTC_tick_update==ENABLE)        RTC_tick_processing();
 
         if(!Power.Pump_active && !Power.Sound_active)
         {
-//#ifndef debug
           PWR_FastWakeUpCmd(ENABLE);
           PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI); // Переходим в сон
           PWR_FastWakeUpCmd(DISABLE);
-//#endif
-#ifdef debug
-          Wakeup.total_wakeup++;
-          DataUpdate.Need_display_update = ENABLE;
-#endif
-
         } else
         {
           PWR_EnterSleepMode(PWR_Regulator_ON, PWR_SLEEPEntry_WFI);
-#ifdef debug
-          Wakeup.total_wakeup++;
-          DataUpdate.Need_display_update = ENABLE;
-#endif
         }
-        //if(DataUpdate.RTC_tick_update==ENABLE)        RTC_tick_processing();
       } else
       {                         // Если фон очень высокий, переключаем частоту МК на максимум
-        if(ADCData.Power_voltage > 2800)
-          if(SystemCoreClock < 20000000)        // Если частота ниже 20 мгц, поднять частоту
-            set_pll_for_usb();
+        if((ADCData.Power_voltage > 2800) && (SystemCoreClock < 20000000))      // Если частота ниже 20 мгц, поднять частоту
+          set_pll_for_usb();
+
       }
+
     } else
       USB_work();               // если USB активен, попробовать передать данные
-#ifdef debug
-    Wakeup.total_cycle++;
-    DataUpdate.Need_display_update = ENABLE;
-#endif
-
   }
 /////////////////////////////////////////////////////////////////////////////// 
 }

@@ -50,10 +50,26 @@ typedef enum
 #define Isotop_count_eu152_address         0x88
 #define Isotop_count_na22_address          0x8C
 #define Isotop_count_cd109_address         0x90
+
 #define Isotop_ACAL_cs137_address          0x94
 #define Isotop_ACAL_eu152_address          0x98
 #define Isotop_ACAL_na22_address           0x9C
 #define Isotop_ACAL_cd109_address          0xA0
+
+
+#define AMODUL_spect_start_address         0xA4
+#define AMODUL_spect_multi_address         0xA8
+
+#define AMODUL_spect_mark1_address         0xAC
+#define AMODUL_spect_mark2_address         0xB0
+#define AMODUL_spect_mark3_address         0xB4
+#define AMODUL_spect_mark4_address         0xB8
+#define AMODUL_spect_mark5_address         0xBC
+
+
+#define Isotop_count_am241_address         0xC0
+#define Isotop_ACAL_am241_address          0xC4
+
 
 extern uint32_t NbrOfPage, Address;
 

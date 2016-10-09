@@ -142,11 +142,23 @@ typedef struct
   uint32_t Isotop_count_eu152;
   uint32_t Isotop_count_na22;
   uint32_t Isotop_count_cd109;
+  uint32_t Isotop_count_am241;
 
   uint32_t Isotop_ACAL_cs137;
   uint32_t Isotop_ACAL_eu152;
   uint32_t Isotop_ACAL_na22;
   uint32_t Isotop_ACAL_cd109;
+  uint32_t Isotop_ACAL_am241;
+
+
+  uint32_t AMODUL_spect_start;
+  uint32_t AMODUL_spect_multi;
+
+  uint32_t AMODUL_spect_mark1;
+  uint32_t AMODUL_spect_mark2;
+  uint32_t AMODUL_spect_mark3;
+  uint32_t AMODUL_spect_mark4;
+  uint32_t AMODUL_spect_mark5;
 
 
   uint32_t AMODUL_mode;         // 0-выкл 1-Модуль-А
@@ -211,7 +223,7 @@ extern uint16_t Detector_massive[Detector_massive_pointer_max + 1];
 extern uint32_t Detector_AB_massive[15];        // 1 минута, интервалами по 4 сек
 
 extern uint32_t AB_fon;         // Фон Альфа-Бета
-extern uint32_t AMODULE_fon[100];       // Фон Альфа-Бета
+extern uint16_t AMODULE_fon[100];       // Фон Альфа-Бета
 
 #define FLASH_PAGE_SIZE                 0x100   // (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 #define FLASH_START_ADDR                0x0800F000
@@ -258,6 +270,8 @@ extern uint32_t USB_not_active;
 extern uint32_t last_count_pump_on_impulse;
 extern FunctionalState pump_on_impulse;
 
+extern FunctionalState spect_impulse;
+
 extern uint32_t unlock_0_serial;
 extern uint32_t unlock_1_serial;
 extern uint32_t unlock_2_serial;
@@ -267,6 +281,13 @@ extern uint32_t Cal_count;
 extern uint32_t Cal_count_time;
 
 extern uint8_t Pump_on_alarm_count;
+
+extern uint32_t AMODULE_timend;
+extern uint32_t AMODULE_timstart;
+extern uint32_t AMODULE_Capture;
+extern uint8_t AMODULE_page;
+extern uint16_t AMODULE_len[];
+extern uint32_t AMODULE_count;
 
 
 extern FunctionalState hidden_menu;

@@ -46,10 +46,24 @@
 #define LANG_ISOTOP    "Изотоп"
 #define LANG_AMODUL    "Актив. Модуль-А"
 
+#define LANG_SPECT_START  "Спек. нач."
+#define LANG_SPECT_MULTIP "Спек. дел."
+#define LANG_SPECT_MARK1  "Cп. марк.1"
+#define LANG_SPECT_MARK2  "Cп. марк.2"
+#define LANG_SPECT_MARK3  "Cп. марк.3"
+#define LANG_SPECT_MARK4  "Cп. марк.4"
+#define LANG_SPECT_MARK5  "Cп. марк.5"
+
 #define LANG_ISOTOP_CS137    "Cs-137"
 #define LANG_ISOTOP_EU152    "Eu-152"
 #define LANG_ISOTOP_NA22     "Na-22"
 #define LANG_ISOTOP_CD109    "Cd-109"
+#define LANG_ISOTOP_AM241    "Am-241"
+
+#define LANG_SPECT_MARK_TEXT1 "Маркеры: 1:60keV"
+#define LANG_SPECT_MARK_TEXT2 "2:121k 3:344k"
+#define LANG_SPECT_MARK_TEXT3 "4:661k 5:>800k"
+
 
 ///////////////////////////////////////////////////////
 
@@ -159,8 +173,22 @@
 #define LANG_ISOTOP_EU152    "Eu-152"
 #define LANG_ISOTOP_NA22     "Na-22"
 #define LANG_ISOTOP_CD109    "Cd-109"
+#define LANG_ISOTOP_AM241    "Am-241"
 
 #define LANG_AMODUL    "Module-A act."
+
+#define LANG_SPECT_START  "Spec.start"
+#define LANG_SPECT_MULTIP "Spec.mul."
+#define LANG_SPECT_MARK1  "Spec.Mark1"
+#define LANG_SPECT_MARK2  "Spec.Mark2"
+#define LANG_SPECT_MARK3  "Spec.Mark3"
+#define LANG_SPECT_MARK4  "Spec.Mark4"
+#define LANG_SPECT_MARK5  "Spec.Mark5"
+
+#define LANG_SPECT_MARK_TEXT1 "Mark: 1:60keV"
+#define LANG_SPECT_MARK_TEXT2 "2:121k 3:344k"
+#define LANG_SPECT_MARK_TEXT3 "4:661k 5:>800k"
+
 
 ///////////////////////////////////////////////////////
 

@@ -87,6 +87,7 @@ void LcdStringInv(unsigned char x, unsigned char y);    // печатает строку в инв
 
 void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end);
 void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end);
+void Draw_AMODUL_graph_spectr(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end, uint8_t page);
 void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end);
 void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds);
 void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds);

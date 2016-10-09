@@ -21,7 +21,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x00, LANG_SCINT_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_amodul_engage,		0x00},
 {0x01, LANG_SPEED,		LANG_OFF,			LANG_ON,	"",					&Settings.Speedup,				0x00,		0x01,		0x00,	&plus_one,				&minus_one},
 // Заплатка на изотоп if(menu_struct_index == 10) ! Исправить в коде при изменении порядка пунктов меню!
-{0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,				0x00,		0x03,		0x00,	&plus_one,				&minus_one},
+{0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,				0x00,		0x04,		0x00,	&plus_one,				&minus_one},
 
 // Приватные пункты меню
 {0x01, LANG_CONTRAST,	"",					"",			"%u",				&Settings.contrast,				0,			15,			0,		&plus_one,				&minus_one},
@@ -40,27 +40,21 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_ISOTOP_EU152,"",				"",			LANG_USEC,			&Settings.Isotop_count_eu152,			100,		1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_NA22, "",				"",			LANG_USEC,			&Settings.Isotop_count_na22,			100,		1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_CD109,"",				"",			LANG_USEC,			&Settings.Isotop_count_cd109,			100,		1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_AM241,"",				"",			LANG_USEC,			&Settings.Isotop_count_am241,			100,		1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_CS137,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cs137,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_EU152,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_eu152,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_NA22, "",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_na22,	    		10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, LANG_ISOTOP_CD109,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cd109,			10,	    	1450,		250,	&plus_ten,				&minus_ten}
+{0x01, LANG_ISOTOP_CD109,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cd109,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_AM241,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_am241,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 
-/*	{  0x01, "Индукция",	    "",		  						"",			        	"%uмТл",	     &Settings.Pump_Energy,                                  150,     450,      250,     &plus_50,                 &minus_50},
-  {  0x00, "Подсветка",		  "откл",							"",			        	"%uсек",	     &Settings.Led_Sleep_time,                               0,       300,      30,      &plus_sleep,              &minus_sleep},
-  {  0x01, "Звук",	        "",		  						"",			        	"%uкГц",	     &Settings.Sound_freq,                                   1,       10,       8,       &plus_one,                &minus_one}
-  {  0x01, "Потребление",	  "мин",  						"макс",		       	"",	           &Settings.Power_comp,                                   0,       1,        0,       &plus_one,                &minus_one}
-  {  0x01, "Час",	    		  "%u",		  					"%u",			       	"%u",			     &RTC_Time.Hour,                        						     0,       23,       0,       &plus_one,                &minus_one},
-  {  0x01, "Минута",	 		  "%u",								"%u",			       	"%u",		  	   &RTC_Time.Minute,                     								   0,       59,       0,       &plus_one,                &minus_one},
-  {  0x01, "Секунда",	      "%u",								"%u",			       	"%u",		    	 &RTC_Time.Second,                              				 0,       59,       0,       &plus_one,                &minus_one},
-  {  0x01, "День",	   		  "%u",		  					"%u",			       	"%u",			     &RTC_Time.Day,                          							   1,       31,       0,       &plus_one,                &minus_one},
-  {  0x01, "Месяц",	 			  "%u",								"%u",			       	"%u",		  	   &RTC_Time.Month,                          							 1,       12,       0,       &plus_one,                &minus_one},
-  {  0x01, "Год",	   		  	"%u",								"%u",			       	"%u",		    	 &RTC_Time.Year,                            			       2014,    2050,     0,       &plus_one,                &minus_one}
-  {  0x01, "Накл. сч/x",	  "",									"",			        	".%01u%%",	   &Settings.Geiger_angle_of_counter_characteristics,      1,       9,        5,       &plus_one,                &minus_one},
-  {  0x01, "Корр. ВВ",	    "",									"",			        	"%u%%",	       &Settings.HV_ADC_Corr,                                  1,       99,       42,      &plus_one,                &minus_one},
-  {  0x01, "ВВ имп/счет",	  "",									"",			        	"%uимп",	     &Settings.pump_pulse_by_impulse,                        1,       40,       5,       &plus_one,                &minus_one},
-  {  0x00, "Выключение",    "*",		  					"*",		        	"*",	         0x00,                                                   0x00,    0x00,     0x00,    &plus_poweroff,           0x00},
-  {  0x01, "ВВ скваж.",	    "",									"",			        	"%u",	         &Settings.pump_skvagennost,                             1,       50,       8,       &plus_one,                &minus_one}
-*/
+{0x01, LANG_SPECT_START,"",				    "",			"%u",	    		&Settings.AMODUL_spect_start,			10,	    	20000,		1000,	&plus_ten,				&minus_ten},
+{0x01, LANG_SPECT_MULTIP,"",				"",			"%u",		    	&Settings.AMODUL_spect_multi,			1,	    	200,	   	70,	    &plus_one,				&minus_one},
+{0x01, LANG_SPECT_MARK1,"",				    "",			"%u",	    		&Settings.AMODUL_spect_mark1,			1,	    	100,		10, 	&plus_one,				&minus_one},
+{0x01, LANG_SPECT_MARK2,"",				    "",			"%u",	    		&Settings.AMODUL_spect_mark2,			1,	    	100,		20,	    &plus_one,				&minus_one},
+{0x01, LANG_SPECT_MARK3,"",				    "",			"%u",	    		&Settings.AMODUL_spect_mark3,			1,	    	100,		30,	    &plus_one,				&minus_one},
+{0x01, LANG_SPECT_MARK4,"",				    "",			"%u",	    		&Settings.AMODUL_spect_mark4,			1,	    	100,		40,	    &plus_one,				&minus_one},
+{0x01, LANG_SPECT_MARK5,"",				    "",			"%u",	    		&Settings.AMODUL_spect_mark5,			1,	    	100,		50,	    &plus_one,				&minus_one}
+
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* *INDENT-ON* */
@@ -300,15 +294,18 @@ void main_screen()
     // Режим "Модуль-А"
     if(Settings.AMODUL_mode > 0)
     {
-      Draw_AMODUL_digit(1, 1, 0);
+      if(Settings.AMODUL_unit < 2)
+      {
+        Draw_AMODUL_digit(1, 1, 0);
 
-    sprintf(lcd_buf, LANG_AMODUL);      // Пишем в буфер значение счетчика
-    LcdString(1, 4);            // // Выводим обычным текстом содержание буфера
+        sprintf(lcd_buf, LANG_AMODUL);  // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
 
-    sprintf(lcd_buf, LANG_TIME);        // Пишем в буфер значение счетчика
-    LcdString(1, 5);            // // Выводим обычным текстом содержание буфера
-    sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);  // Пишем в буфер значение счетчика
-    LcdString(7, 5);            // // Выводим обычным текстом содержание буфера
+        sprintf(lcd_buf, LANG_TIME);    // Пишем в буфер значение счетчика
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+        sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);      // Пишем в буфер значение счетчика
+        LcdString(7, 5);        // // Выводим обычным текстом содержание буфера
+      }
     }
   }
 
@@ -327,7 +324,24 @@ void main_screen()
 
   if(Settings.AMODUL_mode > 0)
   {
-    Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+    if(Settings.AMODUL_unit < 2)
+    {
+      Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+    } else
+    {
+      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT1);  // Пишем в буфер значение счетчика
+      LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
+
+      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT2);  // Пишем в буфер значение счетчика
+      LcdString(1, 2);          // // Выводим обычным текстом содержание буфера
+
+      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT3);  // Пишем в буфер значение счетчика
+      LcdString(1, 3);          // // Выводим обычным текстом содержание буфера
+
+
+      Draw_AMODUL_graph_spectr(2, 96, 67 - 38, 67, 0);
+    }
+
   } else
   {
     Draw_fon_graph(2, 94, 67 - 25, 67);
@@ -531,43 +545,6 @@ void stat_screen()
     sprintf(lcd_buf, LANG_4IDN, working_days);  // Выводим на дисплей
     LcdString(9, 8);            // // Выводим обычным текстом содержание буфера на строку 8
     break;
-
-#ifdef debug
-  case 2:
-/*
-  	sprintf (lcd_buf, "30 R %9i", flash_read_Doze_massive(61)); LcdString(1,1);
-  	sprintf (lcd_buf, "31 R %9i", flash_read_Doze_massive(62)); LcdString(1,2);
-  	sprintf (lcd_buf, "32 R %9i", flash_read_Doze_massive(63));	LcdString(1,3);
-  	sprintf (lcd_buf, "0  F %09X", flash_read_Doze_massive(64));	LcdString(1,4);
-  	sprintf (lcd_buf, "1  F %09X", flash_read_Doze_massive(65));	LcdString(1,5);
-  	sprintf (lcd_buf, "2  F %09X", flash_read_Doze_massive(66));	LcdString(1,6);
-  	sprintf (lcd_buf, "3  F %09X", flash_read_Doze_massive(67));	LcdString(1,7);
-  	sprintf (lcd_buf, "4  F %09X", flash_read_Doze_massive(68));	LcdString(1,8);
-
-*/
-
-    sprintf(lcd_buf, LANG_DALL, Wakeup.total_wakeup);
-    LcdString(1, 1);
-    sprintf(lcd_buf, "RTC    %5i", Wakeup.rtc_wakeup);
-    LcdString(1, 2);
-    sprintf(lcd_buf, "tim9   %5i", Wakeup.tim9_wakeup);
-    LcdString(1, 3);
-    sprintf(lcd_buf, LANG_DIMP, Wakeup.pump_wakeup);
-    LcdString(1, 4);
-    sprintf(lcd_buf, "COMP2  %5i", Wakeup.comp_wakeup);
-    LcdString(1, 5);
-    //sprintf (lcd_buf, LANG_DTIME,   debug_wutr/2);                        LcdString(1,7);
-    //sprintf (lcd_buf, LANG_DSENS,   Wakeup.sensor_wakeup);                LcdString(1,8);
-    sprintf(lcd_buf, "Clk %8i", SystemCoreClock);
-    LcdString(1, 6);
-    sprintf(lcd_buf, "tim3pre %5i", TIM_GetPrescaler(TIM3));
-    LcdString(1, 7);
-    sprintf(lcd_buf, "tim10pr %5i", TIM_GetPrescaler(TIM10));
-    LcdString(1, 8);
-
-
-    break;
-#endif
 
   case 1:
 

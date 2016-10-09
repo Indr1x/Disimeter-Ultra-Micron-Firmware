@@ -27,6 +27,10 @@ void reload_active_isotop_time()
     Settings.Second_count = Settings.Isotop_count_cd109;
     Settings.ACAL_count = Settings.Isotop_ACAL_cd109;
     break;
+  case 0x4:
+    Settings.Second_count = Settings.Isotop_count_am241;
+    Settings.ACAL_count = Settings.Isotop_ACAL_am241;
+    break;
   }
   plus_rad_reset(0x00);
 }
@@ -220,7 +224,7 @@ void recalculate_fon(void)
 // ===============================================================================================
 void sleep_mode(FunctionalState sleep)
 {
-  if(Settings.Sleep_time > 0 && !Power.USB_active && (Settings.AMODUL_mode == 0))
+  if(Settings.Sleep_time > 0 && !Power.USB_active)
   {
     Power.Pump_deny = ENABLE;
     if(Power.Pump_active)
