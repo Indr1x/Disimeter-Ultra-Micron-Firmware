@@ -447,7 +447,6 @@ void USB_off()
   //sleep_mode(DISABLE);
 
   Power.sleep_time = Settings.Sleep_time;
-  Power.led_sleep_time = Settings.Sleep_time - 3;
 }
 
 

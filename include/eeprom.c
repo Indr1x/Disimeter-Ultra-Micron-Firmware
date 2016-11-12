@@ -135,7 +135,6 @@ void eeprom_write_settings(void)
     if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
       eeprom_write(LSI_freq_address, Settings.LSI_freq);
   }
-  Power.led_sleep_time = Settings.Sleep_time - 3;
 }
 
 //**************************************************************************
@@ -297,7 +296,6 @@ void eeprom_read_settings(void)
 
     eeprom_write_settings();    // Запись
   }
-  Power.led_sleep_time = Settings.Sleep_time - 3;
 }
 
 

@@ -205,7 +205,6 @@ typedef struct
   uint32_t APB1ENR;             //
 
   uint32_t sleep_time;          //
-  uint32_t led_sleep_time;      //
   FunctionalState Pump_deny;
 } PowerDef;
 

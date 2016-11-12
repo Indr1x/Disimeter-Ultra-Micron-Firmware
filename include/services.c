@@ -69,21 +69,12 @@ void Pump_now(FunctionalState pump)
 
 void check_wakeup_keys(void)
 {
-  if((Power.led_sleep_time > 0) && (Power.Display_active))      // Управление подсветкой
-  {
-    GPIO_ResetBits(GPIOC, GPIO_Pin_13); // Включаем подсветку 
-  } else
-  {
-    GPIO_SetBits(GPIOC, GPIO_Pin_13);   // Выключаем подсветку                                  
-  }
-
   if((!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3)
       && GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) && !GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6)) || Power.Display_active)
   {
     if((Settings.Sound == 1) || (Settings.Sound == 2))
       sound_activate();
     Power.sleep_time = Settings.Sleep_time;
-    Power.led_sleep_time = Settings.Sleep_time - 3;
   }
 
 }
@@ -235,7 +226,6 @@ void sleep_mode(FunctionalState sleep)
     {
       RTC_ITConfig(RTC_IT_WUT, DISABLE);
 
-      Power.led_sleep_time = 0;
       GPIO_SetBits(GPIOC, GPIO_Pin_13); // Выключаем подсветку                                  
 
       display_off();            // выключить дисплей
@@ -281,7 +271,6 @@ void geiger_calc_fon(void)
     {
       screen = 1;
       Power.sleep_time = Settings.Sleep_time;
-      Power.led_sleep_time = Settings.Sleep_time - 3;
       sleep_mode(DISABLE);
       sound_activate();
     } else

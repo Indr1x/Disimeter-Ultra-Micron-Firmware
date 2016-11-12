@@ -225,7 +225,6 @@ void EXTI9_5_IRQHandler(void)
     {
       sound_activate();
       Power.sleep_time = Settings.Sleep_time;
-      Power.led_sleep_time = Settings.Sleep_time - 3;
     }
   }
 #endif
@@ -376,7 +375,6 @@ void RTC_Alarm_IRQHandler(void)
       DataUpdate.Need_display_update = ENABLE;
 
       Power.sleep_time = Settings.Sleep_time;
-      Power.led_sleep_time = Settings.Sleep_time - 3;
     }
 
   }
@@ -420,14 +418,6 @@ void RTC_Alarm_IRQHandler(void)
         pump_counter_avg_impulse_by_1sec[1] = pump_counter_avg_impulse_by_1sec[0];
         pump_counter_avg_impulse_by_1sec[0] = 0;
         DataUpdate.pump_counter_update_time = 0;
-
-        if((Power.led_sleep_time > 0) && (Power.Display_active))        // Управление подсветкой
-        {
-          GPIO_ResetBits(GPIOC, GPIO_Pin_13);   // Включаем подсветку 
-        } else
-        {
-          GPIO_SetBits(GPIOC, GPIO_Pin_13);     // Выключаем подсветку                                  
-        }
 
         if(pump_counter_avg_impulse_by_1sec[1] == 0)    //затычка на случай глюка с накачкой
         {
@@ -578,14 +568,6 @@ void RTC_Alarm_IRQHandler(void)
       } else
       {
         Power.sleep_time = 0;
-      }
-
-      if(Power.led_sleep_time > 4)
-      {
-        Power.led_sleep_time -= 4;
-      } else
-      {
-        Power.led_sleep_time = 0;
       }
     }
     if(Pump_on_alarm == ENABLE)
