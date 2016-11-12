@@ -113,6 +113,8 @@ void plus_rad_reset(uint32_t * param)
   {
     Detector_massive[i] = 0;
   }
+  Detector_massive_pointer = 1;
+
   recalculate_fon();
 }
 
@@ -322,6 +324,45 @@ void minus_ten(uint32_t * param)        // -10
   } else
   {
     *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 10;       // -10
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// +4 -4
+void plus_four(uint32_t * param)        // +10
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
+  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
+  {
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
+  } else
+  {
+    *Menu_list[*param - 1].Parameter_value = ((*Menu_list[*param - 1].Parameter_value >> 2) + 1) << 2;  //+4
+  }
+}
+
+
+void minus_four(uint32_t * param)       // -10
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
+  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
+  {
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
+  } else
+  {
+    *Menu_list[*param - 1].Parameter_value = ((*Menu_list[*param - 1].Parameter_value >> 2) - 1) << 2;  // -4
   }
 }
 
