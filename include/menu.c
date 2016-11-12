@@ -455,6 +455,9 @@ void menu_screen()
       case 0x3:
         sprintf(para_string, LANG_ISOTOP_CD109);
         break;
+      case 0x4:
+        sprintf(para_string, LANG_ISOTOP_AM241);
+        break;
       }
     }
     // Заплатка на бета окно
