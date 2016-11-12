@@ -447,12 +447,18 @@ void USB_off()
   //sleep_mode(DISABLE);
 
   Power.sleep_time = Settings.Sleep_time;
+
+  GPIO_ResetBits(GPIOC, GPIO_Pin_13);   // Включаем подсветку  
+
 }
 
 
 void USB_on()
 {
 //---------------------------------------------Включение USB------------------------------------
+
+  GPIO_SetBits(GPIOC, GPIO_Pin_13);     // Выключаем подсветку (Hi-Z)
+
   set_pll_for_usb();
   Set_System();
   SystemCoreClockUpdate();
