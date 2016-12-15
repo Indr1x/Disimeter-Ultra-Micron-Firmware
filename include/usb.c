@@ -334,6 +334,16 @@ void USB_work()
             current_rcvd_pointer++;
             break;
 
+          case 0x34:           // передача калибровки (RCV 1 байт)
+            USB_send_calibration_data();
+            current_rcvd_pointer++;
+            break;
+
+          case 0x35:           // запуск калибровки (RCV 1 байт)
+            plus_cal(0x0);
+            current_rcvd_pointer++;
+            break;
+
           case 0x39:           // завершение передачи (RCV 1 байт)
             USB_maxfon_massive_pointer = 0;
             USB_doze_massive_pointer = 0;
@@ -426,6 +436,37 @@ void USB_send_settings_data()
   Send_Buffer[6] = 0xFF;        // передать по УСАПП 
   Send_Buffer[7] = 0xFF;        // передать по УСАПП 
 
+  Send_length = 7;
+}
+
+
+void USB_send_calibration_data()
+{
+//---------------------------------------------Передача данных для калибровки------------------------------------
+
+  uint8_t count_time_lo = 0;
+  uint8_t count_time_hi = 0;
+  if(Cal_count > 0)
+  {
+    count_time_lo = Settings.Second_count & 0xff;
+    count_time_hi = (Settings.Second_count >> 8) & 0xff;
+    Send_Buffer[0] = 0xF6;      // передать ключь
+    Send_Buffer[1] = count_time_hi;
+    Send_Buffer[2] = count_time_lo;
+    Send_Buffer[3] = Cal_count_mass[Cal_count - 1] & 0xff;
+    Send_Buffer[4] = (Cal_count_mass[Cal_count - 1] >> 8) & 0xff;
+    Send_Buffer[5] = (Cal_count_mass[Cal_count - 1] >> 16) & 0xff;
+    Send_Buffer[6] = (Cal_count - 1) & 0xff;
+  } else
+  {
+    Send_Buffer[0] = 0xF6;      // передать ключь
+    Send_Buffer[1] = 0x0;
+    Send_Buffer[2] = 0x0;
+    Send_Buffer[3] = 0x0;
+    Send_Buffer[4] = 0x0;
+    Send_Buffer[5] = 0x0;
+    Send_Buffer[6] = 0xff;
+  }
   Send_length = 7;
 }
 

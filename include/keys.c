@@ -183,6 +183,9 @@ void plus_amodul_engage(uint32_t * param)
 
 void plus_cal(uint32_t * param)
 {
+  int i;
+  for (i = 0; i < 19; i++)
+    Cal_count_mass[i] = 0;
   Cal_count = 0;
   Cal_count_time = 0;
   Settings.Cal_mode = 1;

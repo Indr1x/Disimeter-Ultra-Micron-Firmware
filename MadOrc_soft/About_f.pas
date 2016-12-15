@@ -24,9 +24,15 @@ type
     Edit4: TEdit;
     Edit5: TEdit;
     Edit6: TEdit;
+    Label8: TLabel;
+    Memo1: TMemo;
+    Button2: TButton;
+    Timer2: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
   private
     { Private declarations }
   public
@@ -47,6 +53,7 @@ var
   vAns: TiaBuf;
   tmp: uint32;
 begin
+About_f.About.Timer2.Enabled := false;
 try
    if Edit3.Text <> '' then
    if Edit4.Text <> '' then
@@ -110,6 +117,48 @@ except
 end;
 
 
+procedure TAbout.Button2Click(Sender: TObject);
+var
+  reg: TRegistry;
+  vAns: TiaBuf;
+  tmp: uint32;
+begin
+About_f.About.Timer2.Enabled := true;
+
+try
+    begin
+      if (mainFrm.RS232.Active = false) then
+       begin
+        mainFrm.RS232.Properties.PortNum  := comport_number;
+        mainFrm.RS232.Open;
+        mainFrm.RS232.StartListner;
+
+        mainFrm.CloseTimer.Enabled:=false;
+        mainFrm.CloseTimer.interval:=100;
+        mainFrm.CloseTimer.Enabled:=true;
+      end;
+
+        if (mainFrm.RS232.Active)then
+        begin
+         //DevPresent:=true;
+         SetLength(vAns, 1);
+
+         vAns[0]:=$35;
+         mainFrm.RS232.Send(vAns);
+        end
+        else
+        begin
+          showmessage('Error 491: Port blocked');
+        end;
+    end;
+//    end;
+except
+  on Exception : EConvertError do
+    sleep(100);
+  end;
+
+end;
+
 procedure TAbout.FormCreate(Sender: TObject);
 var
   reg: TRegistry;
@@ -126,5 +175,27 @@ procedure TAbout.Timer1Timer(Sender: TObject);
 begin
  About_f.About.Edit2.Text := IntToHex(device_serial_0,8)+ ' ' +IntToHex(device_serial_1,8)+ ' ' +IntToHex(device_serial_2,8);
 end;
+
+procedure TAbout.Timer2Timer(Sender: TObject);
+var
+ ix: uint32;
+begin
+
+ About_f.About.Memo1.Lines.Clear;
+ About_f.About.Memo1.Lines.Add('Время в настройках '+Main.geiger_seconds_count.ToString()+', массив данных:');
+ for ix := 0 to 18 do begin
+  if (calibration_data[ix] <> '') then
+  begin
+   About_f.About.Memo1.Lines.Add(calibration_data[ix]);
+  end
+   else
+   begin
+     About_f.About.Memo1.Lines.Add('***');
+   end;
+ end;
+
+  if (calibration_data[18] <> '') then About_f.About.Timer2.Enabled := false;
+
+  end;
 
 end.

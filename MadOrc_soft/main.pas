@@ -193,6 +193,7 @@ var
   count_validate: uchar = 0;
   count_interval: uchar = 0;
   blinker: boolean;
+  calibration_data: array[0..20] of string;
   impps: array[0..61] of uint;
   fonps: array[0..61] of ulong;
   fonpermin: array[0..61] of ulong;
@@ -1683,6 +1684,8 @@ if(USB_massive_loading = false) then begin
         vAns[i]:=$e6; i:=i+1; // считать дату прошивки
       end;
 
+      if(About_f.About.Timer2.Enabled = true) then
+        vAns[i]:=$34; i:=i+1; // считать данные калибровки
 
       if Length(vAns) > 0 then RS232.Send(vAns);
 
@@ -2006,6 +2009,7 @@ procedure TmainFrm.DoOnReceiveEvent(Sender: TObject; const aData: TiaBuf; aCount
 Var
   ia:uint;
   F: Integer;
+  cal_pointer: uint;
   ss: String;
   vCount: Integer;
   vBufCount: Integer;
@@ -2067,6 +2071,19 @@ if (fBuf[0] = $d2) then begin // чтение смещения времени
 
 end;
 //-----------------------------------------------------------------------------------
+
+if (fBuf[0] = $f6) then begin // чтение калибровки
+
+  cal_pointer := fBuf[6];
+
+
+  if(cal_pointer<19)then begin
+    geiger_seconds_count:=                      fBuf[1] shl 8;
+    geiger_seconds_count:=geiger_seconds_count+ fBuf[2];
+    calibration_data[cal_pointer] := Convert_to_usv((fBuf[5] shl 16)+(fBuf[4] shl 8)+fBuf[3]);
+  end;
+
+end;
 
 if (fBuf[0] = $e0) then begin // Серийника U_ID_0
 

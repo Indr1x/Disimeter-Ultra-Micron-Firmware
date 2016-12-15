@@ -390,11 +390,25 @@ void RTC_Alarm_IRQHandler(void)
 
       // Калибровка 4 интервала счета
       if(Settings.Cal_mode == 1)
-        if((Settings.Second_count << 2) > Cal_count_time)
+      {
+        if(Cal_count < 20)
         {
-          Cal_count_time += 4;
-          Cal_count += Detector_massive[Detector_massive_pointer];
+          if(Settings.Second_count > Cal_count_time)
+          {
+            Cal_count_time += 4;
+            Cal_count_mass[Cal_count] += Detector_massive[Detector_massive_pointer];
+            Detector_massive[Detector_massive_pointer] = 0;
+          } else
+          {
+            Detector_massive[Detector_massive_pointer] = 0;
+            Cal_count_time = 0;
+            Cal_count++;
+          }
+        } else
+        {
+          Detector_massive[Detector_massive_pointer] = 0;
         }
+      }
 
       if(Power.USB_active)
       {

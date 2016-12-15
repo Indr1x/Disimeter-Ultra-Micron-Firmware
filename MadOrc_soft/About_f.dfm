@@ -4,7 +4,7 @@ object About: TAbout
   BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 374
-  ClientWidth = 258
+  ClientWidth = 534
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -258,6 +258,13 @@ object About: TAbout
     Font.Style = []
     ParentFont = False
   end
+  object Label8: TLabel
+    Left = 336
+    Top = 8
+    Width = 103
+    Height = 13
+    Caption = #1044#1072#1085#1085#1099#1077' '#1082#1072#1083#1080#1073#1088#1086#1074#1082#1080
+  end
   object Button1: TButton
     Left = 93
     Top = 335
@@ -332,10 +339,33 @@ object About: TAbout
     Enabled = False
     TabOrder = 6
   end
+  object Memo1: TMemo
+    Left = 256
+    Top = 40
+    Width = 270
+    Height = 286
+    TabOrder = 7
+  end
+  object Button2: TButton
+    Left = 328
+    Top = 332
+    Width = 129
+    Height = 25
+    Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1082#1072#1083#1080#1073#1088#1086#1074#1082#1091
+    TabOrder = 8
+    OnClick = Button2Click
+  end
   object Timer1: TTimer
     Interval = 5000
     OnTimer = Timer1Timer
-    Left = 232
-    Top = 8
+    Left = 8
+    Top = 64
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 4000
+    OnTimer = Timer2Timer
+    Left = 8
+    Top = 112
   end
 end

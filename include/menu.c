@@ -311,10 +311,10 @@ void main_screen()
 
   if(Settings.Cal_mode == 1)
   {
-    sprintf(lcd_buf, "%5i", (Settings.Second_count << 2) - Cal_count_time);     // Пишем в буфер значение счетчика
+    sprintf(lcd_buf, "%2i  %5i", Cal_count, Cal_count_time);    // Пишем в буфер значение счетчика
     LcdString(1, 1);            // // Выводим обычным текстом содержание буфера
 
-    sprintf(lcd_buf, LANG_FON_UMKZV, convert_mkr_sv(Cal_count >> 2));   // Пишем в буфер значение счетчика
+    sprintf(lcd_buf, LANG_FON_UMKZV, convert_mkr_sv(Cal_count_mass[Cal_count]));        // Пишем в буфер значение счетчика
     LcdString(1, 2);            // // Выводим обычным текстом содержание буфера    
   } else
   {

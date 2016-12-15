@@ -12,6 +12,7 @@ uint32_t ix_update;
 uint16_t Detector_massive[Detector_massive_pointer_max + 1];
 uint32_t ram_Doze_massive[doze_length + 1];     // 1 €чейка = 10 минут, на прот€жении суток
 uint32_t ram_max_fon_massive[doze_length + 1];  // 1 €чейка = 10 минут, на прот€жении суток
+uint32_t Cal_count_mass[20];
 uint16_t USB_maxfon_massive_pointer = 0;
 uint16_t USB_doze_massive_pointer = 0;
 uint16_t current_pulse_count = 0;

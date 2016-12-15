@@ -267,6 +267,8 @@ extern uint8_t auto_speedup_factor;
 extern uint32_t madorc_impulse;
 extern uint32_t USB_not_active;
 extern uint32_t last_count_pump_on_impulse;
+extern uint32_t Cal_count_mass[];
+
 extern FunctionalState pump_on_impulse;
 
 extern FunctionalState spect_impulse;
