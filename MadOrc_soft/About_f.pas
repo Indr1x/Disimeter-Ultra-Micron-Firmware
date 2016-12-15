@@ -122,8 +122,14 @@ var
   reg: TRegistry;
   vAns: TiaBuf;
   tmp: uint32;
+  ix: uint32;
 begin
 About_f.About.Timer2.Enabled := true;
+
+ for ix := 0 to 18 do begin
+  calibration_data[ix]:='';
+ end;
+
 
 try
     begin
@@ -194,7 +200,11 @@ begin
    end;
  end;
 
-  if (calibration_data[18] <> '') then About_f.About.Timer2.Enabled := false;
+  if (calibration_data[18] <> '') then
+  begin
+   About_f.About.Timer2.Enabled := false;
+   ShowMessage('Данные калибровки получены.');
+  end;
 
   end;
 

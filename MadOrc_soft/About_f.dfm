@@ -4,7 +4,7 @@ object About: TAbout
   BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 374
-  ClientWidth = 534
+  ClientWidth = 497
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -259,8 +259,8 @@ object About: TAbout
     ParentFont = False
   end
   object Label8: TLabel
-    Left = 336
-    Top = 8
+    Left = 312
+    Top = 21
     Width = 103
     Height = 13
     Caption = #1044#1072#1085#1085#1099#1077' '#1082#1072#1083#1080#1073#1088#1086#1074#1082#1080
@@ -342,12 +342,12 @@ object About: TAbout
   object Memo1: TMemo
     Left = 256
     Top = 40
-    Width = 270
+    Width = 225
     Height = 286
     TabOrder = 7
   end
   object Button2: TButton
-    Left = 328
+    Left = 304
     Top = 332
     Width = 129
     Height = 25
