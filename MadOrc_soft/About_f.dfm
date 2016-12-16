@@ -4,7 +4,7 @@ object About: TAbout
   BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 374
-  ClientWidth = 497
+  ClientWidth = 496
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -347,13 +347,22 @@ object About: TAbout
     TabOrder = 7
   end
   object Button2: TButton
-    Left = 304
+    Left = 256
     Top = 332
-    Width = 129
+    Width = 105
     Height = 25
-    Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1082#1072#1083#1080#1073#1088#1086#1074#1082#1091
+    Caption = #1042#1086#1081#1090#1080' '#1074' '#1088#1077#1078#1080#1084
     TabOrder = 8
     OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 375
+    Top = 332
+    Width = 106
+    Height = 25
+    Caption = #1042#1099#1081#1090#1080' '#1080#1079' '#1088#1077#1078#1080#1084#1072
+    TabOrder = 9
+    OnClick = Button3Click
   end
   object Timer1: TTimer
     Interval = 5000
@@ -363,7 +372,7 @@ object About: TAbout
   end
   object Timer2: TTimer
     Enabled = False
-    Interval = 4000
+    Interval = 10000
     OnTimer = Timer2Timer
     Left = 8
     Top = 112

@@ -34,7 +34,6 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_BPROCENT,	"",					"",			LANG_BPROCENT_,		&Settings.Beta_procent,			1,			100,		37,		&plus_one,				&minus_one},
 {0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
 {0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            	&Settings.Pump_aggressive,		0,	    	1,  		0,  	&plus_one,		    	&minus_one},
-{0x01, LANG_CAL,		"*",			    "*",	    "*",				0x00,	            			0x00,		0x00,		0x00,	&plus_cal,				0x00},
 
 {0x01, LANG_ISOTOP_CS137,"",				"",			LANG_USEC,			&Settings.Isotop_count_cs137,			100,		1450,		250,	&plus_four,				&minus_four},
 {0x01, LANG_ISOTOP_EU152,"",				"",			LANG_USEC,			&Settings.Isotop_count_eu152,			100,		1450,		250,	&plus_four,				&minus_four},

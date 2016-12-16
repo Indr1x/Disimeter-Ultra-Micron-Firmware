@@ -236,6 +236,7 @@ void USB_work()
 {
   uint32_t wait_count;
   uint32_t current_rcvd_pointer = 0;
+  int i;
 
 //---------------------------------------------Передача данных------------------------------------
   if(bDeviceState == CONFIGURED)
@@ -340,7 +341,28 @@ void USB_work()
             break;
 
           case 0x35:           // запуск калибровки (RCV 1 байт)
-            plus_cal(0x0);
+            for (i = 0; i < 19; i++)
+              Cal_count_mass[i] = 0;
+            Cal_count = 0;
+            Cal_count_time = 0;
+            Settings.Cal_mode = 1;
+            menu_select = 0;
+            enter_menu_item = DISABLE;
+            screen = 1;
+            GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+            current_rcvd_pointer++;
+            break;
+
+          case 0x36:           // выход из калибровки (RCV 1 байт)
+            for (i = 0; i < 19; i++)
+              Cal_count_mass[i] = 0;
+            Cal_count = 0;
+            Cal_count_time = 0;
+            Settings.Cal_mode = 0;
+            menu_select = 0;
+            enter_menu_item = DISABLE;
+            screen = 1;
+            GPIO_SetBits(GPIOC, GPIO_Pin_13);
             current_rcvd_pointer++;
             break;
 

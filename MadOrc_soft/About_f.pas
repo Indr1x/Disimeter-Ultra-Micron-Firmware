@@ -28,11 +28,13 @@ type
     Memo1: TMemo;
     Button2: TButton;
     Timer2: TTimer;
+    Button3: TButton;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Timer2Timer(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,7 +55,6 @@ var
   vAns: TiaBuf;
   tmp: uint32;
 begin
-About_f.About.Timer2.Enabled := false;
 try
    if Edit3.Text <> '' then
    if Edit4.Text <> '' then
@@ -162,6 +163,55 @@ except
   on Exception : EConvertError do
     sleep(100);
   end;
+
+end;
+
+procedure TAbout.Button3Click(Sender: TObject);
+var
+  reg: TRegistry;
+  vAns: TiaBuf;
+  tmp: uint32;
+  ix: uint32;
+begin
+About_f.About.Timer2.Enabled := false;
+
+ for ix := 0 to 18 do begin
+  calibration_data[ix]:='';
+ end;
+
+
+try
+    begin
+      if (mainFrm.RS232.Active = false) then
+       begin
+        mainFrm.RS232.Properties.PortNum  := comport_number;
+        mainFrm.RS232.Open;
+        mainFrm.RS232.StartListner;
+
+        mainFrm.CloseTimer.Enabled:=false;
+        mainFrm.CloseTimer.interval:=100;
+        mainFrm.CloseTimer.Enabled:=true;
+      end;
+
+        if (mainFrm.RS232.Active)then
+        begin
+         //DevPresent:=true;
+         SetLength(vAns, 1);
+
+         vAns[0]:=$36;
+         mainFrm.RS232.Send(vAns);
+        end
+        else
+        begin
+          showmessage('Error 491: Port blocked');
+        end;
+    end;
+//    end;
+except
+  on Exception : EConvertError do
+    sleep(100);
+  end;
+
 
 end;
 

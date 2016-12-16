@@ -181,21 +181,6 @@ void plus_amodul_engage(uint32_t * param)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void plus_cal(uint32_t * param)
-{
-  int i;
-  for (i = 0; i < 19; i++)
-    Cal_count_mass[i] = 0;
-  Cal_count = 0;
-  Cal_count_time = 0;
-  Settings.Cal_mode = 1;
-  menu_select = 0;
-  enter_menu_item = DISABLE;
-  screen = 1;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void plus_doze_reset(uint32_t * param)  // —брос дозы
 {
   int i;
@@ -659,8 +644,6 @@ void keys_proccessing(void)
     while (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6));
     delay_ms(10);
     DataUpdate.Need_display_update = ENABLE;
-    if(Settings.Cal_mode == 1)
-      plus_cal(0x00);
 
     if(Settings.AMODUL_mode > 0)
     {
@@ -740,8 +723,6 @@ void keys_proccessing(void)
     while (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6));
     delay_ms(10);
     DataUpdate.Need_display_update = ENABLE;
-    if(Settings.Cal_mode == 1)
-      Settings.Cal_mode = 0;
 
     if(Settings.AMODUL_mode > 0)
     {
@@ -817,9 +798,6 @@ void keys_proccessing(void)
     key = 0;
 
     ///////////
-    if(Settings.Cal_mode == 1)
-      Settings.Cal_mode = 0;
-
 
     if(Settings.AMODUL_mode > 0)
     {
