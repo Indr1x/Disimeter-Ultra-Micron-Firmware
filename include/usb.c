@@ -268,7 +268,8 @@ void USB_work()
           switch (Receive_Buffer[current_rcvd_pointer])
           {
           case 0xD4:           // Отправка данных по запросу каждую минуту (RCV 1 байт)
-            USB_send_madorc_data();
+            if(Settings.Cal_mode != 1)
+                USB_send_madorc_data();
             current_rcvd_pointer++;
             break;
 
@@ -349,6 +350,7 @@ void USB_work()
             menu_select = 0;
             enter_menu_item = DISABLE;
             screen = 1;
+            hidden_menu = ENABLE;
             GPIO_ResetBits(GPIOC, GPIO_Pin_13);
             current_rcvd_pointer++;
             break;
@@ -362,6 +364,7 @@ void USB_work()
             menu_select = 0;
             enter_menu_item = DISABLE;
             screen = 1;
+            hidden_menu = DISABLE;
             GPIO_SetBits(GPIOC, GPIO_Pin_13);
             current_rcvd_pointer++;
             break;
