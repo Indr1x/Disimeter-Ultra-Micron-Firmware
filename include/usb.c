@@ -365,6 +365,8 @@ void USB_work()
             enter_menu_item = DISABLE;
             screen = 1;
             hidden_menu = DISABLE;
+            plus_rad_reset(0x0);
+            plus_doze_reset(0x0);
             GPIO_SetBits(GPIOC, GPIO_Pin_13);
             current_rcvd_pointer++;
             break;
