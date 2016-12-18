@@ -15,5 +15,5 @@ void USB_send_settings_data(void);
 void USB_send_calibration_data(void);
 void USB_send_serial_data(int);
 uint8_t prepare_data(uint32_t massive, uint16_t * massive_pointer, uint8_t start_key);
-
+void eeprom_send(uint32_t current_rcvd_pointer);
 #endif

@@ -402,9 +402,6 @@ void RTC_Alarm_IRQHandler(void)
             Cal_count_time = 0;
             Cal_count++;
           }
-        } else
-        {
-          Detector_massive[Detector_massive_pointer] = 0;
         }
       }
 

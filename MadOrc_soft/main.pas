@@ -194,6 +194,7 @@ var
   count_interval: uchar = 0;
   blinker: boolean;
   calibration_data: array[0..20] of string;
+  EEPROM_data: array[0..100] of uint;
   impps: array[0..61] of uint;
   fonps: array[0..61] of ulong;
   fonpermin: array[0..61] of ulong;
@@ -2010,6 +2011,7 @@ Var
   ia:uint;
   F: Integer;
   cal_pointer: uint;
+  eeprom_pointer: uint;
   ss: String;
   vCount: Integer;
   vBufCount: Integer;
@@ -2085,6 +2087,20 @@ if (fBuf[0] = $f6) then begin // чтение калибровки
 
 end;
 
+//-----------------------------------------------------------------------------------
+
+if (fBuf[0] = $f7) then begin // чтение данных из EEPROM
+
+  eeprom_pointer := ((fBuf[1] shl 8)+fBuf[2]) div 4;
+  EEPROM_DATA[eeprom_pointer] := (fBuf[3] shl 24)+(fBuf[4] shl 16)+(fBuf[5] shl 8)+fBuf[6];
+
+  // Заполнение комбобокса изотопа
+  if eeprom_pointer = ($80 div 4) then
+    About_f.About.Isotop.ItemIndex:=Main.EEPROM_data[eeprom_pointer];
+
+end;
+
+//-----------------------------------------------------------------------------------
 if (fBuf[0] = $e0) then begin // Серийника U_ID_0
 
   device_serial_0 := (fBuf[4] shl 24)+(fBuf[3] shl 16)+(fBuf[2] shl 8)+fBuf[1]; // собираем 2 чара

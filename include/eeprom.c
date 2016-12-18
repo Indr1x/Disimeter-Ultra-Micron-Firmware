@@ -3,6 +3,7 @@
 
 __IO FLASH_Status FLASHStatus = FLASH_COMPLETE;
 __IO TestStatus DataMemoryProgramStatus = PASSED;
+extern __IO uint8_t Receive_Buffer[VIRTUAL_COM_PORT_DATA_SIZE];
 uint32_t NbrOfPage = 0, j = 0, Address = 0;
 
 //**************************************************************************
@@ -296,6 +297,30 @@ void eeprom_read_settings(void)
 
     eeprom_write_settings();    // Запись
   }
+}
+
+void eeprom_loading(uint32_t current_rcvd_pointer)      // Запись в EEPROM
+{
+  uint16_t eeprom_write_address;
+  uint32_t eeprom_data;
+  if(current_rcvd_pointer + 7 >= VIRTUAL_COM_PORT_DATA_SIZE)
+    return;
+
+  eeprom_write_address = (Receive_Buffer[current_rcvd_pointer + 1] & 0xff);
+  eeprom_write_address += ((Receive_Buffer[current_rcvd_pointer + 2] & 0xff) << 8);
+
+  eeprom_data = (Receive_Buffer[current_rcvd_pointer + 3] & 0xff);
+  eeprom_data += ((Receive_Buffer[current_rcvd_pointer + 4] & 0xff) << 8);
+  eeprom_data += ((Receive_Buffer[current_rcvd_pointer + 5] & 0xff) << 16);
+  eeprom_data += ((Receive_Buffer[current_rcvd_pointer + 6] & 0xff) << 24);
+
+  if(eeprom_read(eeprom_write_address) != eeprom_data)
+  {
+    eeprom_write(eeprom_write_address, eeprom_data);
+    eeprom_read_settings();
+    reload_active_isotop_time();
+  }
+
 }
 
 

@@ -69,6 +69,14 @@ typedef enum
 
 #define Isotop_count_am241_address         0xC0
 #define Isotop_ACAL_am241_address          0xC4
+#define Isotop_count_y88_address           0xC8
+#define Isotop_ACAL_y88_address            0xCC
+#define Isotop_count_ti44_address          0xD0
+#define Isotop_ACAL_ti44_address           0xD4
+#define Isotop_count_ba133_address         0xD8
+#define Isotop_ACAL_ba133_address          0xDC
+#define Isotop_count_th228_address         0xE0
+#define Isotop_ACAL_th228_address          0xE4
 
 
 extern uint32_t NbrOfPage, Address;
@@ -82,6 +90,7 @@ void eeprom_write_settings(void);
 void eeprom_apply_settings(void);
 void eeprom_write_default_settings(void);
 void eeprom_read_settings(void);
+void eeprom_loading(uint32_t current_rcvd_pointer);
 
 
 #endif

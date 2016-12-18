@@ -232,6 +232,7 @@ extern uint16_t AMODULE_fon[100];       // Фон Альфа-Бета
 
 #define max_fon_select 1
 #define dose_select 2
+#define eeprom_send_data 3
 
 #define doze_length_10m       1 // 10 минут
 #define doze_length_hour      6 // 1 час    интервалами по 10 минут 60/10
@@ -290,6 +291,7 @@ extern uint8_t AMODULE_page;
 extern uint16_t AMODULE_len[];
 extern uint32_t AMODULE_count;
 
+extern uint16_t eeprom_address;
 
 extern FunctionalState hidden_menu;
 

@@ -18,41 +18,57 @@ uint8_t prepare_data(uint32_t mode, uint16_t * massive_pointer, uint8_t start_ke
   uint8_t fon_2_4 = 0;
   uint8_t fon_3_4 = 0;
   uint8_t fon_4_4 = 0;
-  uint8_t used_lenght = 0;
+  uint32_t used_lenght = 0;
   uint32_t tmp = 0;             // контрольная сумма
+  uint32_t eeprom_data = 0;     // контрольная сумма
 
   while (used_lenght <= (VIRTUAL_COM_PORT_DATA_SIZE - 7))
   {
-    if(*massive_pointer >= FLASH_MAX_ELEMENT - 1 - 4)
+    if(mode != eeprom_send_data)
     {
-      *massive_pointer = FLASH_MAX_ELEMENT - 1;
-      return used_lenght;
-    }
+      if(*massive_pointer >= FLASH_MAX_ELEMENT - 1 - 4)
+      {
+        *massive_pointer = FLASH_MAX_ELEMENT - 1;
+        return used_lenght;
+      }
 
-    address_lo = *massive_pointer & 0xff;
-    address_hi = (*massive_pointer >> 8) & 0xff;
+      address_lo = *massive_pointer & 0xff;
+      address_hi = (*massive_pointer >> 8) & 0xff;
 
-    if(flash_read_massive((*massive_pointer), mode) < 0xff &&
-       flash_read_massive((*massive_pointer) + 1, mode) < 0xff &&
-       flash_read_massive((*massive_pointer) + 2, mode) < 0xff && flash_read_massive((*massive_pointer) + 3, mode) < 0xff)
-    {                           // Если возможно сжатие массива
-      data_key = start_key - 0x70;
-      fon_1_4 = flash_read_massive((*massive_pointer), mode) & 0xff;
-      fon_2_4 = flash_read_massive((*massive_pointer) + 1, mode) & 0xff;
-      fon_3_4 = flash_read_massive((*massive_pointer) + 2, mode) & 0xff;
-      fon_4_4 = flash_read_massive((*massive_pointer) + 3, mode) & 0xff;
-      *massive_pointer = *massive_pointer + 4;
+      if(flash_read_massive((*massive_pointer), mode) < 0xff &&
+         flash_read_massive((*massive_pointer) + 1, mode) < 0xff &&
+         flash_read_massive((*massive_pointer) + 2, mode) < 0xff && flash_read_massive((*massive_pointer) + 3, mode) < 0xff)
+      {                         // Если возможно сжатие массива
+        data_key = start_key - 0x70;
+        fon_1_4 = flash_read_massive((*massive_pointer), mode) & 0xff;
+        fon_2_4 = flash_read_massive((*massive_pointer) + 1, mode) & 0xff;
+        fon_3_4 = flash_read_massive((*massive_pointer) + 2, mode) & 0xff;
+        fon_4_4 = flash_read_massive((*massive_pointer) + 3, mode) & 0xff;
+        *massive_pointer = *massive_pointer + 4;
+      } else
+      {                         // Если данные сжать нельзя
+        data_key = start_key;
+        tmp = flash_read_massive(*massive_pointer, mode);
+        fon_1_4 = tmp & 0xff;
+        fon_2_4 = (tmp >> 8) & 0xff;
+        fon_3_4 = (tmp >> 16) & 0xff;
+        fon_4_4 = (tmp >> 24) & 0xff;
+        *massive_pointer = *massive_pointer + 1;
+      }
     } else
-    {                           // Если данные сжать нельзя
+    {
       data_key = start_key;
-      tmp = flash_read_massive(*massive_pointer, mode);
-      fon_1_4 = tmp & 0xff;
-      fon_2_4 = (tmp >> 8) & 0xff;
-      fon_3_4 = (tmp >> 16) & 0xff;
-      fon_4_4 = (tmp >> 24) & 0xff;
-      *massive_pointer = *massive_pointer + 1;
-    }
+      address_lo = eeprom_address & 0xff;
+      address_hi = (eeprom_address >> 8) & 0xff;
 
+      eeprom_data = eeprom_read(eeprom_address);
+      eeprom_address+=0x04;
+
+      fon_1_4 = eeprom_data & 0xff;
+      fon_2_4 = (eeprom_data >> 8) & 0xff;
+      fon_3_4 = (eeprom_data >> 16) & 0xff;
+      fon_4_4 = (eeprom_data >> 24) & 0xff;
+    }
     Send_Buffer[used_lenght] = data_key;        // передать ключ
     Send_Buffer[used_lenght + 1] = address_hi;  // передать по УСАПП 
     Send_Buffer[used_lenght + 2] = address_lo;  // передать по УСАПП 
@@ -269,7 +285,7 @@ void USB_work()
           {
           case 0xD4:           // Отправка данных по запросу каждую минуту (RCV 1 байт)
             if(Settings.Cal_mode != 1)
-                USB_send_madorc_data();
+              USB_send_madorc_data();
             current_rcvd_pointer++;
             break;
 
@@ -365,11 +381,35 @@ void USB_work()
             enter_menu_item = DISABLE;
             screen = 1;
             hidden_menu = DISABLE;
+            madorc_impulse=0;
             plus_rad_reset(0x0);
             plus_doze_reset(0x0);
+            full_erase_flash();
             GPIO_SetBits(GPIOC, GPIO_Pin_13);
             current_rcvd_pointer++;
             break;
+
+          case 0x37:           // Загрузка данных в EEPROM (RCV 7 байт)
+            if((current_rcvd_pointer + 7) <= Receive_length)    // Проверка длинны принятого участка
+            {
+              eeprom_loading(current_rcvd_pointer);
+              current_rcvd_pointer += 7;
+            } else
+            {
+              current_rcvd_pointer = Receive_length;    // Принято меньше чем должно быть, завершаем цикл
+            }
+            break;
+
+
+          case 0x38:           // передача данных из EEPROM (RCV 1 байт)
+            Send_length = prepare_data(eeprom_send_data, 0x00, 0xF7);   // Подготовка массива данных к передаче
+            if(Send_length == 0 || eeprom_address >= 0xFF)
+            {
+              eeprom_address=0;
+              current_rcvd_pointer++;   // Если массив исчерпан
+            }
+            break;
+
 
           case 0x39:           // завершение передачи (RCV 1 байт)
             USB_maxfon_massive_pointer = 0;

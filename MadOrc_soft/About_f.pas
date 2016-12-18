@@ -29,12 +29,37 @@ type
     Button2: TButton;
     Timer2: TTimer;
     Button3: TButton;
+    Na22: TEdit;
+    Ti44: TEdit;
+    Y88: TEdit;
+    Cd109: TEdit;
+    Ba133: TEdit;
+    Cs137: TEdit;
+    Eu152: TEdit;
+    Th228: TEdit;
+    Am241: TEdit;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Button4: TButton;
+    Timer3: TTimer;
+    Isotop: TComboBox;
+    Изотоп: TLabel;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Timer2Timer(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Timer3Timer(Sender: TObject);
   private
     { Private declarations }
   public
@@ -184,7 +209,7 @@ try
     begin
       if (mainFrm.RS232.Active = false) then
        begin
-        mainFrm.RS232.Properties.PortNum  := comport_number;
+        mainFrm.RS232.Close;
         mainFrm.RS232.Open;
         mainFrm.RS232.StartListner;
 
@@ -200,6 +225,8 @@ try
 
          vAns[0]:=$36;
          mainFrm.RS232.Send(vAns);
+         ShowMessage('Требуется перезагрузка программы');
+         needexit := true; // вежливо просим свалить из памяти
         end
         else
         begin
@@ -212,6 +239,107 @@ except
     sleep(100);
   end;
 
+
+end;
+
+procedure TAbout.Button4Click(Sender: TObject);
+var
+  reg: TRegistry;
+  vAns: TiaBuf;
+  tmp: uint32;
+  ix: uint32;
+begin
+
+try
+    begin
+      if (mainFrm.RS232.Active = false) then
+       begin
+        mainFrm.RS232.Properties.PortNum  := comport_number;
+        mainFrm.RS232.Open;
+        mainFrm.RS232.StartListner;
+
+        mainFrm.CloseTimer.Enabled:=false;
+        mainFrm.CloseTimer.interval:=100;
+        mainFrm.CloseTimer.Enabled:=true;
+      end;
+
+        if (mainFrm.RS232.Active)then
+        begin
+
+        // Сохраниение данных в EEPROM
+
+        // Выбранный изотоп
+        if ((About_f.About.Isotop.ItemIndex <> Main.EEPROM_data[$80 div 4]) and (About_f.About.Isotop.ItemIndex <> -1)) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$80; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= About_f.About.Isotop.ItemIndex         and $ff;
+            vAns[4]:=(About_f.About.Isotop.ItemIndex shr 8)  and $ff;
+            vAns[5]:=(About_f.About.Isotop.ItemIndex shr 16) and $ff;
+            vAns[6]:=(About_f.About.Isotop.ItemIndex shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
+
+        // Cs-137
+        if ( (About_f.About.Cs137.Text <> Main.EEPROM_data[$84 div 4].Tostring()) and (About_f.About.Cs137.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$84; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Cs137.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Cs137.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Cs137.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Cs137.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
+
+//     About_f.About.Cs137.Text <> Main.EEPROM_data[$84 div 4].Tostring();
+
+//if ( About_f.About.Eu152.Text = '0' ) then
+//     About_f.About.Eu152.Text:=Main.EEPROM_data[$88 div 4].Tostring();
+
+//if ( About_f.About.Na22.Text = '0' ) then
+//     About_f.About.Na22.Text:=Main.EEPROM_data[$8C div 4].Tostring();
+
+//if ( About_f.About.Cd109.Text = '0' ) then
+//     About_f.About.Cd109.Text:=Main.EEPROM_data[$90 div 4].Tostring();
+
+
+
+        // Загрузка данных из EEPROM
+           for ix := 0 to 99 do begin
+            Main.EEPROM_data[ix]:=0;
+           end;
+
+          About_f.About.Na22.Text:= '0';
+          About_f.About.Ti44.Text:= '0';
+          About_f.About.Y88.Text:=  '0';
+          About_f.About.Cd109.Text:='0';
+          About_f.About.Ba133.Text:='0';
+          About_f.About.Cs137.Text:='0';
+          About_f.About.Eu152.Text:='0';
+          About_f.About.Th228.Text:='0';
+          About_f.About.Am241.Text:='0';
+
+          SetLength(vAns, 1);
+          vAns[0]:=$38;
+          mainFrm.RS232.Send(vAns);
+        end
+        else
+        begin
+          showmessage('Error 491: Port blocked');
+        end;
+    end;
+//    end;
+except
+  on Exception : EConvertError do
+    sleep(100);
+  end;
 
 end;
 
@@ -253,9 +381,51 @@ begin
   if (calibration_data[18] <> '') then
   begin
    About_f.About.Timer2.Enabled := false;
-   ShowMessage('Данные калибровки получены.');
   end;
 
   end;
+
+procedure TAbout.Timer3Timer(Sender: TObject);
+begin
+
+if ( About_f.About.Cs137.Text = '0' ) then
+     About_f.About.Cs137.Text:=Main.EEPROM_data[$84 div 4].Tostring();
+
+if ( About_f.About.Eu152.Text = '0' ) then
+     About_f.About.Eu152.Text:=Main.EEPROM_data[$88 div 4].Tostring();
+
+if ( About_f.About.Na22.Text = '0' ) then
+     About_f.About.Na22.Text:=Main.EEPROM_data[$8C div 4].Tostring();
+
+if ( About_f.About.Cd109.Text = '0' ) then
+     About_f.About.Cd109.Text:=Main.EEPROM_data[$90 div 4].Tostring();
+
+if ( About_f.About.Am241.Text = '0' ) then
+     About_f.About.Am241.Text:=Main.EEPROM_data[$C0 div 4].Tostring();
+
+if ( About_f.About.Y88.Text = '0' ) then
+     About_f.About.Y88.Text:=Main.EEPROM_data[$C8 div 4].Tostring();
+
+if ( About_f.About.Ti44.Text = '0' ) then
+     About_f.About.Ti44.Text:=Main.EEPROM_data[$D0 div 4].Tostring();
+
+if ( About_f.About.Ba133.Text = '0' ) then
+     About_f.About.Ba133.Text:=Main.EEPROM_data[$D8 div 4].Tostring();
+
+if ( About_f.About.Th228.Text = '0' ) then
+     About_f.About.Th228.Text:=Main.EEPROM_data[$E0 div 4].Tostring();
+
+if ( About_f.About.Isotop.Items.Count = 0 ) then begin
+  About_f.About.Isotop.AddItem('Cs-137',nil);
+  About_f.About.Isotop.AddItem('Eu-152',nil);
+  About_f.About.Isotop.AddItem('Na-22' ,nil);
+  About_f.About.Isotop.AddItem('Cd-109',nil);
+  About_f.About.Isotop.AddItem('Am-241',nil);
+end;
+
+
+
+
+end;
 
 end.
