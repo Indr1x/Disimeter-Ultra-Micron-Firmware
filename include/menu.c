@@ -21,7 +21,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x00, LANG_SCINT_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_amodul_engage,		0x00},
 {0x01, LANG_SPEED,		LANG_OFF,			LANG_ON,	"",					&Settings.Speedup,				0x00,		0x01,		0x00,	&plus_one,				&minus_one},
 // Заплатка на изотоп if(menu_struct_index == 10) ! Исправить в коде при изменении порядка пунктов меню!
-{0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,				0x00,		0x04,		0x00,	&plus_one,				&minus_one},
+{0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,				0x00,		0x08,		0x00,	&plus_one,				&minus_one},
 
 // Приватные пункты меню
 {0x01, LANG_CONTRAST,	"",					"",			"%u",				&Settings.contrast,				0,			15,			0,		&plus_one,				&minus_one},
@@ -455,6 +455,18 @@ void menu_screen()
         break;
       case 0x4:
         sprintf(para_string, LANG_ISOTOP_AM241);
+        break;
+      case 0x5:
+        sprintf(para_string, LANG_ISOTOP_Y88);
+        break;
+      case 0x6:
+        sprintf(para_string, LANG_ISOTOP_TI44);
+        break;
+      case 0x7:
+        sprintf(para_string, LANG_ISOTOP_BA133);
+        break;
+      case 0x8:
+        sprintf(para_string, LANG_ISOTOP_TH228);
         break;
       }
     }
