@@ -35,11 +35,6 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
 {0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            	&Settings.Pump_aggressive,		0,	    	1,  		0,  	&plus_one,		    	&minus_one},
 
-{0x01, LANG_ISOTOP_CS137,"",				"",			LANG_USEC,			&Settings.Isotop_count_cs137,			100,		1450,		250,	&plus_four,				&minus_four},
-{0x01, LANG_ISOTOP_EU152,"",				"",			LANG_USEC,			&Settings.Isotop_count_eu152,			100,		1450,		250,	&plus_four,				&minus_four},
-{0x01, LANG_ISOTOP_NA22, "",				"",			LANG_USEC,			&Settings.Isotop_count_na22,			100,		1450,		250,	&plus_four,				&minus_four},
-{0x01, LANG_ISOTOP_CD109,"",				"",			LANG_USEC,			&Settings.Isotop_count_cd109,			100,		1450,		250,	&plus_four,				&minus_four},
-{0x01, LANG_ISOTOP_AM241,"",				"",			LANG_USEC,			&Settings.Isotop_count_am241,			100,		1450,		250,	&plus_four,				&minus_four},
 {0x01, LANG_ISOTOP_CS137,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cs137,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_EU152,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_eu152,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_NA22, "",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_na22,	    		10,	    	1450,		250,	&plus_ten,				&minus_ten},

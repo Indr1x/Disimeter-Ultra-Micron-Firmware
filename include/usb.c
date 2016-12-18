@@ -62,7 +62,7 @@ uint8_t prepare_data(uint32_t mode, uint16_t * massive_pointer, uint8_t start_ke
       address_hi = (eeprom_address >> 8) & 0xff;
 
       eeprom_data = eeprom_read(eeprom_address);
-      eeprom_address+=0x04;
+      eeprom_address += 0x04;
 
       fon_1_4 = eeprom_data & 0xff;
       fon_2_4 = (eeprom_data >> 8) & 0xff;
@@ -381,7 +381,7 @@ void USB_work()
             enter_menu_item = DISABLE;
             screen = 1;
             hidden_menu = DISABLE;
-            madorc_impulse=0;
+            madorc_impulse = 0;
             plus_rad_reset(0x0);
             plus_doze_reset(0x0);
             full_erase_flash();
@@ -405,7 +405,7 @@ void USB_work()
             Send_length = prepare_data(eeprom_send_data, 0x00, 0xF7);   // Подготовка массива данных к передаче
             if(Send_length == 0 || eeprom_address >= 0xFF)
             {
-              eeprom_address=0;
+              eeprom_address = 0;
               current_rcvd_pointer++;   // Если массив исчерпан
             }
             break;

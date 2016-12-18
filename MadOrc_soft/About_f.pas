@@ -286,6 +286,10 @@ try
         // Cs-137
         if ( (About_f.About.Cs137.Text <> Main.EEPROM_data[$84 div 4].Tostring()) and (About_f.About.Cs137.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Cs137.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Cs137.Text:=ix.ToString();
+
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$84; // Адрес
@@ -301,6 +305,9 @@ try
         // Eu-152
         if ( (About_f.About.Eu152.Text <> Main.EEPROM_data[$88 div 4].Tostring()) and (About_f.About.Eu152.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Eu152.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Eu152.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$88; // Адрес
@@ -317,6 +324,9 @@ try
         // Na-22
         if ( (About_f.About.Na22.Text <> Main.EEPROM_data[$8C div 4].Tostring()) and (About_f.About.Na22.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Na22.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Na22.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$8C; // Адрес
@@ -332,6 +342,9 @@ try
         // Cd-109
         if ( (About_f.About.Cd109.Text <> Main.EEPROM_data[$90 div 4].Tostring()) and (About_f.About.Cd109.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Cd109.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Cd109.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$90; // Адрес
@@ -347,6 +360,9 @@ try
         // Am-241
         if ( (About_f.About.Am241.Text <> Main.EEPROM_data[$C0 div 4].Tostring()) and (About_f.About.Am241.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Am241.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Am241.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$C0; // Адрес
@@ -362,6 +378,9 @@ try
         // Y-88
         if ( (About_f.About.Y88.Text <> Main.EEPROM_data[$C8 div 4].Tostring()) and (About_f.About.Y88.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Y88.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Y88.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$C8; // Адрес
@@ -377,6 +396,9 @@ try
         // Ti-44
         if ( (About_f.About.Ti44.Text <> Main.EEPROM_data[$D0 div 4].Tostring()) and (About_f.About.Ti44.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Ti44.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Ti44.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$D0; // Адрес
@@ -392,6 +414,9 @@ try
         // Ba-133
         if ( (About_f.About.Ba133.Text <> Main.EEPROM_data[$D8 div 4].Tostring()) and (About_f.About.Ba133.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Ba133.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Ba133.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$D8; // Адрес
@@ -407,6 +432,9 @@ try
         // Th-228
         if ( (About_f.About.Th228.Text <> Main.EEPROM_data[$E0 div 4].Tostring()) and (About_f.About.Th228.Text <> '0')) then
         begin
+            ix:=StrToInt(About_f.About.Th228.Text);
+            ix:=(ix div 4) * 4;
+            About_f.About.Th228.Text:=ix.ToString();
             SetLength(vAns, 7);
             vAns[0]:=$37;
             vAns[1]:=$E0; // Адрес
