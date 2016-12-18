@@ -40,6 +40,10 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_ISOTOP_NA22, "",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_na22,	    		10,	    	1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_CD109,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cd109,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_AM241,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_am241,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_TI44, "",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_ti44,	    		10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_Y88,  "",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_y88,		    	10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_BA133,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_ba133,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, LANG_ISOTOP_TH228,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_th228,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 
 {0x01, LANG_SPECT_START,"",				    "",			"%u",	    		&Settings.AMODUL_spect_start,			10,	    	20000,		1000,	&plus_ten,				&minus_ten},
 {0x01, LANG_SPECT_MULTIP,"",				"",			"%u",		    	&Settings.AMODUL_spect_multi,			1,	    	200,	   	70,	    &plus_one,				&minus_one},
@@ -522,7 +526,7 @@ void stat_screen()
     sprintf(lcd_buf, "|%1i.%02i", ADCData.Power_voltage / 1000, (ADCData.Power_voltage % 1000) / 10);   // Выводим на дисплей
     LcdString(6, 4);            // // Выводим обычным текстом содержание буфера на строку 8
 
-    sprintf(lcd_buf, "|%3i", Settings.Geiger_voltage);  // Выводим на дисплей
+    sprintf(lcd_buf, "|%3is", Settings.Second_count);   // Выводим на дисплей
     LcdString(12, 4);           // // Выводим обычным текстом содержание буфера на строку 8
 
     sprintf(lcd_buf, LANG_PUMP);        // Выводим на дисплей

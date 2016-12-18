@@ -33,11 +33,19 @@ void eeprom_write_default_settings(void)
     Settings.Isotop_count_na22 = 250;
     Settings.Isotop_count_cd109 = 250;
     Settings.Isotop_count_am241 = 250;
+    Settings.Isotop_count_ti44 = 250;
+    Settings.Isotop_count_y88 = 250;
+    Settings.Isotop_count_ba133 = 250;
+    Settings.Isotop_count_th228 = 250;
     Settings.Isotop_ACAL_cs137 = 250;
     Settings.Isotop_ACAL_eu152 = 250;
     Settings.Isotop_ACAL_na22 = 250;
     Settings.Isotop_ACAL_cd109 = 250;
     Settings.Isotop_ACAL_am241 = 250;
+    Settings.Isotop_ACAL_ti44 = 250;
+    Settings.Isotop_ACAL_y88 = 250;
+    Settings.Isotop_ACAL_ba133 = 250;
+    Settings.Isotop_ACAL_th228 = 250;
     Settings.AMODUL_spect_start = 1000;
     Settings.AMODUL_spect_multi = 14;
     Settings.AMODUL_spect_mark1 = 10;
@@ -101,6 +109,14 @@ void eeprom_write_settings(void)
     eeprom_write(Isotop_count_cd109_address, Settings.Isotop_count_cd109);
   if(eeprom_read(Isotop_count_am241_address) != Settings.Isotop_count_am241)
     eeprom_write(Isotop_count_am241_address, Settings.Isotop_count_am241);
+  if(eeprom_read(Isotop_count_ti44_address) != Settings.Isotop_count_ti44)
+    eeprom_write(Isotop_count_ti44_address, Settings.Isotop_count_ti44);
+  if(eeprom_read(Isotop_count_y88_address) != Settings.Isotop_count_y88)
+    eeprom_write(Isotop_count_y88_address, Settings.Isotop_count_y88);
+  if(eeprom_read(Isotop_count_ba133_address) != Settings.Isotop_count_ba133)
+    eeprom_write(Isotop_count_ba133_address, Settings.Isotop_count_ba133);
+  if(eeprom_read(Isotop_count_th228_address) != Settings.Isotop_count_th228)
+    eeprom_write(Isotop_count_th228_address, Settings.Isotop_count_th228);
 
   if(eeprom_read(Isotop_ACAL_cs137_address) != Settings.Isotop_ACAL_cs137)
     eeprom_write(Isotop_ACAL_cs137_address, Settings.Isotop_ACAL_cs137);
@@ -112,6 +128,14 @@ void eeprom_write_settings(void)
     eeprom_write(Isotop_ACAL_cd109_address, Settings.Isotop_ACAL_cd109);
   if(eeprom_read(Isotop_ACAL_am241_address) != Settings.Isotop_ACAL_am241)
     eeprom_write(Isotop_ACAL_am241_address, Settings.Isotop_ACAL_am241);
+  if(eeprom_read(Isotop_ACAL_ti44_address) != Settings.Isotop_ACAL_ti44)
+    eeprom_write(Isotop_ACAL_ti44_address, Settings.Isotop_ACAL_ti44);
+  if(eeprom_read(Isotop_ACAL_y88_address) != Settings.Isotop_ACAL_y88)
+    eeprom_write(Isotop_ACAL_y88_address, Settings.Isotop_ACAL_y88);
+  if(eeprom_read(Isotop_ACAL_ba133_address) != Settings.Isotop_ACAL_ba133)
+    eeprom_write(Isotop_ACAL_ba133_address, Settings.Isotop_ACAL_ba133);
+  if(eeprom_read(Isotop_ACAL_th228_address) != Settings.Isotop_ACAL_th228)
+    eeprom_write(Isotop_ACAL_th228_address, Settings.Isotop_ACAL_th228);
 
 
   if(eeprom_read(AMODUL_spect_start_address) != Settings.AMODUL_spect_start)
@@ -209,6 +233,26 @@ void eeprom_apply_settings(void)
     reload_active_isotop_time();
   }
   // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_ti44_address) != Settings.Isotop_count_ti44)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_y88_address) != Settings.Isotop_count_y88)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_ba133_address) != Settings.Isotop_count_ba133)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_count_th228_address) != Settings.Isotop_count_th228)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
 
   if(eeprom_read(Isotop_ACAL_cs137_address) != Settings.Isotop_ACAL_cs137)
   {
@@ -231,6 +275,26 @@ void eeprom_apply_settings(void)
   }
   // -------------------------------------------------------------------
   if(eeprom_read(Isotop_ACAL_am241_address) != Settings.Isotop_ACAL_am241)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_ACAL_ti44_address) != Settings.Isotop_ACAL_ti44)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_ACAL_y88_address) != Settings.Isotop_ACAL_y88)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_ACAL_ba133_address) != Settings.Isotop_ACAL_ba133)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_ACAL_th228_address) != Settings.Isotop_ACAL_th228)
   {
     reload_active_isotop_time();
   }

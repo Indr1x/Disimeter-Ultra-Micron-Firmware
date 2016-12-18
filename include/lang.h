@@ -58,6 +58,10 @@
 #define LANG_ISOTOP_NA22     "Na-22"
 #define LANG_ISOTOP_CD109    "Cd-109"
 #define LANG_ISOTOP_AM241    "Am-241"
+#define LANG_ISOTOP_Y88      "Y-88"
+#define LANG_ISOTOP_TI44     "Ti-44"
+#define LANG_ISOTOP_BA133    "Ba-133"
+#define LANG_ISOTOP_TH228    "Th-228"
 
 #define LANG_SPECT_MARK_TEXT1 "Маркеры: 1:60keV"
 #define LANG_SPECT_MARK_TEXT2 "2:121k 3:344k"
@@ -87,7 +91,7 @@
 // Screen
 #define LANG_MENU     "      Меню      "
 #define LANG_STAT     "   Статистика   "
-#define LANG_AKB3VVV  "АКБ  |+3В  |ВВ"
+#define LANG_AKB3VVV  "АКБ  |+3В  |счет"
 #define LANG_PUMP     "Накачка"
 #define LANG_IMPMINAR "имп/м | наработ."
 #define LANG_CALC2    "расчет"
@@ -172,6 +176,10 @@
 #define LANG_ISOTOP_NA22     "Na-22"
 #define LANG_ISOTOP_CD109    "Cd-109"
 #define LANG_ISOTOP_AM241    "Am-241"
+#define LANG_ISOTOP_Y88      "Y-88"
+#define LANG_ISOTOP_TI44     "Ti-44"
+#define LANG_ISOTOP_BA133    "Ba-133"
+#define LANG_ISOTOP_TH228    "Th-228"
 
 #define LANG_AMODUL    "Module-A act."
 
@@ -213,7 +221,7 @@
 #define LANG_STAT     "   Statistic    "
 #define LANG_ABOUT    "      About     "
 
-#define LANG_AKB3VVV  "BAT  |+3V  |HV"
+#define LANG_AKB3VVV  "BAT  |+3V  |cnt"
 #define LANG_PUMP     "Pump  "
 #define LANG_IMPMINAR "imp/m | uptime  "
 #define LANG_CALC2    "calc  "

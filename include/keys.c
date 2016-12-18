@@ -188,6 +188,7 @@ void plus_doze_reset(uint32_t * param)  // —брос дозы
   for (i = doze_length; i > 0; i--)
   {
     ram_Doze_massive[i] = 0;
+    ram_max_fon_massive[i] = 0;
     Doze_hour_count += ram_Doze_massive[i];
     Doze_day_count += ram_Doze_massive[i];
     Doze_week_count += ram_Doze_massive[i];

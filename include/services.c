@@ -31,6 +31,22 @@ void reload_active_isotop_time()
     Settings.Second_count = Settings.Isotop_count_am241;
     Settings.ACAL_count = Settings.Isotop_ACAL_am241;
     break;
+  case 0x5:
+    Settings.Second_count = Settings.Isotop_count_y88;
+    Settings.ACAL_count = Settings.Isotop_ACAL_y88;
+    break;
+  case 0x6:
+    Settings.Second_count = Settings.Isotop_count_ti44;
+    Settings.ACAL_count = Settings.Isotop_ACAL_ti44;
+    break;
+  case 0x7:
+    Settings.Second_count = Settings.Isotop_count_ba133;
+    Settings.ACAL_count = Settings.Isotop_ACAL_ba133;
+    break;
+  case 0x8:
+    Settings.Second_count = Settings.Isotop_count_th228;
+    Settings.ACAL_count = Settings.Isotop_ACAL_th228;
+    break;
   }
   plus_rad_reset(0x00);
 }

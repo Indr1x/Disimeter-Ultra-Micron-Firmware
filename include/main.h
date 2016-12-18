@@ -143,12 +143,20 @@ typedef struct
   uint32_t Isotop_count_na22;
   uint32_t Isotop_count_cd109;
   uint32_t Isotop_count_am241;
+  uint32_t Isotop_count_y88;
+  uint32_t Isotop_count_ti44;
+  uint32_t Isotop_count_ba133;
+  uint32_t Isotop_count_th228;
 
   uint32_t Isotop_ACAL_cs137;
   uint32_t Isotop_ACAL_eu152;
   uint32_t Isotop_ACAL_na22;
   uint32_t Isotop_ACAL_cd109;
   uint32_t Isotop_ACAL_am241;
+  uint32_t Isotop_ACAL_y88;
+  uint32_t Isotop_ACAL_ti44;
+  uint32_t Isotop_ACAL_ba133;
+  uint32_t Isotop_ACAL_th228;
 
 
   uint32_t AMODUL_spect_start;
