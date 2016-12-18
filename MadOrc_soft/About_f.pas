@@ -298,18 +298,126 @@ try
             sleep(100);
         end;
 
-//     About_f.About.Cs137.Text <> Main.EEPROM_data[$84 div 4].Tostring();
+        // Eu-152
+        if ( (About_f.About.Eu152.Text <> Main.EEPROM_data[$88 div 4].Tostring()) and (About_f.About.Eu152.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$88; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Eu152.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Eu152.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Eu152.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Eu152.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
 
-//if ( About_f.About.Eu152.Text = '0' ) then
-//     About_f.About.Eu152.Text:=Main.EEPROM_data[$88 div 4].Tostring();
 
-//if ( About_f.About.Na22.Text = '0' ) then
-//     About_f.About.Na22.Text:=Main.EEPROM_data[$8C div 4].Tostring();
+        // Na-22
+        if ( (About_f.About.Na22.Text <> Main.EEPROM_data[$8C div 4].Tostring()) and (About_f.About.Na22.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$8C; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Na22.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Na22.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Na22.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Na22.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
 
-//if ( About_f.About.Cd109.Text = '0' ) then
-//     About_f.About.Cd109.Text:=Main.EEPROM_data[$90 div 4].Tostring();
+        // Cd-109
+        if ( (About_f.About.Cd109.Text <> Main.EEPROM_data[$90 div 4].Tostring()) and (About_f.About.Cd109.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$90; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Cd109.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Cd109.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Cd109.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Cd109.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
 
+        // Am-241
+        if ( (About_f.About.Am241.Text <> Main.EEPROM_data[$C0 div 4].Tostring()) and (About_f.About.Am241.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$C0; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Am241.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Am241.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Am241.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Am241.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
 
+        // Y-88
+        if ( (About_f.About.Y88.Text <> Main.EEPROM_data[$C8 div 4].Tostring()) and (About_f.About.Y88.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$C8; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Y88.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Y88.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Y88.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Y88.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
+
+        // Ti-44
+        if ( (About_f.About.Ti44.Text <> Main.EEPROM_data[$D0 div 4].Tostring()) and (About_f.About.Ti44.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$D0; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Ti44.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Ti44.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Ti44.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Ti44.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
+
+        // Ba-133
+        if ( (About_f.About.Ba133.Text <> Main.EEPROM_data[$D8 div 4].Tostring()) and (About_f.About.Ba133.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$D8; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Ba133.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Ba133.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Ba133.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Ba133.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
+
+        // Th-228
+        if ( (About_f.About.Th228.Text <> Main.EEPROM_data[$E0 div 4].Tostring()) and (About_f.About.Th228.Text <> '0')) then
+        begin
+            SetLength(vAns, 7);
+            vAns[0]:=$37;
+            vAns[1]:=$E0; // Адрес
+            vAns[2]:=$00; // Адрес
+            vAns[3]:= StrToInt(About_f.About.Th228.Text)         and $ff;
+            vAns[4]:=(StrToInt(About_f.About.Th228.Text) shr 8)  and $ff;
+            vAns[5]:=(StrToInt(About_f.About.Th228.Text) shr 16) and $ff;
+            vAns[6]:=(StrToInt(About_f.About.Th228.Text) shr 24) and $ff;
+            mainFrm.RS232.Send(vAns);
+            sleep(100);
+        end;
 
         // Загрузка данных из EEPROM
            for ix := 0 to 99 do begin
@@ -421,6 +529,10 @@ if ( About_f.About.Isotop.Items.Count = 0 ) then begin
   About_f.About.Isotop.AddItem('Na-22' ,nil);
   About_f.About.Isotop.AddItem('Cd-109',nil);
   About_f.About.Isotop.AddItem('Am-241',nil);
+  About_f.About.Isotop.AddItem('Y-88',nil);
+  About_f.About.Isotop.AddItem('Ti-44',nil);
+  About_f.About.Isotop.AddItem('Ba-133',nil);
+  About_f.About.Isotop.AddItem('Th-228',nil);
 end;
 
 

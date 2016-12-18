@@ -632,6 +632,7 @@
     Top = 283
     Width = 68
     Height = 21
+    DropDownCount = 10
     TabOrder = 20
   end
   object Timer1: TTimer
