@@ -160,6 +160,7 @@ void plus_ab_engage(uint32_t * param)
 
 void plus_amodul_engage(uint32_t * param)
 {
+  GPIO_InitTypeDef GPIO_InitStructure;
   int i;
 
   Settings.AMODUL_mode = 1;
@@ -177,6 +178,17 @@ void plus_amodul_engage(uint32_t * param)
   menu_select = 0;
   enter_menu_item = DISABLE;
   screen = 1;
+
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;      // Ножка
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);        // Загружаем конфигурацию
+  GPIO_SetBits(GPIOA, GPIO_InitStructure.GPIO_Pin);     // Отключаем токосемник
+
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -633,6 +645,7 @@ void usb_deactivate(uint32_t * param)   // Выключение USB
 
 void keys_proccessing(void)
 {
+  GPIO_InitTypeDef GPIO_InitStructure;
   extern uint16_t key;
   extern SettingsDef Settings;
   int i;
@@ -806,6 +819,14 @@ void keys_proccessing(void)
       RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
       RTC_ITConfig(RTC_IT_ALRB, DISABLE);
       RTC_ClearFlag(RTC_FLAG_ALRBF);
+      GPIO_ResetBits(GPIOA, GPIO_Pin_11 | GPIO_Pin_12);       // Отключаем токосемник
+      GPIO_StructInit(&GPIO_InitStructure);
+      GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
+      GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;
+      GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+      GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+      GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+      GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     }
 

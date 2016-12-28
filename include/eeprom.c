@@ -332,7 +332,7 @@ void eeprom_read_settings(void)
   Settings.Isotop_count_eu152 = eeprom_read(Isotop_count_eu152_address);
   Settings.Isotop_count_na22 = eeprom_read(Isotop_count_na22_address);
   Settings.Isotop_count_cd109 = eeprom_read(Isotop_count_cd109_address);
-  Settings.Isotop_count_ti44  = eeprom_read(Isotop_count_ti44_address);
+  Settings.Isotop_count_ti44 = eeprom_read(Isotop_count_ti44_address);
   Settings.Isotop_count_y88 = eeprom_read(Isotop_count_y88_address);
   Settings.Isotop_count_ba133 = eeprom_read(Isotop_count_ba133_address);
   Settings.Isotop_count_th228 = eeprom_read(Isotop_count_th228_address);
@@ -342,7 +342,7 @@ void eeprom_read_settings(void)
   Settings.Isotop_ACAL_eu152 = eeprom_read(Isotop_ACAL_eu152_address);
   Settings.Isotop_ACAL_na22 = eeprom_read(Isotop_ACAL_na22_address);
   Settings.Isotop_ACAL_cd109 = eeprom_read(Isotop_ACAL_cd109_address);
-  Settings.Isotop_ACAL_ti44  = eeprom_read(Isotop_ACAL_ti44_address);
+  Settings.Isotop_ACAL_ti44 = eeprom_read(Isotop_ACAL_ti44_address);
   Settings.Isotop_ACAL_y88 = eeprom_read(Isotop_ACAL_y88_address);
   Settings.Isotop_ACAL_ba133 = eeprom_read(Isotop_ACAL_ba133_address);
   Settings.Isotop_ACAL_th228 = eeprom_read(Isotop_ACAL_th228_address);

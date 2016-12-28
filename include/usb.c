@@ -566,7 +566,7 @@ void USB_on()
 //---------------------------------------------Включение USB------------------------------------
 
   GPIO_SetBits(GPIOC, GPIO_Pin_13);     // Выключаем подсветку (Hi-Z)
-
+    
   set_pll_for_usb();
   Set_System();
   SystemCoreClockUpdate();
