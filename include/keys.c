@@ -819,7 +819,7 @@ void keys_proccessing(void)
       RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
       RTC_ITConfig(RTC_IT_ALRB, DISABLE);
       RTC_ClearFlag(RTC_FLAG_ALRBF);
-      GPIO_ResetBits(GPIOA, GPIO_Pin_11 | GPIO_Pin_12);       // Отключаем токосемник
+      GPIO_ResetBits(GPIOA, GPIO_Pin_11 | GPIO_Pin_12); // Отключаем токосемник
       GPIO_StructInit(&GPIO_InitStructure);
       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
       GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;

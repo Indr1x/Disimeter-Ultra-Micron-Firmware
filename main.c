@@ -205,7 +205,7 @@ int main(void)
           PWR_FastWakeUpCmd(DISABLE);
         } else
         {
-          PWR_EnterSleepMode(PWR_Regulator_ON, PWR_SLEEPEntry_WFI);
+          //PWR_EnterSleepMode(PWR_Regulator_ON, PWR_SLEEPEntry_WFI);
         }
       } else
       {                         // Если фон очень высокий, переключаем частоту МК на максимум
