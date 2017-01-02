@@ -211,6 +211,8 @@ int main(void)
       {                         // Если фон очень высокий, переключаем частоту МК на максимум
         if((ADCData.Power_voltage > 2800) && (SystemCoreClock < 20000000))      // Если частота ниже 20 мгц, поднять частоту
           set_pll_for_usb();
+        if(Settings.AMODUL_mode != 0)   // Если включен модуль, переходить в режим SLEEP
+          PWR_EnterSleepMode(PWR_Regulator_ON, PWR_SLEEPEntry_WFI);
 
       }
 
