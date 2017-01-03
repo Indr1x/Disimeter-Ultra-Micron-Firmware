@@ -105,8 +105,8 @@
 #define LANG_ABOUT    "  О программе   "
 #define LANG_DOZIK    "  Ультра-Микрон "
 #define LANG_AUTHOR   "   (c)Shodan    "
-#define LANG_CITY     " г.Тула 2014-16г"
-#define LANG_SITE     " радиокружок.net"
+#define LANG_CITY     " г.Тула 2014-17г"
+#define LANG_SITE     "    misrv.com   "
 #define LANG_BUILD    " Прошивка:"
 ///////////////////////////////////////////////////////
 
@@ -234,8 +234,8 @@
 
 #define LANG_DOZIK    "  Ultra-Micron  "
 #define LANG_AUTHOR   " (c)Shodan,Tula "
-#define LANG_CITY     " Russia 2014-16 "
-#define LANG_SITE     "xn--h1aeegel.net"
+#define LANG_CITY     " Russia 2014-17 "
+#define LANG_SITE     "    misrv.com   "
 #define LANG_BUILD    " FW Build:"
 ///////////////////////////////////////////////////////
 
