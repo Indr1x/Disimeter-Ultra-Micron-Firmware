@@ -181,6 +181,7 @@ void set_pll_for_usb()
   /* Wait till PLL is used as system clock source */
   while (RCC_GetSYSCLKSource() != 0x0C);
 
+  SystemCoreClockUpdate();
   reset_TIM_prescallers_and_Compare();
 
   Power.Pump_active = DISABLE;

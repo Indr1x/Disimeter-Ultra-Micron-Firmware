@@ -4,8 +4,8 @@
 
 #define max_string_len 16       // максимальная длинна строки
 #define max_string_count 8      // максимальное количество строк
-#define max_public_string_count 12      // максимальное количество строк публичного меню
-#define max_struct_index 37     // максимальное количество пунктов меню
+#define max_public_string_count 11      // максимальное количество строк публичного меню
+#define max_struct_index 36     // максимальное количество пунктов меню
 #define start_offset 2          // на сколько строк сместить вниз меню
 
 typedef struct

@@ -540,6 +540,7 @@ void USB_send_calibration_data()
 
 void USB_off()
 {
+  GPIO_InitTypeDef GPIO_InitStructure;
 //---------------------------------------------Отключение USB------------------------------------
   Power.USB_active = DISABLE;
   PowerOff();
@@ -558,12 +559,39 @@ void USB_off()
 
   GPIO_ResetBits(GPIOC, GPIO_Pin_13);   // Включаем подсветку  
 
+  // ===============================================================================================  
+  // Включаем питание модуля А
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;      // Ножка
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);        // Загружаем конфигурацию
+  GPIO_SetBits(GPIOA, GPIO_InitStructure.GPIO_Pin);     // Отключаем токосемник
+  // ===============================================================================================  
+
+
 }
 
 
 void USB_on()
 {
-//---------------------------------------------Включение USB------------------------------------
+  GPIO_InitTypeDef GPIO_InitStructure;
+  //---------------------------------------------Включение USB------------------------------------
+
+  // ===============================================================================================  
+  // Выключаем питание модуля А
+  GPIO_ResetBits(GPIOA, GPIO_Pin_11 | GPIO_Pin_12);     // Отключаем токосемник
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  // ===============================================================================================  
+
 
   GPIO_SetBits(GPIOC, GPIO_Pin_13);     // Выключаем подсветку (Hi-Z)
 
@@ -571,6 +599,7 @@ void USB_on()
   Set_System();
   SystemCoreClockUpdate();
   Set_USBClock();
+  reset_TIM_prescallers_and_Compare();
   USB_Interrupts_Config();
   USB_Init();
   SYSCFG->PMC |= (uint32_t) SYSCFG_PMC_USB_PU;  // Connect internal pull-up on USB DP line

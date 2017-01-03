@@ -138,6 +138,7 @@ void EXTI3_IRQHandler(void)
         }
       }
       Sound_key_pressed = ENABLE;
+      Alarm.Tick_beep_count = 0;
       check_wakeup_keys();
     }
     EXTI_ClearITPendingBit(EXTI_Line3);
@@ -157,6 +158,7 @@ void EXTI4_IRQHandler(void)
         key |= 0x4;             // Кнопка -
       }
       Sound_key_pressed = ENABLE;
+      Alarm.Tick_beep_count = 0;
       check_wakeup_keys();
     }
     EXTI_ClearITPendingBit(EXTI_Line4);
@@ -164,7 +166,7 @@ void EXTI4_IRQHandler(void)
 }
 
 // =======================================================
-// Прерывание по импульсу от датчикав 1 и кнопки 2
+// Прерывание по импульсу от датчика и кнопки 2
 void EXTI9_5_IRQHandler(void)
 {
   extern __IO uint8_t Receive_Buffer[64];
@@ -198,7 +200,8 @@ void EXTI9_5_IRQHandler(void)
       {
         if(Power.Display_active)
         {
-          sound_activate();
+          if(Settings.AMODUL_mode == 0)
+            sound_activate();
         }
       }
     }
@@ -214,6 +217,7 @@ void EXTI9_5_IRQHandler(void)
         key |= 0x2;             // Кнопка +
       }
       Sound_key_pressed = ENABLE;
+      Alarm.Tick_beep_count = 0;
       check_wakeup_keys();
     }
   }
@@ -286,7 +290,8 @@ void TIM3_IRQHandler(void)
             } else
               Alarm.Tick_beep_count++;
 
-          } else if(Alarm.Tick_beep_count > 6)  // тик датчика
+
+          } else if(((Alarm.Tick_beep_count > 6) && (Settings.AMODUL_mode == 0)) || ((Alarm.Tick_beep_count > 1) && (Settings.AMODUL_mode != 0)))       // тик датчика или тик модуля
           {
             Alarm.Tick_beep_count = 0;
             sound_deactivate();
@@ -310,6 +315,10 @@ void TIM2_IRQHandler(void)
   if(TIM_GetITStatus(TIM2, TIM_IT_CC2) != RESET)
   {
     TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
+
+    if(Settings.AMODUL_mode == 0)       // Если модуль-А выключен, активируем его
+      plus_amodul_engage(0x00);
+
     if(spect_impulse == DISABLE)
     {
       if(!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1))
@@ -344,6 +353,7 @@ void TIM2_IRQHandler(void)
         AMODULE_len[i]++;       // Фон Модуля-А
       }
     }
+    sound_activate();
   }
 }
 
@@ -366,12 +376,22 @@ void RTC_Alarm_IRQHandler(void)
     {
       Set_next_B_alarm_wakeup();        // установить таймер просыпания на +1 секунду
 
-      for (i = 99; i > 0; i--)
+      if(Settings.AMODUL_mode != 0)     // Если модуль-А активирован, обрабатываем его массив
       {
-        AMODULE_fon[i] = AMODULE_fon[i - 1];
-      }
-      AMODULE_fon[0] = 0;
+        for (i = 99; i > 0; i--)
+        {
+          AMODULE_fon[i] = AMODULE_fon[i - 1];
+        }
+        AMODULE_fon[0] = 0;
+        if((AMODULE_fon[0] == 0) && (AMODULE_fon[1] == 0) && (AMODULE_fon[2] == 0))     // Если от модуля-А не поступает данных три цыкла, деактивируем его.
+        {
+          Settings.AMODUL_mode = 0;
+          RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
+          RTC_ITConfig(RTC_IT_ALRB, DISABLE);
+          RTC_ClearFlag(RTC_FLAG_ALRBF);
+        }
 
+      }
       DataUpdate.Need_display_update = ENABLE;
 
       Power.sleep_time = Settings.Sleep_time;

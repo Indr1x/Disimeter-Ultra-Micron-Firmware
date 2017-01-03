@@ -9,7 +9,8 @@ void sound_activate(void)
     //RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
     if(Power.Display_active == ENABLE)
     {
-      Alarm.Tick_beep_count = 0;
+      if(!Sound_key_pressed)
+        Alarm.Tick_beep_count = 0;
       TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
       TIM10->EGR |= 0x0001;     // Устанавливаем бит UG для принудительного сброса счетчика
       TIM3->EGR |= 0x0001;      // Устанавливаем бит UG для принудительного сброса счетчика
@@ -191,7 +192,7 @@ void timer10_Config(void)       // генерация звука
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-void tim2_Config()
+void tim2_Config()              // Модуль-А
 {
   TIM_TimeBaseInitTypeDef TIM_BaseConfig;
   NVIC_InitTypeDef NVIC_InitStructure;

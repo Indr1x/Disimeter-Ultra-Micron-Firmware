@@ -18,7 +18,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x00, LANG_UNITS,		LANG_UR,			LANG_UZV,	"",					&Settings.units,				0x00,		0x01,		0x00,	&plus_one,				&minus_one},
 {0x00, LANG_CLEAR_FON,	"*",				"*", 		"*",				0x00,							0x00,		0x00,		0x00,	&plus_rad_reset,		0x00},
 {0x00, LANG_BETA_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_ab_engage,		0x00},
-{0x00, LANG_SCINT_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_amodul_engage,		0x00},
+//{0x00, LANG_SCINT_MEAS,	"*",				"*",		"*",				0x00,							0x00,		0x00,		0x00,	&plus_amodul_engage,		0x00},
 {0x01, LANG_SPEED,		LANG_OFF,			LANG_ON,	"",					&Settings.Speedup,				0x00,		0x01,		0x00,	&plus_one,				&minus_one},
 // Заплатка на изотоп if(menu_struct_index == 10) ! Исправить в коде при изменении порядка пунктов меню!
 {0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,				0x00,		0x08,		0x00,	&plus_one,				&minus_one},
@@ -436,7 +436,7 @@ void menu_screen()
       sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value));
 
     // Заплатка на изотоп
-    if(menu_struct_index == 11)
+    if(menu_struct_index == 10)
     {
       tmpi = *Menu_list[menu_struct_index].Parameter_value;
       switch (tmpi)
@@ -471,7 +471,7 @@ void menu_screen()
       }
     }
     // Заплатка на бета окно
-    if(menu_struct_index == 17)
+    if(menu_struct_index == 16)
     {
       tmp = *Menu_list[menu_struct_index].Parameter_value;
       tmp = tmp / 10;

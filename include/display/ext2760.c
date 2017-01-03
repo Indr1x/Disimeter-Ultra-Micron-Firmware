@@ -61,6 +61,20 @@ void display_on()               // Инициализация порта LCD дисплея
   LcdInit();                    // Инициализируем дисплей
   LcdClear();
 
+  // ===============================================================================================  
+  // Включаем питание модуля А
+
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;      // Ножка
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);        // Загружаем конфигурацию
+  GPIO_SetBits(GPIOA, GPIO_InitStructure.GPIO_Pin);     // Отключаем токосемник
+  // ===============================================================================================  
+
+
 }
 
 void display_off()              // Инициализация порта LCD дисплея
@@ -85,7 +99,32 @@ void display_off()              // Инициализация порта LCD дисплея
 
   // ===============================================================================================  
 
+  // ===============================================================================================  
+  // Выключаем питание модуля А
+  GPIO_ResetBits(GPIOA, GPIO_Pin_11 | GPIO_Pin_12);     // Отключаем токосемник
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  // ===============================================================================================  
+
+
   GPIO_SetBits(GPIOC, GPIO_Pin_13);     // Выключаем подсветку (Hi-Z)
+
+// ===============================================================================================  
+  // Выключаем питание модуля А
+  GPIO_ResetBits(GPIOA, GPIO_Pin_11 | GPIO_Pin_12);     // Отключаем токосемник
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  // ===============================================================================================  
 
 }
 
