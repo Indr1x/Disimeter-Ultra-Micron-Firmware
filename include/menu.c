@@ -34,6 +34,12 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_BPROCENT,	"",					"",			LANG_BPROCENT_,		&Settings.Beta_procent,			1,			100,		37,		&plus_one,				&minus_one},
 {0x01, LANG_REF_VOLT,	"",					"",			LANG_REF_VOLT_,		&ADCData.Power_voltage,			1202,		1242,		1224,	&plus_one_ref,			&minus_one_ref},
 {0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            	&Settings.Pump_aggressive,		0,	    	1,  		0,  	&plus_one,		    	&minus_one},
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////
+MenuItem Modul_Menu_list[modul_max_struct_index] = {
+  
+//Сервис   Текст		Если значение 0		Если 1		если больше чем 1	Откуда брать само значение	        	минимум		максимум	дефолт	Реакция на увеличение	на уменьшение 
+{0x01, LANG_ISOTOP,		"",			        "",	        "",					&Settings.Isotop,			        	0x00,		0x08,		0x00,	&plus_one,				&minus_one},
 
 {0x01, LANG_ISOTOP_CS137,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_cs137,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
 {0x01, LANG_ISOTOP_EU152,"",				"",			LANG_ACAL,			&Settings.Isotop_ACAL_eu152,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
@@ -66,264 +72,280 @@ void main_screen()
 
   uint32_t battery_procent, i = 0, x = 0;
 
-  //Рачсет процента батарейки 3.5В = 0% 4.0В = 100%
-  if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
+  if(Settings.AMODUL_mode == 0)
+
   {
-    battery_procent = ADCData.Batt_voltage;
-    battery_procent -= 3500;
-    battery_procent /= 5;
-    if(ADCData.Batt_voltage < 3500)
+    //Рачсет процента батарейки 3.5В = 0% 4.0В = 100%
+    if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
     {
-      LcdBatt(82, 19, 82 + 10, 19 + 19, 0);
-    }                           //рисуем батарейкуADCData.Batt_voltage
-    else
-      LcdBatt(84, 19, 84 + 10, 19 + 19, battery_procent);       //рисуем батарейкуADCData.Batt_voltage
-  }
-
-  if(main_menu_stat > 8)
-    main_menu_stat = 1;
-  if(main_menu_stat < 1)
-    main_menu_stat = 8;
-
-  if(DataUpdate.Need_update_mainscreen_counters == ENABLE)      // Если требуется обновление счетчиков
-  {
-    DataUpdate.Need_update_mainscreen_counters = DISABLE;
-    Max_fon = 0;
-    Doze_day_count = 0;
-    Doze_week_count = 0;
-    Doze_month_count = 0;
-    Doze_hour_count = 0;
-    Doze_2month_count = 0;
-
-    for (i = doze_length_2month; i > 0; i--)
-    {
-      if(i < doze_length_hour)
-        Doze_hour_count += flash_read_massive(i, dose_select);  // расчет недельной дозы
-      if(i < doze_length_day)
-        Doze_day_count += flash_read_massive(i, dose_select);   // расчет дневной дозы
-      if(i < doze_length_week)
+      battery_procent = ADCData.Batt_voltage;
+      battery_procent -= 3500;
+      battery_procent /= 5;
+      if(ADCData.Batt_voltage < 3500)
       {
-        Doze_week_count += flash_read_massive(i, dose_select);  // расчет недельной дозы
-        x = flash_read_massive(i, max_fon_select);
-        if(x > Max_fon)
-          Max_fon = x;          // расчет максимального фона
-      }
-      if(i < doze_length_month)
-        Doze_month_count += flash_read_massive(i, dose_select); // расчет месячной дозы
-      if(i < doze_length_2month)
-        Doze_2month_count += flash_read_massive(i, dose_select);        // расчет месячной дозы
+        LcdBatt(82, 19, 82 + 10, 19 + 19, 0);
+      }                         //рисуем батарейкуADCData.Batt_voltage
+      else
+        LcdBatt(84, 19, 84 + 10, 19 + 19, battery_procent);     //рисуем батарейкуADCData.Batt_voltage
     }
-  }
 
-  if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
-  {
-    switch (main_menu_stat)
+    if(main_menu_stat > 8)
+      main_menu_stat = 1;
+    if(main_menu_stat < 1)
+      main_menu_stat = 8;
+
+    if(DataUpdate.Need_update_mainscreen_counters == ENABLE)    // Если требуется обновление счетчиков
     {
-    case 0x01:
-      sprintf(lcd_buf, LANG_TIME);      // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
-      sprintf(lcd_buf, LANG_DATE);      // Пишем в буфер значение счетчика
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
+      DataUpdate.Need_update_mainscreen_counters = DISABLE;
+      Max_fon = 0;
+      Doze_day_count = 0;
+      Doze_week_count = 0;
+      Doze_month_count = 0;
+      Doze_hour_count = 0;
+      Doze_2month_count = 0;
 
-      RTC_GetDate(RTC_Format_BIN, &RTC_DateStructure);
-      RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
-
-      sprintf(lcd_buf, "%0.2d.%0.2d.%0.2d", RTC_DateStructure.RTC_Date, RTC_DateStructure.RTC_Month, RTC_DateStructure.RTC_Year);
-      LcdString(7, 5);          // // Выводим обычным текстом содержание буфера
-      sprintf(lcd_buf, "%0.2d:%0.2d:%0.2d", RTC_TimeStructure.RTC_Hours, RTC_TimeStructure.RTC_Minutes, RTC_TimeStructure.RTC_Seconds);
-      LcdString(7, 4);          // // Выводим обычным текстом содержание буфера
-
-      break;
-      // -----------------------------------------
-    case 0x02:
-      sprintf(lcd_buf, LANG_MAXFON);    // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
-
-      if(!Settings.units)
+      for (i = doze_length_2month; i > 0; i--)
       {
-        sprintf(lcd_buf, LANG_9UMKR, Max_fon);  // Пишем в буфер значение счетчика
-      } else
-      {
-        sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv(Max_fon)); // Пишем в буфер значение счетчика
+        if(i < doze_length_hour)
+          Doze_hour_count += flash_read_massive(i, dose_select);        // расчет недельной дозы
+        if(i < doze_length_day)
+          Doze_day_count += flash_read_massive(i, dose_select); // расчет дневной дозы
+        if(i < doze_length_week)
+        {
+          Doze_week_count += flash_read_massive(i, dose_select);        // расчет недельной дозы
+          x = flash_read_massive(i, max_fon_select);
+          if(x > Max_fon)
+            Max_fon = x;        // расчет максимального фона
+        }
+        if(i < doze_length_month)
+          Doze_month_count += flash_read_massive(i, dose_select);       // расчет месячной дозы
+        if(i < doze_length_2month)
+          Doze_2month_count += flash_read_massive(i, dose_select);      // расчет месячной дозы
       }
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      break;
-      // -----------------------------------------
-    case 0x03:
-      sprintf(lcd_buf, LANG_DOSE10M);   // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
+    }
 
-      if(flash_read_massive(doze_length_10m, dose_select) > 0)
+    if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
+    {
+      switch (main_menu_stat)
       {
-        //фон за час massive/(3600/время счета)
+      case 0x01:
+        sprintf(lcd_buf, LANG_TIME);    // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
+        sprintf(lcd_buf, LANG_DATE);    // Пишем в буфер значение счетчика
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+
+        RTC_GetDate(RTC_Format_BIN, &RTC_DateStructure);
+        RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
+
+        sprintf(lcd_buf, "%0.2d.%0.2d.%0.2d", RTC_DateStructure.RTC_Date, RTC_DateStructure.RTC_Month, RTC_DateStructure.RTC_Year);
+        LcdString(7, 5);        // // Выводим обычным текстом содержание буфера
+        sprintf(lcd_buf, "%0.2d:%0.2d:%0.2d", RTC_TimeStructure.RTC_Hours, RTC_TimeStructure.RTC_Minutes, RTC_TimeStructure.RTC_Seconds);
+        LcdString(7, 4);        // // Выводим обычным текстом содержание буфера
+
+        break;
+        // -----------------------------------------
+      case 0x02:
+        sprintf(lcd_buf, LANG_MAXFON);  // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
+
         if(!Settings.units)
         {
-          sprintf(lcd_buf, LANG_9UMKR, (flash_read_massive(doze_length_10m, dose_select) * (Settings.Second_count >> 2)) / 900);        // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, LANG_9UMKR, Max_fon);        // Пишем в буфер значение счетчика
         } else
         {
-          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((flash_read_massive(doze_length_10m, dose_select) * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv(Max_fon));       // Пишем в буфер значение счетчика
         }
-      } else
-      {
-        sprintf(lcd_buf, LANG_DOSECALC);        // Пишем в буфер значение счетчика
-      }
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      break;
-      // -----------------------------------------
-    case 0x04:
-      sprintf(lcd_buf, LANG_DOSEHOUR);  // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+        break;
+        // -----------------------------------------
+      case 0x03:
+        sprintf(lcd_buf, LANG_DOSE10M); // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
 
-      if(flash_read_massive(doze_length_hour, dose_select) > 0)
-      {
-        if(!Settings.units)
+        if(flash_read_massive(doze_length_10m, dose_select) > 0)
         {
-          sprintf(lcd_buf, LANG_9UMKR, ((Doze_hour_count * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
+          //фон за час massive/(3600/время счета)
+          if(!Settings.units)
+          {
+            sprintf(lcd_buf, LANG_9UMKR, (flash_read_massive(doze_length_10m, dose_select) * (Settings.Second_count >> 2)) / 900);      // Пишем в буфер значение счетчика
+          } else
+          {
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((flash_read_massive(doze_length_10m, dose_select) * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
+          }
         } else
         {
-          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_hour_count * (Settings.Second_count >> 2)) / 900));        // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, LANG_DOSECALC);      // Пишем в буфер значение счетчика
         }
-      } else
-      {
-        sprintf(lcd_buf, LANG_DOSECALC);        // Пишем в буфер значение счетчика
-      }
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      break;
-      // -----------------------------------------
-    case 0x05:
-      sprintf(lcd_buf, LANG_DOSE24H);   // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера         
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+        break;
+        // -----------------------------------------
+      case 0x04:
+        sprintf(lcd_buf, LANG_DOSEHOUR);        // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
 
-      if(flash_read_massive(doze_length_day, dose_select) > 0)  // День
-      {
-        if(!Settings.units)
+        if(flash_read_massive(doze_length_hour, dose_select) > 0)
         {
-          sprintf(lcd_buf, LANG_9UMKR, ((Doze_day_count * (Settings.Second_count >> 2)) / 900));        // Пишем в буфер значение счетчика
+          if(!Settings.units)
+          {
+            sprintf(lcd_buf, LANG_9UMKR, ((Doze_hour_count * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
+          } else
+          {
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_hour_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
+          }
         } else
         {
-          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_day_count * (Settings.Second_count >> 2)) / 900)); // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, LANG_DOSECALC);      // Пишем в буфер значение счетчика
         }
-      } else
-      {
-        sprintf(lcd_buf, LANG_DOSECALC);        // Пишем в буфер значение счетчика
-      }
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+        break;
+        // -----------------------------------------
+      case 0x05:
+        sprintf(lcd_buf, LANG_DOSE24H); // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера         
 
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      break;
-      // -----------------------------------------
-    case 0x06:
-      sprintf(lcd_buf, LANG_DOSEWEEK);  // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
-
-      if(flash_read_massive(doze_length_week, dose_select) > 0) // неделя
-      {
-        if(!Settings.units)
+        if(flash_read_massive(doze_length_day, dose_select) > 0)        // День
         {
-          sprintf(lcd_buf, LANG_9UMKR, ((Doze_week_count * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
+          if(!Settings.units)
+          {
+            sprintf(lcd_buf, LANG_9UMKR, ((Doze_day_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
+          } else
+          {
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_day_count * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
+          }
         } else
         {
-          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_week_count * (Settings.Second_count >> 2)) / 900));        // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, LANG_DOSECALC);      // Пишем в буфер значение счетчика
         }
-      } else
-      {
-        sprintf(lcd_buf, LANG_DOSECALC);        // Пишем в буфер значение счетчика
-      }
 
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      break;
-      // -----------------------------------------
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+        break;
+        // -----------------------------------------
+      case 0x06:
+        sprintf(lcd_buf, LANG_DOSEWEEK);        // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
+
+        if(flash_read_massive(doze_length_week, dose_select) > 0)       // неделя
+        {
+          if(!Settings.units)
+          {
+            sprintf(lcd_buf, LANG_9UMKR, ((Doze_week_count * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
+          } else
+          {
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_week_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
+          }
+        } else
+        {
+          sprintf(lcd_buf, LANG_DOSECALC);      // Пишем в буфер значение счетчика
+        }
+
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+        break;
+        // -----------------------------------------
 
 
 // -----------------------------------------
-    case 0x07:
-      sprintf(lcd_buf, LANG_DOSEMONTH); // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
-
-      if(flash_read_massive(doze_length_month, dose_select) > 0)        // неделя
-      {
-        if(!Settings.units)
-        {
-          sprintf(lcd_buf, LANG_9UMKR, ((Doze_month_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
-        } else
-        {
-          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_month_count * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
-        }
-      } else
-      {
-        sprintf(lcd_buf, LANG_DOSECALC);        // Пишем в буфер значение счетчика
-      }
-
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      break;
-      // -----------------------------------------
-
-      // -----------------------------------------
-    case 0x08:
-      sprintf(lcd_buf, LANG_DOSE2MONTH);        // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
-
-      if(flash_read_massive(doze_length_2month, dose_select) > 0)       // неделя
-      {
-        if(!Settings.units)
-        {
-          sprintf(lcd_buf, LANG_9UMKR, ((Doze_2month_count * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
-        } else
-        {
-          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_2month_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
-        }
-      } else
-      {
-        sprintf(lcd_buf, LANG_DOSECALC);        // Пишем в буфер значение счетчика
-      }
-
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      break;
-      // -----------------------------------------
-
-    default:
-      break;
-    }
-  } else
-  {
-    // Режим "Замер А-В"
-    if(Settings.AB_mode > 0)
-      Draw_AB_digit(4, 1, 0);
-
-    // Режим "Модуль-А"
-    if(Settings.AMODUL_mode > 0)
-    {
-      if(Settings.AMODUL_unit < 2)
-      {
-        Draw_AMODUL_digit(1, 1, 0);
-
-        sprintf(lcd_buf, LANG_AMODUL);  // Пишем в буфер значение счетчика
+      case 0x07:
+        sprintf(lcd_buf, LANG_DOSEMONTH);       // Пишем в буфер значение счетчика
         LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
 
-        sprintf(lcd_buf, LANG_TIME);    // Пишем в буфер значение счетчика
+        if(flash_read_massive(doze_length_month, dose_select) > 0)      // неделя
+        {
+          if(!Settings.units)
+          {
+            sprintf(lcd_buf, LANG_9UMKR, ((Doze_month_count * (Settings.Second_count >> 2)) / 900));    // Пишем в буфер значение счетчика
+          } else
+          {
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_month_count * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
+          }
+        } else
+        {
+          sprintf(lcd_buf, LANG_DOSECALC);      // Пишем в буфер значение счетчика
+        }
+
         LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
-        sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);      // Пишем в буфер значение счетчика
-        LcdString(7, 5);        // // Выводим обычным текстом содержание буфера
+        break;
+        // -----------------------------------------
+
+        // -----------------------------------------
+      case 0x08:
+        sprintf(lcd_buf, LANG_DOSE2MONTH);      // Пишем в буфер значение счетчика
+        LcdString(1, 4);        // // Выводим обычным текстом содержание буфера
+
+        if(flash_read_massive(doze_length_2month, dose_select) > 0)     // неделя
+        {
+          if(!Settings.units)
+          {
+            sprintf(lcd_buf, LANG_9UMKR, ((Doze_2month_count * (Settings.Second_count >> 2)) / 900));   // Пишем в буфер значение счетчика
+          } else
+          {
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_2month_count * (Settings.Second_count >> 2)) / 900));    // Пишем в буфер значение счетчика
+          }
+        } else
+        {
+          sprintf(lcd_buf, LANG_DOSECALC);      // Пишем в буфер значение счетчика
+        }
+
+        LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
+        break;
+        // -----------------------------------------
+
+      default:
+        break;
       }
+    } else
+    {
+      // Режим "Замер А-В"
+      if(Settings.AB_mode > 0)
+        Draw_AB_digit(4, 1, 0);
     }
-  }
 
-  if(Settings.Cal_mode == 1)
-  {
-    sprintf(lcd_buf, "%2i  %5i", Cal_count, Cal_count_time);    // Пишем в буфер значение счетчика
-    LcdString(1, 1);            // // Выводим обычным текстом содержание буфера
+    if(Settings.Cal_mode == 1)
+    {
+      sprintf(lcd_buf, "%2i  %5i", Cal_count, Cal_count_time);  // Пишем в буфер значение счетчика
+      LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
 
-    sprintf(lcd_buf, LANG_FON_UMKZV, convert_mkr_sv(Cal_count_mass[Cal_count]));        // Пишем в буфер значение счетчика
-    LcdString(1, 2);            // // Выводим обычным текстом содержание буфера    
-  } else
-  {
-    if(Settings.AMODUL_mode == 0)
+      sprintf(lcd_buf, LANG_FON_UMKZV, convert_mkr_sv(Cal_count_mass[Cal_count]));      // Пишем в буфер значение счетчика
+      LcdString(1, 2);          // // Выводим обычным текстом содержание буфера    
+    } else
+    {
       Draw_fon_digit(1, 1, 0);
-  }
+    }
+    Draw_fon_graph(2, 94, 67 - 25, 67);
 
-  if(Settings.AMODUL_mode > 0)
+    if(auto_speedup_factor > 1)
+    {
+      Draw_speedup(2, 94, 67 - 25, 67);
+      sprintf(lcd_buf, "x%2u", auto_speedup_factor);    // Пишем в буфер значение счетчика
+      LcdString(12, 3);         // // Выводим обычным текстом содержание буфера
+    }
+  } else
+    amodul_screen();
+
+  LcdUpdate();                  // записываем данные из сформированного фрейм-буфера на дисплей
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void amodul_screen()
+{
+  if(Settings.AMODUL_menu == 0)
   {
     if(Settings.AMODUL_unit < 2)
     {
+      Draw_AMODUL_digit(1, 1, 0);
+
+      sprintf(lcd_buf, LANG_AMODUL);    // Пишем в буфер значение счетчика
+      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
+
+      sprintf(lcd_buf, LANG_TIME);      // Пишем в буфер значение счетчика
+      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
+      sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);        // Пишем в буфер значение счетчика
+      LcdString(7, 5);          // // Выводим обычным текстом содержание буфера
+
       Draw_AMODUL_graph(2, 94, 67 - 25, 67);
     } else
     {
@@ -339,20 +361,10 @@ void main_screen()
 
       Draw_AMODUL_graph_spectr(2, 96, 67 - 38, 67, 0);
     }
-
   } else
   {
-    Draw_fon_graph(2, 94, 67 - 25, 67);
+    menu_screen(AMODUL_menu_mode);
   }
-
-  if(auto_speedup_factor > 1)
-  {
-    Draw_speedup(2, 94, 67 - 25, 67);
-    sprintf(lcd_buf, "x%2u", auto_speedup_factor);      // Пишем в буфер значение счетчика
-    LcdString(12, 3);           // // Выводим обычным текстом содержание буфера
-  }
-  LcdUpdate();                  // записываем данные из сформированного фрейм-буфера на дисплей
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -360,7 +372,7 @@ void main_screen()
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void menu_screen()
+void menu_screen(uint32_t mode)
 {
   char para_string[20];
   char tmp_string[20];
@@ -369,146 +381,279 @@ void menu_screen()
 
   sprintf(lcd_buf, LANG_MENU);
   LcdStringInv(1, 1);
-
-  if(menu_select == 0)
+  if(mode == AMODUL_menu_mode)  // Меню модуля-А
   {
-    menu_page = 0;
-  } else
-  {
-
-    if(hidden_menu)
+    if(modul_menu_select == 0)
     {
-      menu_page = (menu_select - 1) / (max_string_count - start_offset);        // определение страницы меню (полное)
+      menu_page = 0;
     } else
     {
-      if(menu_select <= max_public_string_count)
+
+
+      if(modul_menu_select <= modul_max_struct_index)
       {
-        menu_page = (menu_select - 1) / (max_string_count - start_offset);      // определение страницы меню (Публичное)
+        menu_page = (modul_menu_select - 1) / (max_string_count - start_offset);        // определение страницы меню (Публичное)
       } else
       {
         menu_page = 0;
       }
+
+    }
+
+    for (i = 0; i < (max_string_count - start_offset); i++)
+    {
+      uint32_t fill_len = 0;
+      uint32_t para_len = 0;
+      uint32_t text_len = 0;
+      uint32_t menu_struct_index = 0;
+//      float tmp;
+      uint32_t tmpi;
+
+      menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;  // вычисление адеса в структуре
+      if(menu_struct_index >= modul_max_struct_index)
+        break;                  // если меню кончилось
+
+
+      // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
+
+      // вычисляем значение параметра "10сек"
+      switch (*Modul_Menu_list[menu_struct_index].Parameter_value)
+      {
+      case 0:                  // если значение параметра равно нулю, ищем нет ли макроподстановки на этот случай
+        if(Modul_Menu_list[menu_struct_index].Param_is_0[0] != '\0')
+        {
+          sprintf(para_string, Modul_Menu_list[menu_struct_index].Param_is_0);
+          break;
+        }
+
+      case 1:                  // если значение параметра равен еденице, ищем нет ли макроподстановки на этот случай
+        if(Modul_Menu_list[menu_struct_index].Param_is_1[0] != '\0')
+        {
+          sprintf(para_string, Modul_Menu_list[menu_struct_index].Param_is_1);
+          break;
+        }
+
+      default:                 // во всех остальных случиях выводим по шаблону
+        sprintf(para_string, Modul_Menu_list[menu_struct_index].Param_is_N, *Modul_Menu_list[menu_struct_index].Parameter_value);
+        break;
+      }
+
+      // Заплатка на изотоп
+      if(menu_struct_index == 0)
+      {
+        tmpi = *Modul_Menu_list[menu_struct_index].Parameter_value;
+        switch (tmpi)
+        {
+        case 0x0:
+          sprintf(para_string, LANG_ISOTOP_CS137);
+          break;
+        case 0x1:
+          sprintf(para_string, LANG_ISOTOP_EU152);
+          break;
+        case 0x2:
+          sprintf(para_string, LANG_ISOTOP_NA22);
+          break;
+        case 0x3:
+          sprintf(para_string, LANG_ISOTOP_CD109);
+          break;
+        case 0x4:
+          sprintf(para_string, LANG_ISOTOP_AM241);
+          break;
+        case 0x5:
+          sprintf(para_string, LANG_ISOTOP_Y88);
+          break;
+        case 0x6:
+          sprintf(para_string, LANG_ISOTOP_TI44);
+          break;
+        case 0x7:
+          sprintf(para_string, LANG_ISOTOP_BA133);
+          break;
+        case 0x8:
+          sprintf(para_string, LANG_ISOTOP_TH228);
+          break;
+        }
+      }
+      // Заплатка на бета окно
+//      if(menu_struct_index == 16)
+//      {
+//        tmp = *Modul_Menu_list[menu_struct_index].Parameter_value;
+//        tmp = tmp / 10;
+//        sprintf(para_string, LANG_BWINDOW_, tmp);
+//      }
+
+
+      para_len = strlen(para_string);   // длинна параметра
+      text_len = strlen(Modul_Menu_list[menu_struct_index].Text);       // линна текста
+      fill_len = max_string_len - para_len - text_len;  // сколько добавлять пустых символов
+
+      sprintf(tmp_string, Modul_Menu_list[menu_struct_index].Text);     // пишем текст сначала             "Сон"
+      for (j = 0; j < fill_len; j++)
+        strcat(tmp_string, " ");        // добиваем пробелами посередине   "Сон      "
+
+      // вывод на экран
+      // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
+      sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
+      if(modul_menu_select == menu_struct_index + 1 && enter_menu_item == DISABLE)      // Определение подсветки
+      {
+        LcdStringInv(1, i + start_offset + 1);
+      } else
+      {
+        LcdString(1, i + start_offset + 1);
+      }
+
+      sprintf(lcd_buf, para_string);    // готовим к выводу на значения "10 сек"
+      if(modul_menu_select == menu_struct_index + 1)    // Определение подсветки
+      {
+        LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
+      } else
+      {
+        LcdString(1 + text_len + fill_len, i + start_offset + 1);
+      }
+
     }
   }
-
-  for (i = 0; i < (max_string_count - start_offset); i++)
+//**********************************************************************************************
+  if(mode == NORMAL_menu_mode)
   {
-    uint32_t fill_len = 0;
-    uint32_t para_len = 0;
-    uint32_t text_len = 0;
-    uint32_t menu_struct_index = 0;
-    float tmp;
-    uint32_t tmpi;
-
-    menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;    // вычисление адеса в структуре
-    if(menu_struct_index >= max_struct_index)
-      break;                    // если меню кончилось
-    if((menu_struct_index >= max_public_string_count) && (!hidden_menu))
-      break;                    // если за границей публичного меню
-
-
-    // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
-
-    // вычисляем значение параметра "10сек"
-    switch (*Menu_list[menu_struct_index].Parameter_value)
+    if(menu_select == 0)
     {
-    case 0:                    // если значение параметра равно нулю, ищем нет ли макроподстановки на этот случай
-      if(Menu_list[menu_struct_index].Param_is_0[0] != '\0')
-      {
-        sprintf(para_string, Menu_list[menu_struct_index].Param_is_0);
-        break;
-      }
-
-    case 1:                    // если значение параметра равен еденице, ищем нет ли макроподстановки на этот случай
-      if(Menu_list[menu_struct_index].Param_is_1[0] != '\0')
-      {
-        sprintf(para_string, Menu_list[menu_struct_index].Param_is_1);
-        break;
-      }
-
-    default:                   // во всех остальных случиях выводим по шаблону
-      sprintf(para_string, Menu_list[menu_struct_index].Param_is_N, *Menu_list[menu_struct_index].Parameter_value);
-      break;
-    }
-
-    // Заплатка на мкЗв
-    if((menu_struct_index == 0) && Settings.units)
-      sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value));
-
-    // Заплатка на изотоп
-    if(menu_struct_index == 10)
-    {
-      tmpi = *Menu_list[menu_struct_index].Parameter_value;
-      switch (tmpi)
-      {
-      case 0x0:
-        sprintf(para_string, LANG_ISOTOP_CS137);
-        break;
-      case 0x1:
-        sprintf(para_string, LANG_ISOTOP_EU152);
-        break;
-      case 0x2:
-        sprintf(para_string, LANG_ISOTOP_NA22);
-        break;
-      case 0x3:
-        sprintf(para_string, LANG_ISOTOP_CD109);
-        break;
-      case 0x4:
-        sprintf(para_string, LANG_ISOTOP_AM241);
-        break;
-      case 0x5:
-        sprintf(para_string, LANG_ISOTOP_Y88);
-        break;
-      case 0x6:
-        sprintf(para_string, LANG_ISOTOP_TI44);
-        break;
-      case 0x7:
-        sprintf(para_string, LANG_ISOTOP_BA133);
-        break;
-      case 0x8:
-        sprintf(para_string, LANG_ISOTOP_TH228);
-        break;
-      }
-    }
-    // Заплатка на бета окно
-    if(menu_struct_index == 16)
-    {
-      tmp = *Menu_list[menu_struct_index].Parameter_value;
-      tmp = tmp / 10;
-      sprintf(para_string, LANG_BWINDOW_, tmp);
-    }
-
-
-    para_len = strlen(para_string);     // длинна параметра
-    text_len = strlen(Menu_list[menu_struct_index].Text);       // линна текста
-    fill_len = max_string_len - para_len - text_len;    // сколько добавлять пустых символов
-
-    sprintf(tmp_string, Menu_list[menu_struct_index].Text);     // пишем текст сначала             "Сон"
-    for (j = 0; j < fill_len; j++)
-      strcat(tmp_string, " ");  // добиваем пробелами посередине   "Сон      "
-
-    // вывод на экран
-    // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
-    sprintf(lcd_buf, tmp_string);       // готовим к выводу на экран "Сон      "
-    if(menu_select == menu_struct_index + 1 && enter_menu_item == DISABLE)      // Определение подсветки
-    {
-      LcdStringInv(1, i + start_offset + 1);
+      menu_page = 0;
     } else
     {
-      LcdString(1, i + start_offset + 1);
+
+      if(hidden_menu)
+      {
+        menu_page = (menu_select - 1) / (max_string_count - start_offset);      // определение страницы меню (полное)
+      } else
+      {
+        if(menu_select <= max_public_string_count)
+        {
+          menu_page = (menu_select - 1) / (max_string_count - start_offset);    // определение страницы меню (Публичное)
+        } else
+        {
+          menu_page = 0;
+        }
+      }
     }
 
-    sprintf(lcd_buf, para_string);      // готовим к выводу на значения "10 сек"
-    if(menu_select == menu_struct_index + 1)    // Определение подсветки
+    for (i = 0; i < (max_string_count - start_offset); i++)
     {
-      LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
-    } else
-    {
-      LcdString(1 + text_len + fill_len, i + start_offset + 1);
-    }
+      uint32_t fill_len = 0;
+      uint32_t para_len = 0;
+      uint32_t text_len = 0;
+      uint32_t menu_struct_index = 0;
+      float tmp;
+      uint32_t tmpi;
 
+      menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;  // вычисление адеса в структуре
+      if(menu_struct_index >= max_struct_index)
+        break;                  // если меню кончилось
+      if((menu_struct_index >= max_public_string_count) && (!hidden_menu))
+        break;                  // если за границей публичного меню
+
+
+      // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
+
+      // вычисляем значение параметра "10сек"
+      switch (*Menu_list[menu_struct_index].Parameter_value)
+      {
+      case 0:                  // если значение параметра равно нулю, ищем нет ли макроподстановки на этот случай
+        if(Menu_list[menu_struct_index].Param_is_0[0] != '\0')
+        {
+          sprintf(para_string, Menu_list[menu_struct_index].Param_is_0);
+          break;
+        }
+
+      case 1:                  // если значение параметра равен еденице, ищем нет ли макроподстановки на этот случай
+        if(Menu_list[menu_struct_index].Param_is_1[0] != '\0')
+        {
+          sprintf(para_string, Menu_list[menu_struct_index].Param_is_1);
+          break;
+        }
+
+      default:                 // во всех остальных случиях выводим по шаблону
+        sprintf(para_string, Menu_list[menu_struct_index].Param_is_N, *Menu_list[menu_struct_index].Parameter_value);
+        break;
+      }
+
+      // Заплатка на мкЗв
+      if((menu_struct_index == 0) && Settings.units)
+        sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value));
+
+      // Заплатка на изотоп
+      if(menu_struct_index == 10)
+      {
+        tmpi = *Menu_list[menu_struct_index].Parameter_value;
+        switch (tmpi)
+        {
+        case 0x0:
+          sprintf(para_string, LANG_ISOTOP_CS137);
+          break;
+        case 0x1:
+          sprintf(para_string, LANG_ISOTOP_EU152);
+          break;
+        case 0x2:
+          sprintf(para_string, LANG_ISOTOP_NA22);
+          break;
+        case 0x3:
+          sprintf(para_string, LANG_ISOTOP_CD109);
+          break;
+        case 0x4:
+          sprintf(para_string, LANG_ISOTOP_AM241);
+          break;
+        case 0x5:
+          sprintf(para_string, LANG_ISOTOP_Y88);
+          break;
+        case 0x6:
+          sprintf(para_string, LANG_ISOTOP_TI44);
+          break;
+        case 0x7:
+          sprintf(para_string, LANG_ISOTOP_BA133);
+          break;
+        case 0x8:
+          sprintf(para_string, LANG_ISOTOP_TH228);
+          break;
+        }
+      }
+      // Заплатка на бета окно
+      if(menu_struct_index == 16)
+      {
+        tmp = *Menu_list[menu_struct_index].Parameter_value;
+        tmp = tmp / 10;
+        sprintf(para_string, LANG_BWINDOW_, tmp);
+      }
+
+
+      para_len = strlen(para_string);   // длинна параметра
+      text_len = strlen(Menu_list[menu_struct_index].Text);     // линна текста
+      fill_len = max_string_len - para_len - text_len;  // сколько добавлять пустых символов
+
+      sprintf(tmp_string, Menu_list[menu_struct_index].Text);   // пишем текст сначала             "Сон"
+      for (j = 0; j < fill_len; j++)
+        strcat(tmp_string, " ");        // добиваем пробелами посередине   "Сон      "
+
+      // вывод на экран
+      // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
+      sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
+      if(menu_select == menu_struct_index + 1 && enter_menu_item == DISABLE)    // Определение подсветки
+      {
+        LcdStringInv(1, i + start_offset + 1);
+      } else
+      {
+        LcdString(1, i + start_offset + 1);
+      }
+
+      sprintf(lcd_buf, para_string);    // готовим к выводу на значения "10 сек"
+      if(menu_select == menu_struct_index + 1)  // Определение подсветки
+      {
+        LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
+      } else
+      {
+        LcdString(1 + text_len + fill_len, i + start_offset + 1);
+      }
+
+    }
   }
-
   LcdUpdate();
 
 }

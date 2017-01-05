@@ -5,8 +5,14 @@
 #define max_string_len 16       // максимальная длинна строки
 #define max_string_count 8      // максимальное количество строк
 #define max_public_string_count 11      // максимальное количество строк публичного меню
-#define max_struct_index 36     // максимальное количество пунктов меню
+#define max_struct_index 20     // максимальное количество пунктов меню
 #define start_offset 2          // на сколько строк сместить вниз меню
+
+#define modul_max_struct_index 17       // максимальное количество пунктов меню
+
+
+#define NORMAL_menu_mode 0
+#define AMODUL_menu_mode 1
 
 typedef struct
 {
@@ -25,9 +31,11 @@ typedef struct
 } MenuItem;
 
 void main_screen(void);
-void menu_screen(void);
+void menu_screen(uint32_t);
 void stat_screen(void);
+void amodul_screen(void);
 
 extern MenuItem Menu_list[];
+extern MenuItem Modul_Menu_list[];
 
 #endif

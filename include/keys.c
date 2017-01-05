@@ -175,6 +175,7 @@ void plus_amodul_engage(uint32_t * param)
   RTC_ClearFlag(RTC_FLAG_ALRBF);
 
   menu_select = 0;
+  modul_menu_select = 0;
   enter_menu_item = DISABLE;
   screen = 1;
 
@@ -205,35 +206,71 @@ void plus_doze_reset(uint32_t * param)  // —брос дозы
 // +1 -1
 void plus_one(uint32_t * param) // +1
 {
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //≈сли пытаемс€ привысить максимально допустимое значение, то переходим на минимум
-  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
+  if(Settings.AMODUL_mode > 0)
   {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
+    if(*param > modul_max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить максимально допустимое значение, то переходим на минимум
+    if(*Modul_Menu_list[*param - 1].Parameter_value >= Modul_Menu_list[*param - 1].Max_limit)
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Min_limit;
+    } else
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value + 1;  //+1
+    }
   } else
   {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 1;        //+1
+    if(*param > max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить максимально допустимое значение, то переходим на минимум
+    if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
+    {
+      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
+    } else
+    {
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 1;      //+1
+    }
   }
 }
 
 void minus_one(uint32_t * param)        // -1
 {
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //≈сли пытаемс€ привысить минимально допустимое значение, то переходим на максимум
-  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
+  if(Settings.AMODUL_mode > 0)
   {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
+    if(*param > modul_max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить минимально допустимое значение, то переходим на максимум
+    if(*Modul_Menu_list[*param - 1].Parameter_value <= Modul_Menu_list[*param - 1].Min_limit)
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Max_limit;
+    } else
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value - 1;  // -1
+    }
   } else
   {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 1;        // -1
+    if(*param > max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить минимально допустимое значение, то переходим на максимум
+    if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
+    {
+      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
+    } else
+    {
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 1;      // -1
+    }
   }
 }
 
@@ -284,36 +321,72 @@ void plus_one_ref(uint32_t * param)
 // +10 -10
 void plus_ten(uint32_t * param) // +10
 {
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //≈сли пытаемс€ привысить максимально допустимое значение, то переходим на минимум
-  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
+  if(Settings.AMODUL_mode > 0)
   {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
+    if(*param > modul_max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить максимально допустимое значение, то переходим на минимум
+    if(*Modul_Menu_list[*param - 1].Parameter_value >= Modul_Menu_list[*param - 1].Max_limit)
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Min_limit;
+    } else
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value + 10; //+10
+    }
   } else
   {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 10;       //+10
+    if(*param > max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить максимально допустимое значение, то переходим на минимум
+    if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
+    {
+      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
+    } else
+    {
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 10;     //+10
+    }
   }
 }
 
 
 void minus_ten(uint32_t * param)        // -10
 {
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //≈сли пытаемс€ привысить минимально допустимое значение, то переходим на максимум
-  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
+  if(Settings.AMODUL_mode > 0)
   {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
+    if(*param > modul_max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить минимально допустимое значение, то переходим на максимум
+    if(*Modul_Menu_list[*param - 1].Parameter_value <= Modul_Menu_list[*param - 1].Min_limit)
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Max_limit;
+    } else
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value - 10; // -10
+    }
   } else
   {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 10;       // -10
+    if(*param > max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //≈сли пытаемс€ привысить минимально допустимое значение, то переходим на максимум
+    if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
+    {
+      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
+    } else
+    {
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 10;     // -10
+    }
   }
 }
 
@@ -647,7 +720,7 @@ void keys_proccessing(void)
     delay_ms(10);
     DataUpdate.Need_display_update = ENABLE;
 
-    if(Settings.AMODUL_mode > 0)
+    if((Settings.AMODUL_mode > 0) && (Settings.AMODUL_menu == 0))
     {
       if(Settings.AMODUL_unit < 2)
       {
@@ -675,8 +748,10 @@ void keys_proccessing(void)
     } else
     {
 
-      if(screen == 2 && enter_menu_item == DISABLE)
+      if((screen == 2 && enter_menu_item == DISABLE) && (Settings.AMODUL_menu == 0))
         menu_select--;
+      if((Settings.AMODUL_menu > 0) && (enter_menu_item == DISABLE))
+        modul_menu_select--;
       if(screen == 1)
         main_menu_stat++;
       if(screen == 3)
@@ -698,11 +773,14 @@ void keys_proccessing(void)
         if(menu_select > max_public_string_count)
           menu_select = max_public_string_count;
       }
+      if(modul_menu_select > modul_max_struct_index)
+        modul_menu_select = modul_max_struct_index;
+
 
       key = 0;
 
       ///////////
-      if(enter_menu_item == ENABLE)
+      if((enter_menu_item == ENABLE) && (Settings.AMODUL_menu == 0))
       {
 
         if(menu_select > max_struct_index)
@@ -713,6 +791,20 @@ void keys_proccessing(void)
         if(Menu_list[menu_select - 1].Plus_reaction != 0x00)    // ≈сли адрес функции существует, то выполнить ее.
         {
           (*Menu_list[menu_select - 1].Plus_reaction) (&menu_select);   // запуск  функции - гиперхак мать его :)
+        }
+      }
+      ///////////
+      if((Settings.AMODUL_menu > 0) && (enter_menu_item == ENABLE))
+      {
+
+        if(modul_menu_select > modul_max_struct_index)
+          return;
+        if(modul_menu_select == 0)
+          return;
+
+        if(Modul_Menu_list[modul_menu_select - 1].Plus_reaction != 0x00)        // ≈сли адрес функции существует, то выполнить ее.
+        {
+          (*Modul_Menu_list[modul_menu_select - 1].Plus_reaction) (&modul_menu_select); // запуск  функции - гиперхак мать его :)
         }
       }
     }
@@ -726,7 +818,7 @@ void keys_proccessing(void)
     delay_ms(10);
     DataUpdate.Need_display_update = ENABLE;
 
-    if(Settings.AMODUL_mode > 0)
+    if((Settings.AMODUL_mode > 0) && (Settings.AMODUL_menu == 0))
     {
       Settings.AMODUL_unit++;
       if(Settings.AMODUL_unit == 2)
@@ -744,8 +836,10 @@ void keys_proccessing(void)
       key = 0;
     } else
     {
-      if(screen == 2 && enter_menu_item == DISABLE)
+      if((screen == 2 && enter_menu_item == DISABLE) && (Settings.AMODUL_menu == 0))
         menu_select++;
+      if((Settings.AMODUL_menu != 0) && (enter_menu_item == DISABLE))
+        modul_menu_select++;
       if(screen == 1)
         main_menu_stat--;
       if(screen == 3)
@@ -768,11 +862,13 @@ void keys_proccessing(void)
         if(menu_select > max_public_string_count)
           menu_select = 0;
       }
+      if(modul_menu_select > modul_max_struct_index)
+        modul_menu_select = 0;
 
       key = 0;
 
       ///////////
-      if(enter_menu_item == ENABLE)     // тревога
+      if((enter_menu_item == ENABLE) && (Settings.AMODUL_menu == 0))
       {
         if(menu_select > max_struct_index)
           return;
@@ -782,6 +878,19 @@ void keys_proccessing(void)
         if(Menu_list[menu_select - 1].Minus_reaction != 0x00)   // ≈сли адрес функции существует, то выполнить ее.
         {
           (*Menu_list[menu_select - 1].Minus_reaction) (&menu_select);  // запуск  функции - гиперхак мать его :)
+        }
+      }
+      ///////////
+      if((Settings.AMODUL_menu != 0) && (enter_menu_item == ENABLE))
+      {
+        if(modul_menu_select > modul_max_struct_index)
+          return;
+        if(modul_menu_select == 0)
+          return;
+
+        if(Modul_Menu_list[modul_menu_select - 1].Minus_reaction != 0x00)       // ≈сли адрес функции существует, то выполнить ее.
+        {
+          (*Modul_Menu_list[modul_menu_select - 1].Minus_reaction) (&modul_menu_select);        // запуск  функции - гиперхак мать его :)
         }
       }
     }
@@ -808,6 +917,26 @@ void keys_proccessing(void)
 //      RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
 //      RTC_ITConfig(RTC_IT_ALRB, DISABLE);
 //      RTC_ClearFlag(RTC_FLAG_ALRBF);
+
+      if(modul_menu_select > 0)
+      {
+        if(enter_menu_item == DISABLE)
+        {
+          enter_menu_item = ENABLE;
+        } else
+        {
+          enter_menu_item = DISABLE;
+          eeprom_apply_settings();      //примен€ем параметры
+          eeprom_write_settings();      //сохран€ем параметры
+        }
+      } else
+      {
+        Settings.AMODUL_menu++;
+        if(Settings.AMODUL_menu > 1)
+          Settings.AMODUL_menu = 0;
+      }
+
+
     } else
     {
       if(Settings.AB_mode > 0)

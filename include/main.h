@@ -158,6 +158,7 @@ typedef struct
   uint32_t Isotop_ACAL_ba133;
   uint32_t Isotop_ACAL_th228;
 
+  uint32_t AMODUL_menu;
 
   uint32_t AMODUL_spect_start;
   uint32_t AMODUL_spect_multi;
@@ -265,6 +266,7 @@ extern uint32_t Doze_2month_count;
 extern uint32_t Max_fon;
 extern uint8_t main_menu_stat;
 extern uint32_t menu_select;
+extern uint32_t modul_menu_select;
 extern FunctionalState enter_menu_item;
 extern uint8_t screen;
 extern uint8_t stat_screen_number;

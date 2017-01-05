@@ -34,6 +34,7 @@ uint32_t USB_not_active = 0;
 uint32_t last_count_pump_on_impulse = 0;
 FunctionalState pump_on_impulse = DISABLE;
 uint32_t menu_select = 0;
+uint32_t modul_menu_select = 0;
 FunctionalState enter_menu_item = DISABLE;
 uint8_t screen = 1;
 uint8_t stat_screen_number = 0;
@@ -178,7 +179,7 @@ int main(void)
         if(screen == 1)
           main_screen();
         if(screen == 2)
-          menu_screen();
+          menu_screen(NORMAL_menu_mode);
         if(screen == 3)
           stat_screen();
       }

@@ -385,7 +385,13 @@ void RTC_Alarm_IRQHandler(void)
         AMODULE_fon[0] = 0;
         if((AMODULE_fon[0] == 0) && (AMODULE_fon[1] == 0) && (AMODULE_fon[2] == 0))     // Если от модуля-А не поступает данных три цыкла, деактивируем его.
         {
+
           Settings.AMODUL_mode = 0;
+          modul_menu_select = 0;
+          menu_select = 0;
+          Settings.AMODUL_menu = 0;
+          enter_menu_item = DISABLE;
+
           RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
           RTC_ITConfig(RTC_IT_ALRB, DISABLE);
           RTC_ClearFlag(RTC_FLAG_ALRBF);
