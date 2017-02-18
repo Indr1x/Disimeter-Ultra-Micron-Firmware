@@ -52,7 +52,8 @@
 #define LANG_SPECT_MARK3  "Cп. марк.3"
 #define LANG_SPECT_MARK4  "Cп. марк.4"
 #define LANG_SPECT_MARK5  "Cп. марк.5"
-
+#define LANG_ISOTOP_COUNTS "Щелчков на"
+#define LANG_ISOTOP_COUNTS_ "%uИ"
 #define LANG_ISOTOP_CS137    "Cs-137"
 #define LANG_ISOTOP_EU152    "Eu-152"
 #define LANG_ISOTOP_NA22     "Na-22"
@@ -182,6 +183,10 @@
 #define LANG_ISOTOP_TH228    "Th-228"
 
 #define LANG_AMODUL    "Module-A act."
+
+#define LANG_ISOTOP_COUNTS "Pulses on"
+#define LANG_ISOTOP_COUNTS_ "%uI"
+
 
 #define LANG_SPECT_START  "Spec.start"
 #define LANG_SPECT_MULTIP "Spec.mul."

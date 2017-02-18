@@ -77,7 +77,7 @@ typedef enum
 #define Isotop_ACAL_ba133_address          0xDC
 #define Isotop_count_th228_address         0xE0
 #define Isotop_ACAL_th228_address          0xE4
-
+#define Isotop_counts_address              0xE8
 
 extern uint32_t NbrOfPage, Address;
 

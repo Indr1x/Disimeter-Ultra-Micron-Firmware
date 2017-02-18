@@ -137,6 +137,7 @@ typedef struct
   uint32_t Cal_mode;
   uint32_t Isotop;
 
+  uint32_t Isotop_counts;
 
   uint32_t Isotop_count_cs137;
   uint32_t Isotop_count_eu152;
@@ -288,6 +289,8 @@ extern uint32_t unlock_0_serial;
 extern uint32_t unlock_1_serial;
 extern uint32_t unlock_2_serial;
 extern uint32_t unlock_3_serial;
+
+extern uint32_t Isotop_counts;
 
 extern uint32_t Cal_count;
 extern uint32_t Cal_count_time;

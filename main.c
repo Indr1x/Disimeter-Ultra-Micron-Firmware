@@ -40,6 +40,8 @@ uint8_t screen = 1;
 uint8_t stat_screen_number = 0;
 uint16_t pump_counter_avg_impulse_by_1sec[2];
 uint32_t fon_level = 0;
+uint32_t Isotop_counts = 0;
+
 FunctionalState poweroff_state = DISABLE;
 FunctionalState hidden_menu = DISABLE;
 FunctionalState Pump_on_alarm = DISABLE;

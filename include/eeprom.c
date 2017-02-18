@@ -28,6 +28,7 @@ void eeprom_write_default_settings(void)
     Settings.Pump_aggressive = 0;
     Settings.Speedup = 0;
     Settings.Isotop = 0;
+    Settings.Isotop_counts = 1;
     Settings.Isotop_count_cs137 = 250;
     Settings.Isotop_count_eu152 = 250;
     Settings.Isotop_count_na22 = 250;
@@ -98,6 +99,9 @@ void eeprom_write_settings(void)
 
   if(eeprom_read(Isotop_address) != Settings.Isotop)
     eeprom_write(Isotop_address, Settings.Isotop);
+
+  if(eeprom_read(Isotop_counts_address) != Settings.Isotop_counts)
+    eeprom_write(Isotop_counts_address, Settings.Isotop_counts);
 
   if(eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137)
     eeprom_write(Isotop_count_cs137_address, Settings.Isotop_count_cs137);
@@ -204,6 +208,11 @@ void eeprom_apply_settings(void)
   }
   // -------------------------------------------------------------------
   if(eeprom_read(Isotop_address) != Settings.Isotop)
+  {
+    reload_active_isotop_time();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Isotop_counts_address) != Settings.Isotop_counts)
   {
     reload_active_isotop_time();
   }
@@ -328,6 +337,7 @@ void eeprom_read_settings(void)
   Settings.Speedup = eeprom_read(Speedup_address);
 
   Settings.Isotop = eeprom_read(Isotop_address);
+  Settings.Isotop_counts = eeprom_read(Isotop_counts_address);
   Settings.Isotop_count_cs137 = eeprom_read(Isotop_count_cs137_address);
   Settings.Isotop_count_eu152 = eeprom_read(Isotop_count_eu152_address);
   Settings.Isotop_count_na22 = eeprom_read(Isotop_count_na22_address);

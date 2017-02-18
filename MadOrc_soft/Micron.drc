@@ -1697,11 +1697,11 @@ BEGIN
 END
 
 /* c:\program files (x86)\embarcadero\studio\14.0\lib\Win32\release\Controls.res */
-/* c:\Program Files (x86)\JVCL\jcl\lib\d20\win32\JclUnicode.res */
-/* c:\Program Files (x86)\JVCL\jvcl\Resources\JvConsts.res */
+/* d:\drive_m\soft\radio\Delphi C++Builder\JCL\jcl\lib\d20\win32\JclUnicode.res */
+/* d:\drive_m\soft\radio\Delphi C++Builder\JCL\jvcl\Resources\JvConsts.res */
 /* c:\program files (x86)\embarcadero\studio\14.0\lib\Win32\release\WindowsXP.res */
 /* c:\program files (x86)\embarcadero\studio\14.0\lib\Win32\release\Buttons.res */
-/* c:\Program Files (x86)\JVCL\jvcl\Resources\JvPoweredBy.res */
+/* d:\drive_m\soft\radio\Delphi C++Builder\JCL\jvcl\Resources\JvPoweredBy.res */
 /* c:\program files (x86)\embarcadero\studio\14.0\lib\Win32\release\ExtDlgs.res */
 /* C:\Проекты\Ультра-микрон\firmware\MadOrc_soft\About_f.dfm */
 /* C:\Проекты\Ультра-микрон\firmware\MadOrc_soft\Unit1.dfm */

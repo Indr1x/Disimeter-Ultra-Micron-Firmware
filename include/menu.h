@@ -8,7 +8,7 @@
 #define max_struct_index 20     // максимальное количество пунктов меню
 #define start_offset 2          // на сколько строк сместить вниз меню
 
-#define modul_max_struct_index 17       // максимальное количество пунктов меню
+#define modul_max_struct_index 18       // максимальное количество пунктов меню
 
 
 #define NORMAL_menu_mode 0

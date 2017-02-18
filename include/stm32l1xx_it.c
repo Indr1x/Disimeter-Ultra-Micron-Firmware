@@ -353,7 +353,15 @@ void TIM2_IRQHandler(void)
         AMODULE_len[i]++;       // Фон Модуля-А
       }
     }
-    sound_activate();
+    if(Isotop_counts >= Settings.Isotop_counts)
+    {
+      sound_activate();
+      Isotop_counts = 0;
+    } else
+    {
+      Isotop_counts++;
+    }
+
   }
 }
 
