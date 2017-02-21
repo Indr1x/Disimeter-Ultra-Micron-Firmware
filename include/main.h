@@ -172,7 +172,6 @@ typedef struct
 
 
   uint32_t AMODUL_mode;         // 0-выкл 1-Модуль-А
-  uint32_t AMODUL_time;
   uint32_t AMODUL_unit;         // 0-Кванты 1-мкЗвч
   uint32_t ACAL_count;
   uint32_t AB_mode;             // 0-выкл 1-гамма 2-альфа-бета
@@ -222,6 +221,13 @@ static __IO uint8_t timer_is_reload = 0;        // counts 1ms timeTicks
 extern uint16_t key;            // массив нажатых кнопок [012]
 extern uint32_t ix;
 extern uint32_t ix_update;
+
+extern uint32_t fonmodule;
+
+#define QUANT 0
+#define SIVERT 1
+#define MKRH 2
+
 
 //#define count_seconds 75 // 
 

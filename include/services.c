@@ -2,11 +2,178 @@
 #include <stdint.h>
 #include "STM32L1xx.h"          // Device header
 #include "main.h"
+#include "math.h"
 
 #define DOR_OFFSET                 ((uint32_t)0x0000002C)
 
 // ===============================================================================================
 
+float precision_measure()
+{
+  uint32_t i = 0;
+  uint32_t fail = 0;
+  uint32_t avg = 0;             // Xштр
+  uint32_t avg_summ = 0;
+  uint32_t n = 0;               // n
+  long int xshtr_xi_q[40];      // n
+  long int xshtr_xi_q_summ = 0;
+  float sxstrih = 0;
+  float tkrit = 0;
+  float delta_x = 0;
+  float epsi = 0;
+
+  avg = fonmodule;
+
+  //////////////////////////////////////////////////////////
+  for (i = 1; i < 99; i++)      // Поиск адекватных элементов массива
+  {
+    if((AMODULE_fon[i] > (avg * 1.5)) || (AMODULE_fon[i] < (avg / 1.5)))        // Если замер двухкрано превышает среднее число
+    {
+      fail++;
+      if(fail > 2)              // если ошибочных замеров больше двух, пересчет.
+      {
+        break;
+      }
+    }
+    if(AMODULE_fon[i] == 0)
+      break;
+
+    if(n == 30)
+      break;
+
+    n++;
+    avg_summ += AMODULE_fon[i];
+    avg = avg_summ / n;
+
+  }
+  if(n > 1)
+  {
+    //////////////////////////////////////////////////////////
+    // Вычисление массива (Xштр-Xi)^2
+    for (i = 1; i <= n; i++)
+    {
+      xshtr_xi_q[i] = avg;
+      xshtr_xi_q[i] -= AMODULE_fon[i];
+      xshtr_xi_q[i] *= xshtr_xi_q[i];
+      xshtr_xi_q_summ += xshtr_xi_q[i];
+    }
+    //////////////////////////////////////////////////////////
+    // Вычисление Sxштр
+    sxstrih = xshtr_xi_q_summ;
+    sxstrih /= (n * (n - 1));
+    sxstrih = sqrt(sxstrih);
+
+    //////////////////////////////////////////////////////////
+    // Вычисление t-критерий Стьюдента для P=0.95
+    switch (n)
+    {
+    case 2:
+      tkrit = 12.70620474;
+      break;
+    case 3:
+      tkrit = 4.30265273;
+      break;
+    case 4:
+      tkrit = 3.182446305;
+      break;
+    case 5:
+      tkrit = 2.776445105;
+      break;
+    case 6:
+      tkrit = 2.570581836;
+      break;
+    case 7:
+      tkrit = 2.446911851;
+      break;
+    case 8:
+      tkrit = 2.364624252;
+      break;
+    case 9:
+      tkrit = 2.306004135;
+      break;
+    case 10:
+      tkrit = 2.262157163;
+      break;
+    case 11:
+      tkrit = 2.228138852;
+      break;
+    case 12:
+      tkrit = 2.20098516;
+      break;
+    case 13:
+      tkrit = 2.17881283;
+      break;
+    case 14:
+      tkrit = 2.160368656;
+      break;
+    case 15:
+      tkrit = 2.144786688;
+      break;
+    case 16:
+      tkrit = 2.131449546;
+      break;
+    case 17:
+      tkrit = 2.119905299;
+      break;
+    case 18:
+      tkrit = 2.109815578;
+      break;
+    case 19:
+      tkrit = 2.10092204;
+      break;
+    case 20:
+      tkrit = 2.093024054;
+      break;
+    case 21:
+      tkrit = 2.085963447;
+      break;
+    case 22:
+      tkrit = 2.079613845;
+      break;
+    case 23:
+      tkrit = 2.073873068;
+      break;
+    case 24:
+      tkrit = 2.06865761;
+      break;
+    case 25:
+      tkrit = 2.063898562;
+      break;
+    case 26:
+      tkrit = 2.059538553;
+      break;
+    case 27:
+      tkrit = 2.055529439;
+      break;
+    case 28:
+      tkrit = 2.051830516;
+      break;
+    case 29:
+      tkrit = 2.048407142;
+      break;
+    case 30:
+      tkrit = 2.045229642;
+      break;
+    }
+    //////////////////////////////////////////////////////////
+    // Вычисление Дельта-X
+    delta_x = tkrit * sxstrih;
+
+    //////////////////////////////////////////////////////////
+    // Вычисление Э
+    epsi = (delta_x / avg) * 100;
+
+    fonmodule = avg;
+
+    return epsi;
+  }
+  return 100;
+}
+
+// ===============================================================================================
+
+
+// ===============================================================================================
 void reload_active_isotop_time()
 {
   switch (Settings.Isotop)

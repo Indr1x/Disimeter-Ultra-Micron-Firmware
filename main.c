@@ -41,6 +41,7 @@ uint8_t stat_screen_number = 0;
 uint16_t pump_counter_avg_impulse_by_1sec[2];
 uint32_t fon_level = 0;
 uint32_t Isotop_counts = 0;
+uint32_t fonmodule = 0;
 
 FunctionalState poweroff_state = DISABLE;
 FunctionalState hidden_menu = DISABLE;
@@ -97,7 +98,7 @@ int main(void)
 
   Settings.Geiger_voltage = 360;        // Напряжение на датчике 360 вольт
   Settings.Pump_Energy = 350;   // энергия накачки 350 мТл
-  Settings.AMODUL_time = 5;
+//  Settings.AMODUL_time = 5;
   DataUpdate.current_flash_page = 0;
 
   io_init();                    // Инициализация потров МК

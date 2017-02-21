@@ -311,7 +311,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>2</Optim>
+            <Optim>3</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -671,6 +671,11 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
               <FileName>timers.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\timers.c</FilePath>
@@ -993,11 +998,6 @@
               <FileName>stm32l1xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\stm32l1xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
             </File>
             <File>
               <FileName>eeprom.c</FileName>
@@ -1775,6 +1775,11 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
               <FileName>timers.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\timers.c</FilePath>
@@ -2097,11 +2102,6 @@
               <FileName>stm32l1xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\stm32l1xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
             </File>
             <File>
               <FileName>eeprom.c</FileName>
@@ -2879,6 +2879,11 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
               <FileName>timers.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\timers.c</FilePath>
@@ -3201,11 +3206,6 @@
               <FileName>stm32l1xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\stm32l1xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
             </File>
             <File>
               <FileName>eeprom.c</FileName>
@@ -3934,6 +3934,11 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
               <FileName>timers.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\timers.c</FilePath>
@@ -4256,11 +4261,6 @@
               <FileName>stm32l1xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\stm32l1xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
             </File>
             <File>
               <FileName>eeprom.c</FileName>
@@ -4989,6 +4989,11 @@
           <GroupName>Includes</GroupName>
           <Files>
             <File>
+              <FileName>services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\include\services.c</FilePath>
+            </File>
+            <File>
               <FileName>timers.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\timers.c</FilePath>
@@ -5311,11 +5316,6 @@
               <FileName>stm32l1xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\include\stm32l1xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>services.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\include\services.c</FilePath>
             </File>
             <File>
               <FileName>eeprom.c</FileName>

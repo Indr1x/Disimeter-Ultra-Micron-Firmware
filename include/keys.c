@@ -722,17 +722,8 @@ void keys_proccessing(void)
 
     if((Settings.AMODUL_mode > 0) && (Settings.AMODUL_menu == 0))
     {
-      if(Settings.AMODUL_unit < 2)
+      if(Settings.AMODUL_unit < 3)
       {
-        if(Settings.AMODUL_time <= 2)
-        {
-          Settings.AMODUL_time = 5;
-        } else
-        {
-          Settings.AMODUL_time += 5;
-        }
-        if(Settings.AMODUL_time > 30)
-          Settings.AMODUL_time = 2;
       } else
       {
         AMODULE_page++;
@@ -821,12 +812,12 @@ void keys_proccessing(void)
     if((Settings.AMODUL_mode > 0) && (Settings.AMODUL_menu == 0))
     {
       Settings.AMODUL_unit++;
-      if(Settings.AMODUL_unit == 2)
+      if(Settings.AMODUL_unit == 3)
       {
         for (i = 0; i < 100; i++)
           AMODULE_len[i] = 0;
       }
-      if(Settings.AMODUL_unit > 2)
+      if(Settings.AMODUL_unit > 3)
         Settings.AMODUL_unit = 0;
     }
 

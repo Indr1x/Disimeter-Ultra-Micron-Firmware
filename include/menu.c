@@ -333,21 +333,56 @@ void main_screen()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void amodul_screen()
 {
+  float epsi = 100;
+  uint32_t i, summ = 0;
   if(Settings.AMODUL_menu == 0)
   {
-    if(Settings.AMODUL_unit < 2)
+    if(Settings.AMODUL_unit < 3)
     {
-      Draw_AMODUL_digit(1, 1, 0);
-
       sprintf(lcd_buf, LANG_AMODUL);    // Пишем в буфер значение счетчика
-      LcdString(1, 4);          // // Выводим обычным текстом содержание буфера
+      LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
 
-      sprintf(lcd_buf, LANG_TIME);      // Пишем в буфер значение счетчика
-      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-      sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);        // Пишем в буфер значение счетчика
-      LcdString(7, 5);          // // Выводим обычным текстом содержание буфера
+      if(Settings.AMODUL_unit == 2)
+      {
+        Draw_AMODUL_digit(2, 1, 0, (AMODULE_fon[1] + AMODULE_fon[2]) / 2, QUANT);
 
-      Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+        for (i = 1; i <= 10; i++)
+          summ += AMODULE_fon[i];
+        summ /= 10;
+        Draw_AMODUL_digit(4, 1, 0, summ, QUANT);
+
+        Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+
+      } else
+      {
+        epsi = precision_measure();
+
+        if((epsi) >= 99)
+          return;
+
+        if((epsi) >= 10)
+        {
+          sprintf(lcd_buf, " '%2.1f%% ", epsi); // Пишем в буфер значение счетчика
+        } else
+        {
+          sprintf(lcd_buf, "  '%2.1f%% ", epsi);        // Пишем в буфер значение счетчика
+        }
+        LcdStringBold(1, 4);    // // Выводим обычным текстом содержание буфера
+        if(Settings.AMODUL_unit == 0)
+        {
+          Draw_AMODUL_digit(2, 1, 0, fonmodule, QUANT);
+        }
+        if(Settings.AMODUL_unit == 1)
+        {
+          Draw_AMODUL_digit(2, 1, 0, fonmodule, SIVERT);
+        }
+//      sprintf(lcd_buf, LANG_TIME);      // Пишем в буфер значение счетчика
+//      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
+//      sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);        // Пишем в буфер значение счетчика
+//      LcdString(7, 5);          // // Выводим обычным текстом содержание буфера
+
+        Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+      }
     } else
     {
       sprintf(lcd_buf, LANG_SPECT_MARK_TEXT1);  // Пишем в буфер значение счетчика

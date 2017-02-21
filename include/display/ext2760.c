@@ -620,7 +620,7 @@ void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t 
   y_lenght = y_end - y_start;
 
   scalling_factor = y_lenght / 10;
-  for (q = 0; q < x_lenght + 1; q++)
+  for (q = 0; q < (x_lenght / 2) + 1; q++)
   {
     if(AMODULE_fon[q] > scalling_factor)
       scalling_factor = AMODULE_fon[q];
@@ -628,7 +628,7 @@ void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t 
 
   for (q = x_end; q > x_start; q--)
   {
-    i = AMODULE_fon[x_end - q];
+    i = AMODULE_fon[(x_end - q) / 2];
     if(i > 0)
       LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
   }
@@ -881,20 +881,12 @@ void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 
 
 
-void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
+void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32_t fonmodule_val, uint32_t label)
 {
-  uint32_t i, fonmodule = 0;
   float fonusvh = 0;
 
 
-  // Усреднение
-  for (i = 1; i <= Settings.AMODUL_time; i++)
-    fonmodule += AMODULE_fon[i];
-
-  fonmodule /= Settings.AMODUL_time;
-
-
-  if(Settings.AMODUL_unit == 0)
+  if(label == QUANT)
   {
     sprintf(lcd_buf, LANG_GAMMA1);
     LcdString(((start_char + 6) * 2), line);
@@ -905,17 +897,19 @@ void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
 
     LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
 
-    if(fonmodule < 1000000)
+    if(fonmodule_val < 1000000)
     {
-      sprintf(lcd_buf, "%6i", fonmodule);
+      sprintf(lcd_buf, "%6i", fonmodule_val);
     } else
     {
-      sprintf(lcd_buf, "%5iK", fonmodule / 1000);
+      sprintf(lcd_buf, "%5iK", fonmodule_val / 1000);
     }
     LcdStringBold(start_char, line);
-  } else
+  }
+
+  if(label == SIVERT)
   {
-    fonusvh = fonmodule;
+    fonusvh = fonmodule_val;
     fonusvh /= Settings.ACAL_count;
 
     sprintf(lcd_buf, LANG_UZ);
