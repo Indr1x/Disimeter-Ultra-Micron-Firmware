@@ -358,7 +358,7 @@ void amodul_screen()
         epsi = precision_measure();
 
         if((epsi) >= 99)
-          return;
+          epsi=99;
 
         if((epsi) >= 10)
         {
