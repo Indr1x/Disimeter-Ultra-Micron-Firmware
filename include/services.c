@@ -30,7 +30,7 @@ float precision_measure()
     if((AMODULE_fon[i] > (avg * 1.5)) || (AMODULE_fon[i] < (avg / 1.5)))        // Если замер двухкрано превышает среднее число
     {
       fail++;
-      if(fail > 2)              // если ошибочных замеров больше двух, пересчет.
+      if(fail > 1)              // если ошибочных замеров больше двух, пересчет.
       {
         break;
       }
@@ -46,7 +46,12 @@ float precision_measure()
       avg_summ += AMODULE_fon[i];
     }
   }
-  if(n > 1)
+  if(n > 0)
+    n -= fail;
+  if(n < 2)
+  {
+    fonmodule = AMODULE_fon[1];
+  } else
   {
     avg = avg_summ / n;
     //////////////////////////////////////////////////////////
