@@ -227,7 +227,7 @@ extern uint32_t fonmodule;
 #define QUANT 0
 #define SIVERT 1
 #define MKRH 2
-
+#define BETA 3
 
 //#define count_seconds 75 // 
 

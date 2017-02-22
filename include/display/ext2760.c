@@ -781,110 +781,10 @@ void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
+void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32_t fonmodule_val, uint8_t label, uint8_t accentuation)
 {
-  uint32_t i = 0, digit_num = 0;
-
-
-  i = (line * 2) - 1;
-  if(!Settings.units)
-  {
-    if(fon_level <= 999999)     // 1Ğ/÷
-    {
-      sprintf(lcd_buf, "%6i", fon_level);
-    } else
-    {
-      sprintf(lcd_buf, "%5iK", fon_level / 1000);
-    }
-    LcdStringBold(start_char, i);
-
-
-    sprintf(lcd_buf, LANG_UR);
-    LcdString(((start_char + 6) * 2), i);
-  } else
-  {
-    if(fon_level <= 100000)     // 999.99 ìêÇâ/÷
-    {
-      sprintf(lcd_buf, "%6.2f", convert_mkr_sv(fon_level));
-    } else
-    {
-      if(fon_level <= 1000000)  // 9999.9 ìêÇâ/÷
-      {
-        sprintf(lcd_buf, "%6.1f", convert_mkr_sv(fon_level));
-      } else
-      {                         // 999999 ìêÇâ/÷
-        sprintf(lcd_buf, "%6.0f", convert_mkr_sv(fon_level));
-      }
-    }
-    LcdStringBold(start_char, i);
-
-
-    sprintf(lcd_buf, LANG_UZ);
-    LcdString(((start_char + 6) * 2), i);
-  }
-
-  sprintf(lcd_buf, LANG_H);
-  LcdString(((start_char + 6) * 2), i + 1);
-
-  LcdLine(((start_char + 5) * 12) + 5, i * 8, ((start_char + 5) * 12) + 18 + 5, i * 8, 1);
-  for (digit_num = 0; digit_num < 6; digit_num++)
-  {
-    LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num),
-            line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10, line * 16, 1);
-    LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num),
-            line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num), (line * 16) - 3, 1);
-    LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10,
-            line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10, (line * 16) - 3, 1);
-  }
-}
-
-//////////////////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////////////////
-
-
-void Draw_AB_digit(uint8_t line, uint8_t start_char, uint8_t seconds)
-{
-  // îòğèñîâêà åäåíèö
-  if(Settings.AB_mode < 2)
-  {
-    sprintf(lcd_buf, LANG_BETA1);
-    LcdStringInv(((start_char + 6) * 2), line);
-
-    sprintf(lcd_buf, LANG_BETA2);
-    LcdStringInv(((start_char + 6) * 2), line + 1);
-  } else
-  {
-    sprintf(lcd_buf, LANG_BETA1);
-    LcdString(((start_char + 6) * 2), line);
-
-    sprintf(lcd_buf, LANG_BETA2);
-    LcdString(((start_char + 6) * 2), line + 1);
-  }
-
-  LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
-
-  if(AB_fon < 1000000)
-  {
-    sprintf(lcd_buf, "%6i", AB_fon);
-    LcdStringBold(start_char, line);
-  } else
-  {
-    sprintf(lcd_buf, "%5iK", AB_fon / 1000);
-    LcdStringBold(start_char, line);
-  }
-
-}
-
-//////////////////////////////////////////////////////////////////////////////////////
-
-
-
-void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32_t fonmodule_val, uint32_t label)
-{
+  uint32_t digit_num = 0;
   float fonusvh = 0;
-
 
   if(label == QUANT)
   {
@@ -893,9 +793,6 @@ void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32
 
     sprintf(lcd_buf, LANG_GAMMA2);
     LcdString(((start_char + 6) * 2), line + 1);
-
-
-    LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
 
     if(fonmodule_val < 1000000)
     {
@@ -909,17 +806,20 @@ void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32
 
   if(label == SIVERT)
   {
-    fonusvh = fonmodule_val;
-    fonusvh /= Settings.ACAL_count;
+    if(Settings.AMODUL_mode == 0)
+    {
+      fonusvh = convert_mkr_sv(fonmodule_val);
+    } else
+    {
+      fonusvh = fonmodule_val;
+      fonusvh /= Settings.ACAL_count;
+    }
 
     sprintf(lcd_buf, LANG_UZ);
     LcdString(((start_char + 6) * 2), line);
 
     sprintf(lcd_buf, LANG_H);
     LcdString(((start_char + 6) * 2), line + 1);
-
-    LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
-
 
     if(fonusvh <= 1000)         // 999.99 ìêÇâ/÷
     {
@@ -937,7 +837,74 @@ void Draw_AMODUL_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32
     LcdStringBold(start_char, line);
   }
 
+  if(label == MKRH)
+  {
+
+    sprintf(lcd_buf, LANG_UZ);
+    LcdString(((start_char + 6) * 2), line);
+
+    sprintf(lcd_buf, LANG_H);
+    LcdString(((start_char + 6) * 2), line + 1);
+
+    if(fon_level <= 999999)     // 1Ğ/÷
+    {
+      sprintf(lcd_buf, "%6i", fon_level);
+    } else
+    {
+      sprintf(lcd_buf, "%5iK", fon_level / 1000);
+    }
+    LcdStringBold(start_char, line);
+  }
+	
+  if(label == BETA)
+  {
+    if(Settings.AB_mode < 2)
+    {
+      sprintf(lcd_buf, LANG_BETA1);
+      LcdStringInv(((start_char + 6) * 2), line);
+
+      sprintf(lcd_buf, LANG_BETA2);
+      LcdStringInv(((start_char + 6) * 2), line + 1);
+    } else
+    {
+      sprintf(lcd_buf, LANG_BETA1);
+      LcdString(((start_char + 6) * 2), line);
+
+      sprintf(lcd_buf, LANG_BETA2);
+      LcdString(((start_char + 6) * 2), line + 1);
+    }
+
+    if(AB_fon < 1000000)
+    {
+      sprintf(lcd_buf, "%6i", AB_fon);
+      LcdStringBold(start_char, line);
+    } else
+    {
+      sprintf(lcd_buf, "%5iK", AB_fon / 1000);
+      LcdStringBold(start_char, line);
+    }
+  }
+
+  LcdLine(((start_char + 5) * 12) + 5, line * 8, ((start_char + 5) * 12) + 18 + 5, line * 8, 1);
+
+  if(accentuation == 1)
+    for (digit_num = 0; digit_num < 6; digit_num++)
+    {
+      LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num),
+              line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10, line * 16, 1);
+      LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num),
+              line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num), (line * 16) - 3, 1);
+      LcdLine(((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10,
+              line * 16, ((start_char + digit_num - 1) * 10) + (2 * digit_num) + 10, (line * 16) - 3, 1);
+    }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 

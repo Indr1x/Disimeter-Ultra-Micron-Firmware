@@ -297,7 +297,7 @@ void main_screen()
     {
       // Режим "Замер А-В"
       if(Settings.AB_mode > 0)
-        Draw_AB_digit(4, 1, 0);
+        Draw_fon_digit(4, 1, 0, fon_level, BETA,   0);
     }
 
     if(Settings.Cal_mode == 1)
@@ -309,7 +309,13 @@ void main_screen()
       LcdString(1, 2);          // // Выводим обычным текстом содержание буфера    
     } else
     {
-      Draw_fon_digit(1, 1, 0);
+      if(!Settings.units)
+      {
+        Draw_fon_digit(1, 1, 0, fon_level, MKRH, 1);
+      } else
+      {
+        Draw_fon_digit(1, 1, 0, fon_level, SIVERT, 1);
+      }
     }
     Draw_fon_graph(2, 94, 67 - 25, 67);
 
@@ -344,12 +350,12 @@ void amodul_screen()
 
       if(Settings.AMODUL_unit == 2)
       {
-        Draw_AMODUL_digit(2, 1, 0, (AMODULE_fon[1] + AMODULE_fon[2]) / 2, QUANT);
+        Draw_fon_digit(2, 1, 0, (AMODULE_fon[1] + AMODULE_fon[2]) / 2, QUANT, 0);
 
         for (i = 1; i <= 10; i++)
           summ += AMODULE_fon[i];
         summ /= 10;
-        Draw_AMODUL_digit(4, 1, 0, summ, QUANT);
+        Draw_fon_digit(4, 1, 0, summ, QUANT, 0);
 
         Draw_AMODUL_graph(2, 94, 67 - 25, 67);
 
@@ -358,7 +364,7 @@ void amodul_screen()
         epsi = precision_measure();
 
         if((epsi) >= 99)
-          epsi=99;
+          epsi = 99;
 
         if((epsi) >= 10)
         {
@@ -370,11 +376,11 @@ void amodul_screen()
         LcdStringBold(1, 4);    // // Выводим обычным текстом содержание буфера
         if(Settings.AMODUL_unit == 0)
         {
-          Draw_AMODUL_digit(2, 1, 0, fonmodule, QUANT);
+          Draw_fon_digit(2, 1, 0, fonmodule, QUANT, 0);
         }
         if(Settings.AMODUL_unit == 1)
         {
-          Draw_AMODUL_digit(2, 1, 0, fonmodule, SIVERT);
+          Draw_fon_digit(2, 1, 0, fonmodule, SIVERT, 0);
         }
 //      sprintf(lcd_buf, LANG_TIME);      // Пишем в буфер значение счетчика
 //      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
