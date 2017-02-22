@@ -34,20 +34,21 @@ float precision_measure()
       {
         break;
       }
+    } else
+    {
+      if(AMODULE_fon[i] == 0)
+        break;
+
+      if(n >= 30)
+        break;
+
+      n++;
+      avg_summ += AMODULE_fon[i];
     }
-    if(AMODULE_fon[i] == 0)
-      break;
-
-    if(n == 30)
-      break;
-
-    n++;
-    avg_summ += AMODULE_fon[i];
-    avg = avg_summ / n;
-
   }
   if(n > 1)
   {
+    avg = avg_summ / n;
     //////////////////////////////////////////////////////////
     // Вычисление массива (Xштр-Xi)^2
     for (i = 1; i <= n; i++)

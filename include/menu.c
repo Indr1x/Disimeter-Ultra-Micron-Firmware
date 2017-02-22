@@ -363,8 +363,6 @@ void amodul_screen()
         summ /= 10;
         Draw_fon_digit(4, 1, 0, summ, QUANT, 0);
 
-        //Draw_AMODUL_graph(2, 94, 67 - 25, 67);
-
       } else
       {
         epsi = precision_measure();
@@ -388,12 +386,6 @@ void amodul_screen()
         {
           Draw_fon_digit(2, 1, 0, fonmodule, SIVERT, 0);
         }
-//      sprintf(lcd_buf, LANG_TIME);      // Пишем в буфер значение счетчика
-//      LcdString(1, 5);          // // Выводим обычным текстом содержание буфера
-//      sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);        // Пишем в буфер значение счетчика
-//      LcdString(7, 5);          // // Выводим обычным текстом содержание буфера
-
-        //Draw_AMODUL_graph(2, 94, 67 - 25, 67);
       }
       Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
     } else
@@ -408,9 +400,7 @@ void amodul_screen()
       LcdString(1, 3);          // // Выводим обычным текстом содержание буфера
 
 
-      //Draw_AMODUL_graph_spectr(2, 96, 67 - 38, 67, 0);
       Draw_fon_graph(2, 96, 67 - 38, 67, SMALL_SIZE, AMODULE_len, 0, SPECTR);
-      //AMODULE_len
 
     }
   } else
