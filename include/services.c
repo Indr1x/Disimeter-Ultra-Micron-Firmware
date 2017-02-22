@@ -43,16 +43,19 @@ float precision_measure()
         break;
 
       n++;
-      avg_summ += AMODULE_fon[i];
     }
   }
-  if(n > 0)
-    n -= fail;
+	
   if(n < 2)
-  {
+  { // Если недостаточно данных для вычисления
     fonmodule = AMODULE_fon[1];
   } else
   {
+	  for (i = 1; i <= n; i++)      // Расчет среднего
+		{
+			avg_summ += AMODULE_fon[i];
+		}
+
     avg = avg_summ / n;
     //////////////////////////////////////////////////////////
     // Вычисление массива (Xштр-Xi)^2
