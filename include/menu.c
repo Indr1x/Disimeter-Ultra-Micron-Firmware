@@ -297,7 +297,7 @@ void main_screen()
     {
       // Режим "Замер А-В"
       if(Settings.AB_mode > 0)
-        Draw_fon_digit(4, 1, 0, fon_level, BETA,   0);
+        Draw_fon_digit(4, 1, 0, fon_level, BETA, 0);
     }
 
     if(Settings.Cal_mode == 1)
@@ -317,7 +317,13 @@ void main_screen()
         Draw_fon_digit(1, 1, 0, fon_level, SIVERT, 1);
       }
     }
-    Draw_fon_graph(2, 94, 67 - 25, 67);
+    if((Settings.Second_count / 4) > 100)
+    {
+      Draw_fon_graph(2, 94, 67 - 25, 67, SMALL_SIZE, Detector_massive, Detector_massive_pointer, NORMAL);
+    } else
+    {
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, Detector_massive, Detector_massive_pointer, NORMAL);
+    }
 
     if(auto_speedup_factor > 1)
     {
@@ -357,7 +363,7 @@ void amodul_screen()
         summ /= 10;
         Draw_fon_digit(4, 1, 0, summ, QUANT, 0);
 
-        Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+        //Draw_AMODUL_graph(2, 94, 67 - 25, 67);
 
       } else
       {
@@ -387,8 +393,9 @@ void amodul_screen()
 //      sprintf(lcd_buf, LANG_USEC, Settings.AMODUL_time);        // Пишем в буфер значение счетчика
 //      LcdString(7, 5);          // // Выводим обычным текстом содержание буфера
 
-        Draw_AMODUL_graph(2, 94, 67 - 25, 67);
+        //Draw_AMODUL_graph(2, 94, 67 - 25, 67);
       }
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
     } else
     {
       sprintf(lcd_buf, LANG_SPECT_MARK_TEXT1);  // Пишем в буфер значение счетчика
@@ -401,7 +408,10 @@ void amodul_screen()
       LcdString(1, 3);          // // Выводим обычным текстом содержание буфера
 
 
-      Draw_AMODUL_graph_spectr(2, 96, 67 - 38, 67, 0);
+      //Draw_AMODUL_graph_spectr(2, 96, 67 - 38, 67, 0);
+      Draw_fon_graph(2, 96, 67 - 38, 67, SMALL_SIZE, AMODULE_len, 0, SPECTR);
+      //AMODULE_len
+
     }
   } else
   {

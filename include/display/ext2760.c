@@ -482,7 +482,8 @@ void LcdStringBig(unsigned char x, unsigned char y)     //Displays a string at c
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end)
+void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end, uint8_t size, uint16_t * massive, uint32_t massive_pointer_val,
+                    uint32_t spec)
 {
   uint32_t x_lenght = 0, y_lenght = 0;
   uint32_t q = 0, i = 0, j = 0, pointer = 0;
@@ -500,34 +501,47 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
   y_lenght = y_end - y_start;
 
 
-  if((Settings.Second_count / 4) > 100)
+//  if((Settings.Second_count / 4) > 100)
+  if(size == SMALL_SIZE)
   {                             // если время счета большое, то рисуем тонкие линии
     scalling_factor = y_lenght / 10;
     for (q = 0; q < x_lenght + 1; q++)
     {
-      if(Detector_massive_pointer >= q)
+      if(spec == NORMAL)
       {
-        pointer = Detector_massive_pointer - q;
+        if(massive_pointer_val >= q)
+        {
+          pointer = massive_pointer_val - q;
+        } else
+        {
+          pointer = (Settings.Second_count >> 2) - (q - massive_pointer_val);
+        }
       } else
       {
-        pointer = (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
+        pointer = q;
       }
 
-      if(Detector_massive[pointer] > scalling_factor)
-        scalling_factor = Detector_massive[pointer];
+      if(massive[pointer] > scalling_factor)
+        scalling_factor = massive[pointer];
     }
 
     for (q = x_end; q > x_start; q--)
     {
-      if(Detector_massive_pointer >= (x_end - q))
+      if(spec == NORMAL)
       {
-        pointer = Detector_massive_pointer - (x_end - q);
+        if(massive_pointer_val >= (x_end - q))
+        {
+          pointer = massive_pointer_val - (x_end - q);
+        } else
+        {
+          pointer = (Settings.Second_count >> 2) - ((x_end - q) - massive_pointer_val);
+        }
+        i = massive[pointer];
       } else
       {
-        pointer = (Settings.Second_count >> 2) - ((x_end - q) - Detector_massive_pointer);
+        i = massive[(x_end - q)];
       }
 
-      i = Detector_massive[pointer];
       if(i > 0)
         LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
     }
@@ -536,35 +550,68 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
     scalling_factor = y_lenght / 10;
     for (q = 0; q < (x_lenght / 2) + 1; q++)
     {
-      if(Detector_massive_pointer >= q)
+      if(spec == NORMAL)
       {
-        pointer = Detector_massive_pointer - q;
+        if(massive_pointer_val >= q)
+        {
+          pointer = massive_pointer_val - q;
+        } else
+        {
+          pointer = (Settings.Second_count >> 2) - (q - massive_pointer_val);
+        }
       } else
       {
-        pointer = (Settings.Second_count >> 2) - (q - Detector_massive_pointer);
+        pointer = q;
       }
 
-      if(Detector_massive[pointer] > scalling_factor)
-        scalling_factor = Detector_massive[pointer];
+      if(massive[pointer] > scalling_factor)
+        scalling_factor = massive[pointer];
     }
 
     for (q = x_end; q > x_start; q--)
     {
-      if(Detector_massive_pointer >= ((x_end - q) / 2))
+      if(spec == NORMAL)
       {
-        pointer = Detector_massive_pointer - ((x_end - q) / 2);
+
+        if(massive_pointer_val >= ((x_end - q) / 2))
+        {
+          pointer = massive_pointer_val - ((x_end - q) / 2);
+        } else
+        {
+          pointer = (Settings.Second_count >> 2) - (((x_end - q) / 2) - massive_pointer_val);
+        }
+
+        i = 0;
+        if(((x_end - q) / 2) < (Settings.Second_count / 4))
+          i = massive[pointer];
       } else
       {
-        pointer = (Settings.Second_count >> 2) - (((x_end - q) / 2) - Detector_massive_pointer);
+        i = massive[(x_end - q) / 2];
       }
-      i = 0;
-      if(((x_end - q) / 2) < (Settings.Second_count / 4))
-        i = Detector_massive[pointer];
       if(i > 0)
         LcdLine(x_end - q, y_end, x_end - q, y_end - ((i * y_lenght) / scalling_factor), 1);
     }
   }
 
+  if(spec == SPECTR)
+  {
+    // Рисуем маркеры над графиком
+
+    LcdLine(Settings.AMODUL_spect_mark1, y_start - 3, Settings.AMODUL_spect_mark1 + 1, y_start - 3, 1);
+    LcdLine(Settings.AMODUL_spect_mark1, y_start - 2, Settings.AMODUL_spect_mark1 + 1, y_start - 2, 1);
+
+    LcdLine(Settings.AMODUL_spect_mark2, y_start - 3, Settings.AMODUL_spect_mark2 + 1, y_start - 3, 1);
+    LcdLine(Settings.AMODUL_spect_mark2, y_start - 2, Settings.AMODUL_spect_mark2 + 1, y_start - 2, 1);
+
+    LcdLine(Settings.AMODUL_spect_mark3, y_start - 3, Settings.AMODUL_spect_mark3 + 1, y_start - 3, 1);
+    LcdLine(Settings.AMODUL_spect_mark3, y_start - 2, Settings.AMODUL_spect_mark3 + 1, y_start - 2, 1);
+
+    LcdLine(Settings.AMODUL_spect_mark4, y_start - 3, Settings.AMODUL_spect_mark4 + 1, y_start - 3, 1);
+    LcdLine(Settings.AMODUL_spect_mark4, y_start - 2, Settings.AMODUL_spect_mark4 + 1, y_start - 2, 1);
+
+    LcdLine(Settings.AMODUL_spect_mark5, y_start - 3, Settings.AMODUL_spect_mark5 + 1, y_start - 3, 1);
+    LcdLine(Settings.AMODUL_spect_mark5, y_start - 2, Settings.AMODUL_spect_mark5 + 1, y_start - 2, 1);
+  }
   //risuem setku
   LcdLine(x_start, y_start, x_start, y_start - 2, 1);
   LcdLine(x_start, y_end, x_start, y_end + 2, 1);
@@ -600,9 +647,9 @@ void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_e
 
 
 
-
+/*
 //////////////////////////////////////////////////////////////////////////////////////
-void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end)
+void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end, uint8_t size, uint32_t massive_address)
 {
   uint32_t x_lenght = 0, y_lenght = 0;
   uint32_t q = 0, i = 0, j = 0;
@@ -752,7 +799,7 @@ void Draw_AMODUL_graph_spectr(uint8_t x_start, uint8_t x_end, uint8_t y_start, u
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////
 void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end)
@@ -855,7 +902,7 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32_t 
     }
     LcdStringBold(start_char, line);
   }
-	
+
   if(label == BETA)
   {
     if(Settings.AB_mode < 2)

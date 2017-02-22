@@ -224,10 +224,20 @@ extern uint32_t ix_update;
 
 extern uint32_t fonmodule;
 
+// Режим отображения больших цифр
 #define QUANT 0
 #define SIVERT 1
 #define MKRH 2
 #define BETA 3
+
+// Размер линий графика
+#define SMALL_SIZE 0
+#define BIG_SIZE 1
+
+// Режим графика
+#define NORMAL 0
+#define MODUL 1
+#define SPECTR 2
 
 //#define count_seconds 75 // 
 
