@@ -44,6 +44,7 @@
 #define LANG_PUMP_AGR  "Нак.Агрес."
 #define LANG_ISOTOP    "Изотоп"
 #define LANG_AMODUL    "Актив. Модуль-А"
+#define LANG_BAT_CAL	 "Калибр. АКБ"
 
 #define LANG_SPECT_START  "Спек. нач."
 #define LANG_SPECT_MULTIP "Спек. дел."
@@ -171,6 +172,7 @@
 #define LANG_REF_VOLT_ "%umV"
 #define LANG_PUMP_AGR  "Pump AGR"
 #define LANG_ISOTOP    "Isotop"
+#define LANG_BAT_CAL	 "Batt cal."
 
 #define LANG_ISOTOP_CS137    "Cs-137"
 #define LANG_ISOTOP_EU152    "Eu-152"

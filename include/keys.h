@@ -2,6 +2,8 @@
 #define __keys_user_H
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+extern void plus_batcal(uint32_t * param);
+
 extern void plus_alarm(uint32_t * param);
 extern void minus_alarm(uint32_t * param);
 

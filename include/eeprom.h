@@ -12,6 +12,9 @@ typedef enum
 #define DATA_EEPROM_END_ADDR       0x080827FF
 #define DATA_EEPROM_PAGE_SIZE      0x8
 
+#define Batt_cal_massive_address																0xCDF
+#define Batt_cal_massive_end_address														0xFFF
+
 #define Alarm_level_address                                     0x00
 #define Sleep_time_address                                      0x04
 #define Display_reverse_address                                 0x08
@@ -91,6 +94,7 @@ void eeprom_apply_settings(void);
 void eeprom_write_default_settings(void);
 void eeprom_read_settings(void);
 void eeprom_loading(uint32_t current_rcvd_pointer);
-
+void cal_write(void);
+uint32_t cal_read(uint32_t voltage);
 
 #endif

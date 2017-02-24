@@ -486,6 +486,9 @@ void RTC_Alarm_IRQHandler(void)
       // Сдвиг массива дозы
       if(DataUpdate.doze_sec_count >= 150)      // каждые 10 минут (150)
       {
+        if(bat_cal_running > 0) // Запись калибровки АКБ
+          cal_write();
+
         if(DataUpdate.Need_erase_flash == ENABLE)
         {
           full_erase_flash();

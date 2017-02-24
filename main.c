@@ -63,6 +63,7 @@ uint16_t AMODULE_fon[100];      // Фон Модуля-А
 uint16_t AMODULE_len[100];
 uint32_t AMODULE_count = 0;
 
+uint16_t bat_cal_running = 0;
 
 uint32_t working_days = 0;
 
@@ -197,6 +198,9 @@ int main(void)
 
     if(!Power.USB_active)       // если USB не активен, можно уходить в сон
     {
+      if(bat_cal_running > 0)
+        Power.sleep_time = Settings.Sleep_time; // В режиме калибровки АКБ не спать
+
       if((current_pulse_count < 30) && (fon_level < 10000) && (AB_fon < 10000) && (Settings.AMODUL_mode == 0))  // Если счетчик не зашкаливает, то можно уйти в сон
       {
         if(SystemCoreClock > 20000000)  // Если частота выше 20 мгц, понизить частоту

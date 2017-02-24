@@ -239,7 +239,8 @@ extern uint32_t fonmodule;
 #define MODUL 1
 #define SPECTR 2
 
-//#define count_seconds 75 // 
+extern uint16_t bat_cal_running;
+extern uint16_t Bat_call[];
 
 #define Detector_massive_pointer_max 375
 
