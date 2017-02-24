@@ -240,7 +240,7 @@ extern uint32_t fonmodule;
 #define SPECTR 2
 
 extern uint16_t bat_cal_running;
-extern uint16_t Bat_call[];
+
 
 #define Detector_massive_pointer_max 375
 

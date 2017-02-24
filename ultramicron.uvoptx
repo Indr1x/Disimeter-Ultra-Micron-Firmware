@@ -359,7 +359,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>1</IsCurrentTarget>
+        <IsCurrentTarget>0</IsCurrentTarget>
       </OPTFL>
       <CpuCode>18</CpuCode>
       <DebugOpt>
@@ -1080,27 +1080,12 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>0</IsCurrentTarget>
+        <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
       <CpuCode>18</CpuCode>
       <Books>
         <Book>
           <Number>0</Number>
-          <Title>Data Brief (STM32L-Discovery)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Boards\ST\STM32L-Discovery\Documents\DM00027566.pdf</Path>
-        </Book>
-        <Book>
-          <Number>1</Number>
-          <Title>User Manual (STM32L-Discovery)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Boards\ST\STM32L-Discovery\Documents\DM00027954.pdf</Path>
-        </Book>
-        <Book>
-          <Number>2</Number>
-          <Title>Schematics (STM32L-Discovery)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Boards\ST\STM32L-Discovery\Documents\MB963.pdf</Path>
-        </Book>
-        <Book>
-          <Number>3</Number>
           <Title>STM32L-Discovery Web Page (STM32L-Discovery)</Title>
           <Path>http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF250990</Path>
         </Book>
@@ -2029,7 +2014,7 @@
       <GroupNumber>6</GroupNumber>
       <FileNumber>58</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\include\eeprom.c</PathWithFileName>

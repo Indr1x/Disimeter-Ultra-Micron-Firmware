@@ -24,6 +24,7 @@ void comp_on()
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_COMP, ENABLE);
+  SYSCFG_RIIOSwitchConfig(RI_IOSwitch_GR6_1, ENABLE);
 
 //  COMP->CSR = (uint32_t) 0x00FC1000;    // COMP_InvertingInput_DAC2 + COMP_OutputSelect_None + COMP_Speed_Fast
 
@@ -35,9 +36,12 @@ void comp_on()
   EXTI_StructInit(&EXTI_InitStructure);
   EXTI_InitStructure.EXTI_Line = EXTI_Line22;
   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
+
+  while (!(COMP->CSR & COMP_CSR_INSEL));        // ждем пока не включиться компаратор
+
 }
 
 void comp_init()
@@ -59,7 +63,7 @@ void comp_init()
   EXTI_StructInit(&EXTI_InitStructure);
   EXTI_InitStructure.EXTI_Line = EXTI_Line22;
   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
 

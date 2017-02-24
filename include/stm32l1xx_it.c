@@ -458,12 +458,12 @@ void RTC_Alarm_IRQHandler(void)
         DataUpdate.Batt_update_time_counter = 0;
         DataUpdate.Need_batt_voltage_update = ENABLE;
       }
-
       // Счетчик времени для обновления счетчика импульсов накачки
       if(DataUpdate.pump_counter_update_time > 14)
       {
         if(!Power.USB_active)
           madorc_impulse = 0;
+
         pump_counter_avg_impulse_by_1sec[1] = pump_counter_avg_impulse_by_1sec[0];
         pump_counter_avg_impulse_by_1sec[0] = 0;
         DataUpdate.pump_counter_update_time = 0;
@@ -676,82 +676,82 @@ void COMP_IRQHandler(void)
     if(!poweroff_state)
     {
       // Зафиксирован выброс нужной амплитуды, выключаем накачку
-      {
-        Pump_now(DISABLE);
-        if(!pump_on_impulse)
-        {
-          i = RTC->WUTR;
-          if(current_pulse_count > 20)  // если подключена мощьная нагрузка типа мультиметра, резко ускаряем накачку.
-          {
-            if(i > 0x80)
-            {
-#ifdef version_401              // Для версии 4+ делить на 4 для стабилизации накачки
-              i >>= 2;          // ускоренное деление на 4
-#else
-              i >>= 4;          // ускоренное деление на 16
-#endif
-            } else
-            {
-              i = 0x8;          // Если делить нельзя, то = 4 мс
-            }
-          } else
-          {
-            if(i < 0x8)
-              i = 0x8;
-            if(current_pulse_count > 2) // Если количество импульсов велико, то напряжения не достаточно, ускоряем накачку.
-            {
-              if(i > 0x0010)
-                i >>= 1;        // деление на 2
-            } else
-#ifdef version_401              // Для версии 4+ накачка немного более агресивна
-            {                   // Количество импульсов накачки мало, значит можно увеличить интервал между импульсами.
-              i <<= 1;          // умножаем на 2
-              if(i > 0x1E00)
-                i = 0x2000;     // придел 4 секунды
-            }
-#else
-            {                   // Количество импульсов накачки мало, значит можно увеличить интервал между импульсами.
-              if(i < 0x7FFF)    //Если больше половины от максимума
-              {
-                i <<= 1;        // умножаем на 2
-              } else
-              {
-                // если умножать на 2 уже нельзя, просто прибавляем до придела
-                i = i + 0x2000; // + 4 секунды
-                if(i > 0xFFFF)
-                  i = 0xFFFF;   // придел 32 секунды
-              }
-            }
-#endif
 
-          }
-#ifdef version_401              // Для версии 4+
-          if(i == 0x2000)
+      Pump_now(DISABLE);
+      if(!pump_on_impulse)
+      {
+        i = RTC->WUTR;
+        if(current_pulse_count > 20)    // если подключена мощьная нагрузка типа мультиметра, резко ускаряем накачку.
+        {
+          if(i > 0x80)
           {
-            RTC_ITConfig(RTC_IT_WUT, DISABLE);
-            RTC_WakeUpCmd(DISABLE);
-            Pump_on_alarm = ENABLE;
+#ifdef version_401              // Для версии 4+ делить на 4 для стабилизации накачки
+            i >>= 2;            // ускоренное деление на 4
+#else
+            i >>= 4;            // ускоренное деление на 16
+#endif
           } else
           {
-            RTC_ITConfig(RTC_IT_WUT, ENABLE);
-            Pump_on_alarm = DISABLE;
-#endif
-            if(RTC->WUTR != i)
-            {
-              while (RTC_WakeUpCmd(DISABLE) != SUCCESS);
-              RTC_SetWakeUpCounter(i);  // Установить таймаут просыпания
-              while (RTC_WakeUpCmd(ENABLE) != SUCCESS);
-            }
-#ifdef version_401              // Для версии 4+
+            i = 0x8;            // Если делить нельзя, то = 4 мс
           }
-#endif
-          current_pulse_count = 0;
         } else
         {
-          //last_count_pump_on_impulse = current_pulse_count;
-          pump_on_impulse = DISABLE;
+          if(i < 0x8)
+            i = 0x8;
+          if(current_pulse_count > 2)   // Если количество импульсов велико, то напряжения не достаточно, ускоряем накачку.
+          {
+            if(i > 0x0010)
+              i >>= 1;          // деление на 2
+          } else
+#ifdef version_401              // Для версии 4+ накачка немного более агресивна
+          {                     // Количество импульсов накачки мало, значит можно увеличить интервал между импульсами.
+            i <<= 1;            // умножаем на 2
+            if(i > 0x1E00)
+              i = 0x2000;       // придел 4 секунды
+          }
+#else
+          {                     // Количество импульсов накачки мало, значит можно увеличить интервал между импульсами.
+            if(i < 0x7FFF)      //Если больше половины от максимума
+            {
+              i <<= 1;          // умножаем на 2
+            } else
+            {
+              // если умножать на 2 уже нельзя, просто прибавляем до придела
+              i = i + 0x2000;   // + 4 секунды
+              if(i > 0xFFFF)
+                i = 0xFFFF;     // придел 32 секунды
+            }
+          }
+#endif
+
         }
+#ifdef version_401              // Для версии 4+
+        if(i == 0x2000)
+        {
+          RTC_ITConfig(RTC_IT_WUT, DISABLE);
+          RTC_WakeUpCmd(DISABLE);
+          Pump_on_alarm = ENABLE;
+        } else
+        {
+          RTC_ITConfig(RTC_IT_WUT, ENABLE);
+          Pump_on_alarm = DISABLE;
+#endif
+          if(RTC->WUTR != i)
+          {
+            while (RTC_WakeUpCmd(DISABLE) != SUCCESS);
+            RTC_SetWakeUpCounter(i);    // Установить таймаут просыпания
+            while (RTC_WakeUpCmd(ENABLE) != SUCCESS);
+          }
+#ifdef version_401              // Для версии 4+
+        }
+#endif
+        current_pulse_count = 0;
+      } else
+      {
+        //last_count_pump_on_impulse = current_pulse_count;
+        pump_on_impulse = DISABLE;
       }
+
     }
     EXTI_ClearITPendingBit(EXTI_Line22);
   }
