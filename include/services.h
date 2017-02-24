@@ -11,5 +11,5 @@ void sleep_mode(FunctionalState);
 void geiger_calc_fon(void);
 uint32_t calc_ab(void);
 void reload_active_isotop_time(void);
-float precision_measure(void);
+uint32_t precision_measure(void);
 #endif

@@ -8,7 +8,7 @@
 
 // ===============================================================================================
 
-float precision_measure()
+uint32_t precision_measure()
 {
   uint32_t i = 0;
   uint32_t fail = 0;
@@ -174,9 +174,9 @@ float precision_measure()
 
     fonmodule = avg;
 
-    return epsi;
+    return epsi * 10;
   }
-  return 100;
+  return 1000;
 }
 
 // ===============================================================================================

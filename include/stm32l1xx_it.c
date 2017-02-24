@@ -454,12 +454,11 @@ void RTC_Alarm_IRQHandler(void)
         DataUpdate.Batt_update_time_counter++;
 
       if((DataUpdate.Batt_update_time_counter > 2) && (Power.Display_active == ENABLE)) // Если дисплей активен, обновлять каждые 12 секунд
-			{ 
-				DataUpdate.Batt_update_time_counter = 0;
+      {
+        DataUpdate.Batt_update_time_counter = 0;
         DataUpdate.Need_batt_voltage_update = ENABLE;
-			}
+      }
 
-			
       // Счетчик времени для обновления счетчика импульсов накачки
       if(DataUpdate.pump_counter_update_time > 14)
       {
