@@ -816,11 +816,11 @@ void LcdBatt(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t persen
   LcdLine(x1 + 7, y1 - 1, x2 - 7, y1 - 1, 1);
   LcdLine(x1 + 7, y1 - 2, x2 - 7, y1 - 2, 1);
 
-  horizon_line = persent * (y2 - y1 - 3) / 100;
+  horizon_line = persent * (y2 - y1 - 2) / 100;
   for (i = 0; i < horizon_line; i++)
-    LcdLine(x1 + 2, y2 - 2 - i, x2 - 2, y2 - 2 - i, 1);
+    LcdLine(x1 + 1, y2 - 1 - i, x2 - 1, y2 - 1 - i, 1);
 
-  horizon_line2 = (y2 - y1 - 3);
+  horizon_line2 = (y2 - y1 - 2);
   for (i = horizon_line2; i > horizon_line; i--)
-    LcdLine(x1 + 2, y2 - 2 - i, x2 - 2, y2 - 2 - i, 0);
+    LcdLine(x1 + 1, y2 - 1 - i, x2 - 1, y2 - 1 - i, 0);
 }

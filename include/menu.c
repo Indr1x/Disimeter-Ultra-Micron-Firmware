@@ -73,26 +73,16 @@ void main_screen()
 
 
   //uint32_t battery_procent, i = 0, x = 0;
-	uint32_t i = 0, x = 0;
+  uint32_t i = 0, x = 0;
 
   if(Settings.AMODUL_mode == 0)
 
   {
-    //Рачсет процента батарейки 3.5В = 0% 4.0В = 100%
-    if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
+		// Индикация батарейки и выключение питания при разряде
+    if(Settings.AB_mode == 0) 
     {
       if(ADCData.Batt_voltage < 3500)
         minus_poweroff(0x00);   // Если меньше 3.5В выключаем прибор.
-
-//      battery_procent = ADCData.Batt_voltage;
-//      battery_procent -= 3500;
-//      battery_procent /= 5;
-//      if(ADCData.Batt_voltage < 3500)
-//      {
-//        LcdBatt(82, 19, 82 + 10, 19 + 19, 0);
-//      }                         //рисуем батарейкуADCData.Batt_voltage
-//      else
-//        LcdBatt(84, 19, 84 + 10, 19 + 19, battery_procent);     //рисуем батарейкуADCData.Batt_voltage
 
       LcdBatt(84, 19, 84 + 10, 19 + 19, cal_read(ADCData.Batt_voltage));
     }
@@ -339,7 +329,19 @@ void main_screen()
       LcdString(12, 3);         // // Выводим обычным текстом содержание буфера
     }
   } else
+	{
     amodul_screen();
+
+		// Индикация батарейки и выключение питания при разряде
+    if (Settings.AMODUL_unit < 2)
+    {
+      if(ADCData.Batt_voltage < 3500)
+        minus_poweroff(0x00);   // Если меньше 3.5В выключаем прибор.
+
+      LcdBatt(84, 19 + 7, 84 + 10, 19 + 19 + 1, cal_read(ADCData.Batt_voltage));
+    }
+
+	}
 
   LcdUpdate();                  // записываем данные из сформированного фрейм-буфера на дисплей
 
@@ -374,15 +376,15 @@ void amodul_screen()
       {
         epsi = precision_measure();
 
-        if((epsi) >= 99)
+        if(epsi >= 99)
           epsi = 99;
 
-        if((epsi) >= 10)
+        if(epsi < 9.9999)
         {
-          sprintf(lcd_buf, " '%2.1f%% ", epsi); // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, "'%2.1f%% ", epsi); // Пишем в буфер значение счетчика
         } else
         {
-          sprintf(lcd_buf, "  '%2.1f%% ", epsi);        // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, "'%2.1f%% ", epsi);  // Пишем в буфер значение счетчика
         }
         LcdStringBold(1, 4);    // // Выводим обычным текстом содержание буфера
         if(Settings.AMODUL_unit == 0)
@@ -726,7 +728,7 @@ void stat_screen()
     sprintf(lcd_buf, LANG_AKB3VVV);     // Выводим на дисплей
     LcdString(1, 3);            // // Выводим обычным текстом содержание буфера на строку 8
 
-	  sprintf(lcd_buf, "%03i%%", cal_read(ADCData.Batt_voltage));      // Выводим на дисплей
+    sprintf(lcd_buf, "%3i%%", cal_read(ADCData.Batt_voltage)); // Выводим на дисплей
     //sprintf(lcd_buf, "%1i.%02i", ADCData.Batt_voltage / 1000, (ADCData.Batt_voltage % 1000) / 10);      // Выводим на дисплей
     LcdString(1, 4);            // // Выводим обычным текстом содержание буфера на строку 8
 
