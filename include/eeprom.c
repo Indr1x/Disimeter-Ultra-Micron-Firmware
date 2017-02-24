@@ -387,14 +387,15 @@ void eeprom_read_settings(void)
 void cal_write(void)
 {
   uint16_t address = 0;
+	uint16_t i = 0;
 
   address = Batt_cal_massive_address + (bat_cal_running * 0x04);
 
   if(bat_cal_running == 1)
   {
-    while (address < Batt_cal_massive_end_address)
+    for (i=Batt_cal_massive_address; i < Batt_cal_massive_end_address;i+=0x04)
     {
-      eeprom_write(address, 0x00);
+      eeprom_write(i, 0x00);
     }
   }
 
