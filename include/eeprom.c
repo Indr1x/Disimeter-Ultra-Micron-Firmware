@@ -386,8 +386,8 @@ void eeprom_read_settings(void)
 ///////////////////////////////////////////////////////////////////////////
 void cal_write(void)
 {
-  uint16_t address = 0;
-	uint16_t i = 0;
+  uint32_t address = 0;
+	uint32_t i = 0;
 
   address = Batt_cal_massive_address + (bat_cal_running * 0x04);
 
@@ -403,21 +403,21 @@ void cal_write(void)
   {
     if(address < Batt_cal_massive_end_address)
       eeprom_write(address, ADCData.Batt_voltage);
-
-    bat_cal_running++;
   }
+	
+	bat_cal_running++;
+	
 }
 
 uint32_t cal_read(uint32_t voltage)
 {
-  uint16_t address = 0;
+  uint32_t address = 0;
   uint32_t data = 0;
   uint32_t i = 0;
   uint32_t end_massive = 0;
   uint32_t tmp = 0;
 
-  address = Batt_cal_massive_address + i;
-  i += 0x04;
+  address = Batt_cal_massive_address;
 
   while (address < Batt_cal_massive_end_address)
   {
@@ -427,7 +427,7 @@ uint32_t cal_read(uint32_t voltage)
     data = eeprom_read(address);
     if(data > 0)
     {
-      end_massive = i;
+      end_massive++;
       if(voltage <= data)
         tmp++;
     }

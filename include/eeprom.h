@@ -12,8 +12,8 @@ typedef enum
 #define DATA_EEPROM_END_ADDR       0x080827FF
 #define DATA_EEPROM_PAGE_SIZE      0x8
 
-#define Batt_cal_massive_address																0xCDF
-#define Batt_cal_massive_end_address														0xFFF
+#define Batt_cal_massive_address																0x200
+#define Batt_cal_massive_end_address														0x5FF
 
 #define Alarm_level_address                                     0x00
 #define Sleep_time_address                                      0x04
