@@ -59,7 +59,10 @@ uint32_t AMODULE_timstart = 0;
 uint32_t AMODULE_Capture = 0;
 uint8_t AMODULE_page = 0;
 
-uint16_t AMODULE_fon[100];      // Фон Модуля-А
+uint32_t AMODULE_find_summ = 0;
+
+uint16_t AMODULE_fon[60];       // Фон Модуля-А
+uint16_t AMODULE_find[11];      // Фон Модуля-А
 uint16_t AMODULE_len[100];
 uint32_t AMODULE_count = 0;
 
@@ -122,6 +125,7 @@ int main(void)
   timer10_Config();
   tim2_Config();
   tim3_Config();
+  tim4_Config();
   sound_activate();
   delay_ms(100);
   sound_deactivate();

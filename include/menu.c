@@ -40,6 +40,7 @@ MenuItem Menu_list[max_struct_index] = {
 MenuItem Modul_Menu_list[modul_max_struct_index] = {
   
 //Сервис   Текст		Если значение 0		Если 1		если больше чем 1	Откуда брать само значение	        	минимум		максимум	дефолт	Реакция на увеличение	на уменьшение 
+{0x01, LANG_ALARM,		LANG_OFF,				"",			LANG_UMKZV,		&Settings.AMODUL_Alarm_level,			0,			10000,	60,			&plus_five,			&minus_five},
 {0x01, LANG_ISOTOP,		"",			      	"",	        "",				&Settings.Isotop,			        	0x00,		0x08,		0x00,	&plus_one,				&minus_one},
 {0x01, LANG_ISOTOP_COUNTS,"", 	LANG_ISOTOP_COUNTS_, LANG_ISOTOP_COUNTS_,	&Settings.Isotop_counts,		  		1,	    	20,			1,		&plus_one,				&minus_one},
 
@@ -345,73 +346,86 @@ void main_screen()
 void amodul_screen()
 {
   uint32_t epsi = 100;
-  uint32_t i, summ = 0;
+
   if(Settings.AMODUL_menu == 0)
   {
-    if(Settings.AMODUL_unit < 3)
+    sprintf(lcd_buf, LANG_AMODUL);      // Пишем в буфер значение счетчика
+    LcdString(1, 1);            // // Выводим обычным текстом содержание буфера
+
+
+    epsi = precision_measure();
+
+    switch (Settings.AMODUL_unit)
     {
-      sprintf(lcd_buf, LANG_AMODUL);    // Пишем в буфер значение счетчика
-      LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
+    case 0:
+      Draw_fon_digit(2, 1, 0, fonmodule, QUANT, 0);
 
-      if(Settings.AMODUL_unit == 2)
+      if(epsi >= 999)
+        epsi = 999;
+      if(epsi < 100)
       {
-        Draw_fon_digit(2, 1, 0, (AMODULE_fon[1] + AMODULE_fon[2]) / 2, QUANT, 0);
-
-        for (i = 1; i <= 10; i++)
-          summ += AMODULE_fon[i];
-        summ /= 10;
-        Draw_fon_digit(4, 1, 0, summ, QUANT, 0);
-
+        sprintf(lcd_buf, "  '%1u.%1u%%", epsi / 10, epsi % 10); // Пишем в буфер значение счетчика
       } else
       {
-        epsi = precision_measure();
-
-        if(epsi >= 999)
-          epsi = 999;
-
-        if(epsi < 100)
-        {
-          sprintf(lcd_buf, "  '%1u.%1u%%", epsi / 10, epsi % 10);       // Пишем в буфер значение счетчика
-        } else
-        {
-          sprintf(lcd_buf, " '%2u.%1u%%", epsi / 10, epsi % 10);        // Пишем в буфер значение счетчика
-        }
-        LcdStringBold(1, 4);    // // Выводим обычным текстом содержание буфера
-        if(Settings.AMODUL_unit == 0)
-        {
-          Draw_fon_digit(2, 1, 0, fonmodule, QUANT, 0);
-        }
-        if(Settings.AMODUL_unit == 1)
-        {
-          Draw_fon_digit(2, 1, 0, fonmodule, SIVERT, 0);
-        }
+        sprintf(lcd_buf, " '%2u.%1u%%", epsi / 10, epsi % 10);  // Пишем в буфер значение счетчика
       }
-      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
-    } else
-    {
-      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT1);  // Пишем в буфер значение счетчика
-      LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
-
-      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT2);  // Пишем в буфер значение счетчика
-      LcdString(1, 2);          // // Выводим обычным текстом содержание буфера
-
-      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT3);  // Пишем в буфер значение счетчика
-      LcdString(1, 3);          // // Выводим обычным текстом содержание буфера
+      LcdStringBold(1, 4);      // // Выводим обычным текстом содержание буфера
 
 
-      Draw_fon_graph(2, 96, 67 - 38, 67, SMALL_SIZE, AMODULE_len, 0, SPECTR);
-
-    }
-
-    // Индикация батарейки и выключение питания при разряде
-    if(Settings.AMODUL_unit < 2)
-    {
+      // Индикация батарейки и выключение питания при разряде
       if(ADCData.Batt_voltage < 3500)
         minus_poweroff(0x00);   // Если меньше 3.5В выключаем прибор.
-
       LcdBatt(84, 19 + 7, 84 + 10, 19 + 19 + 1, cal_read(ADCData.Batt_voltage));
-    }
 
+
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
+
+      break;
+    case 1:
+      Draw_fon_digit(2, 1, 0, fonmodule, SIVERT, 0);
+
+      if(epsi >= 999)
+        epsi = 999;
+      if(epsi < 100)
+      {
+        sprintf(lcd_buf, "  '%1u.%1u%%", epsi / 10, epsi % 10); // Пишем в буфер значение счетчика
+      } else
+      {
+        sprintf(lcd_buf, " '%2u.%1u%%", epsi / 10, epsi % 10);  // Пишем в буфер значение счетчика
+      }
+      LcdStringBold(1, 4);      // // Выводим обычным текстом содержание буфера
+
+
+      // Индикация батарейки и выключение питания при разряде
+      if(ADCData.Batt_voltage < 3500)
+        minus_poweroff(0x00);   // Если меньше 3.5В выключаем прибор.
+      LcdBatt(84, 19 + 7, 84 + 10, 19 + 19 + 1, cal_read(ADCData.Batt_voltage));
+
+
+
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
+
+      break;
+    case 2:
+
+      Draw_fon_digit(2, 1, 0, AMODULE_find_summ, SIVERT, 0);
+      Draw_fon_digit(4, 1, 0, fonmodule, SIVERT, 0);
+
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
+
+      break;
+    case 3:
+
+      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT1);  // Пишем в буфер значение счетчика
+      LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
+      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT2);  // Пишем в буфер значение счетчика
+      LcdString(1, 2);          // // Выводим обычным текстом содержание буфера
+      sprintf(lcd_buf, LANG_SPECT_MARK_TEXT3);  // Пишем в буфер значение счетчика
+      LcdString(1, 3);          // // Выводим обычным текстом содержание буфера
+      Draw_fon_graph(2, 96, 67 - 38, 67, SMALL_SIZE, AMODULE_len, 0, SPECTR);
+
+      break;
+    }
   } else
   {
     menu_screen(AMODUL_menu_mode);
@@ -429,7 +443,6 @@ void menu_screen(uint32_t mode)
   char tmp_string[20];
   uint16_t menu_page, i, j;
   //прорисовка меню
-
   sprintf(lcd_buf, LANG_MENU);
   LcdStringInv(1, 1);
   if(mode == AMODUL_menu_mode)  // Меню модуля-А
@@ -459,14 +472,10 @@ void menu_screen(uint32_t mode)
       uint32_t menu_struct_index = 0;
 //      float tmp;
       uint32_t tmpi;
-
       menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;  // вычисление адеса в структуре
       if(menu_struct_index >= modul_max_struct_index)
         break;                  // если меню кончилось
-
-
       // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
-
       // вычисляем значение параметра "10сек"
       switch (*Modul_Menu_list[menu_struct_index].Parameter_value)
       {
@@ -489,8 +498,13 @@ void menu_screen(uint32_t mode)
         break;
       }
 
+      // Заплатка на тревогу
+      if((menu_struct_index == 0) && (Settings.AMODUL_mode != 0))
+        sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Modul_Menu_list[menu_struct_index].Parameter_value));
+
+
       // Заплатка на изотоп
-      if(menu_struct_index == 0)
+      if(menu_struct_index == 1)
       {
         tmpi = *Modul_Menu_list[menu_struct_index].Parameter_value;
         switch (tmpi)
@@ -536,11 +550,9 @@ void menu_screen(uint32_t mode)
       para_len = strlen(para_string);   // длинна параметра
       text_len = strlen(Modul_Menu_list[menu_struct_index].Text);       // линна текста
       fill_len = max_string_len - para_len - text_len;  // сколько добавлять пустых символов
-
       sprintf(tmp_string, Modul_Menu_list[menu_struct_index].Text);     // пишем текст сначала             "Сон"
       for (j = 0; j < fill_len; j++)
         strcat(tmp_string, " ");        // добиваем пробелами посередине   "Сон      "
-
       // вывод на экран
       // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
       sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
@@ -595,16 +607,12 @@ void menu_screen(uint32_t mode)
       uint32_t menu_struct_index = 0;
       float tmp;
       uint32_t tmpi;
-
       menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;  // вычисление адеса в структуре
       if(menu_struct_index >= max_struct_index)
         break;                  // если меню кончилось
       if((menu_struct_index >= max_public_string_count) && (!hidden_menu))
         break;                  // если за границей публичного меню
-
-
       // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
-
       // вычисляем значение параметра "10сек"
       switch (*Menu_list[menu_struct_index].Parameter_value)
       {
@@ -630,7 +638,6 @@ void menu_screen(uint32_t mode)
       // Заплатка на мкЗв
       if((menu_struct_index == 0) && Settings.units)
         sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value));
-
       // Заплатка на изотоп
       if(menu_struct_index == 10)
       {
@@ -678,11 +685,9 @@ void menu_screen(uint32_t mode)
       para_len = strlen(para_string);   // длинна параметра
       text_len = strlen(Menu_list[menu_struct_index].Text);     // линна текста
       fill_len = max_string_len - para_len - text_len;  // сколько добавлять пустых символов
-
       sprintf(tmp_string, Menu_list[menu_struct_index].Text);   // пишем текст сначала             "Сон"
       for (j = 0; j < fill_len; j++)
         strcat(tmp_string, " ");        // добиваем пробелами посередине   "Сон      "
-
       // вывод на экран
       // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
       sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
@@ -706,7 +711,6 @@ void menu_screen(uint32_t mode)
     }
   }
   LcdUpdate();
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -721,29 +725,21 @@ void stat_screen()
   case 0:
     sprintf(lcd_buf, LANG_STAT);
     LcdStringInv(1, 1);
-
     sprintf(lcd_buf, LANG_VOLTAGE);     // Выводим на дисплей
     LcdString(1, 2);            // // Выводим обычным текстом содержание буфера на строку 8
-
     sprintf(lcd_buf, LANG_AKB3VVV);     // Выводим на дисплей
     LcdString(1, 3);            // // Выводим обычным текстом содержание буфера на строку 8
-
     sprintf(lcd_buf, "%3i%%", cal_read(ADCData.Batt_voltage));  // Выводим на дисплей
     //sprintf(lcd_buf, "%1i.%02i", ADCData.Batt_voltage / 1000, (ADCData.Batt_voltage % 1000) / 10);      // Выводим на дисплей
     LcdString(1, 4);            // // Выводим обычным текстом содержание буфера на строку 8
-
     sprintf(lcd_buf, "|%1i.%02i", ADCData.Power_voltage / 1000, (ADCData.Power_voltage % 1000) / 10);   // Выводим на дисплей
     LcdString(6, 4);            // // Выводим обычным текстом содержание буфера на строку 8
-
     sprintf(lcd_buf, "|%3is", Settings.Second_count);   // Выводим на дисплей
     LcdString(12, 4);           // // Выводим обычным текстом содержание буфера на строку 8
-
     sprintf(lcd_buf, LANG_PUMP);        // Выводим на дисплей
     LcdString(1, 6);            // // Выводим обычным текстом содержание буфера на строку 8
-
     sprintf(lcd_buf, LANG_IMPMINAR);    // Выводим на дисплей
     LcdString(1, 7);            // // Выводим обычным текстом содержание буфера на строку 8
-
     if(pump_counter_avg_impulse_by_1sec[1] == 0)
     {
       sprintf(lcd_buf, LANG_CALC2);
@@ -751,16 +747,13 @@ void stat_screen()
     else
       sprintf(lcd_buf, "%5i ", pump_counter_avg_impulse_by_1sec[1]);    // Выводим на дисплей
     LcdString(1, 8);            // // Выводим обычным текстом содержание буфера на строку 8
-
     sprintf(lcd_buf, LANG_4IDN, working_days);  // Выводим на дисплей
     LcdString(9, 8);            // // Выводим обычным текстом содержание буфера на строку 8
     break;
-
   case 1:
 
     sprintf(lcd_buf, LANG_ABOUT);
     LcdStringInv(1, 1);
-
     sprintf(lcd_buf, LANG_DOZIK);
     LcdString(1, 3);
     sprintf(lcd_buf, LANG_AUTHOR);
@@ -774,7 +767,6 @@ void stat_screen()
     sprintf(lcd_buf, "     %s", __DATE__);
     LcdString(1, 8);
     break;
-
   default:
     stat_screen_number = 0;
     break;

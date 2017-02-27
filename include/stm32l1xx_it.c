@@ -326,6 +326,7 @@ void TIM2_IRQHandler(void)
         spect_impulse = ENABLE;
         AMODULE_timstart = TIM_GetCapture2(TIM2);
         AMODULE_fon[0]++;
+        AMODULE_find[0]++;
       }
     } else
     {
@@ -365,6 +366,54 @@ void TIM2_IRQHandler(void)
   }
 }
 
+////////////////////////
+void TIM4_IRQHandler(void)
+{
+  uint32_t i = 0;
+  if(TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET)
+  {
+    TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+
+    if(Settings.AMODUL_mode != 0)
+    {
+
+      AMODULE_find_summ = AMODULE_find[0];
+      for (i = 9; i > 0; i--)
+      {
+        AMODULE_find_summ += AMODULE_find[i];
+        AMODULE_find[i] = AMODULE_find[i - 1];
+      }
+      AMODULE_find[0] = 0;
+
+      if(Settings.AMODUL_unit == 2)
+        DataUpdate.Need_display_update = ENABLE;
+
+      if(Settings.AMODUL_Alarm_level > 0)
+        if(AMODULE_find_summ > Settings.AMODUL_Alarm_level_raw)
+        {
+          if(Alarm.Alarm_active == DISABLE)
+            Alarm.User_cancel = DISABLE;
+
+          Alarm.Alarm_active = ENABLE;
+          sound_activate();
+
+        } else
+        {
+          if(Alarm.Alarm_active == ENABLE)
+          {
+            sound_deactivate();
+            Power.Sound_active = DISABLE;
+            Alarm.Alarm_active = DISABLE;
+            Alarm.User_cancel = DISABLE;
+            Alarm.Alarm_beep_count = 0;
+          }
+        }
+    }
+  }
+}
+
+
+
 
 ////////////////////////////////////////
 // Секундный тик
@@ -386,11 +435,13 @@ void RTC_Alarm_IRQHandler(void)
 
       if(Settings.AMODUL_mode != 0)     // Если модуль-А активирован, обрабатываем его массив
       {
-        for (i = 99; i > 0; i--)
+        for (i = 59; i > 0; i--)
         {
           AMODULE_fon[i] = AMODULE_fon[i - 1];
         }
+
         AMODULE_fon[0] = 0;
+
         if((AMODULE_fon[0] == 0) && (AMODULE_fon[1] == 0) && (AMODULE_fon[2] == 0))     // Если от модуля-А не поступает данных три цыкла, деактивируем его.
         {
 
@@ -404,9 +455,8 @@ void RTC_Alarm_IRQHandler(void)
           RTC_ITConfig(RTC_IT_ALRB, DISABLE);
           RTC_ClearFlag(RTC_FLAG_ALRBF);
         }
-
+        DataUpdate.Need_display_update = ENABLE;
       }
-      DataUpdate.Need_display_update = ENABLE;
 
       Power.sleep_time = Settings.Sleep_time;
     }
@@ -420,7 +470,8 @@ void RTC_Alarm_IRQHandler(void)
     {
       Set_next_alarm_wakeup();  // установить таймер просыпания на +4 секунды
 
-      DataUpdate.Need_display_update = ENABLE;
+      if(Settings.AMODUL_mode == 0)
+        DataUpdate.Need_display_update = ENABLE;
 
       // Калибровка 4 интервала счета
       if(Settings.Cal_mode == 1)

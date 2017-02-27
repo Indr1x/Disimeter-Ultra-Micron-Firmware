@@ -47,6 +47,7 @@ void eeprom_write_default_settings(void)
     Settings.Isotop_ACAL_y88 = 250;
     Settings.Isotop_ACAL_ba133 = 250;
     Settings.Isotop_ACAL_th228 = 250;
+    Settings.AMODUL_Alarm_level = 100;
     Settings.AMODUL_spect_start = 1000;
     Settings.AMODUL_spect_multi = 14;
     Settings.AMODUL_spect_mark1 = 10;
@@ -141,6 +142,8 @@ void eeprom_write_settings(void)
   if(eeprom_read(Isotop_ACAL_th228_address) != Settings.Isotop_ACAL_th228)
     eeprom_write(Isotop_ACAL_th228_address, Settings.Isotop_ACAL_th228);
 
+  if(eeprom_read(AMODUL_Alarm_level_address) != Settings.AMODUL_Alarm_level)
+    eeprom_write(AMODUL_Alarm_level_address, Settings.AMODUL_Alarm_level);
 
   if(eeprom_read(AMODUL_spect_start_address) != Settings.AMODUL_spect_start)
     eeprom_write(AMODUL_spect_start_address, Settings.AMODUL_spect_start);
@@ -308,6 +311,11 @@ void eeprom_apply_settings(void)
     reload_active_isotop_time();
   }
 
+  if(eeprom_read(AMODUL_Alarm_level_address) != Settings.AMODUL_Alarm_level)
+  {
+    reload_active_isotop_time();
+  }
+
 }
 
 //**************************************************************************
@@ -357,6 +365,8 @@ void eeprom_read_settings(void)
   Settings.Isotop_ACAL_ba133 = eeprom_read(Isotop_ACAL_ba133_address);
   Settings.Isotop_ACAL_th228 = eeprom_read(Isotop_ACAL_th228_address);
   Settings.Isotop_ACAL_am241 = eeprom_read(Isotop_ACAL_am241_address);
+
+  Settings.AMODUL_Alarm_level = eeprom_read(AMODUL_Alarm_level_address);
 
   Settings.AMODUL_spect_start = eeprom_read(AMODUL_spect_start_address);
   Settings.AMODUL_spect_multi = eeprom_read(AMODUL_spect_multi_address);

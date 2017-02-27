@@ -25,7 +25,7 @@ uint32_t precision_measure()
   avg = fonmodule;
 
   //////////////////////////////////////////////////////////
-  for (i = 1; i < 99; i++)      // Поиск адекватных элементов массива
+  for (i = 1; i <= 30; i++)     // Поиск адекватных элементов массива
   {
     if((AMODULE_fon[i] > (avg * 1.5)) || (AMODULE_fon[i] < (avg / 1.5)))        // Если замер двухкрано превышает среднее число
     {
@@ -37,9 +37,6 @@ uint32_t precision_measure()
     } else
     {
       if(AMODULE_fon[i] == 0)
-        break;
-
-      if(n >= 30)
         break;
 
       n++;
@@ -163,6 +160,9 @@ uint32_t precision_measure()
     case 30:
       tkrit = 2.045229642;
       break;
+    default:
+      tkrit = 2.045229642;
+      break;
     }
     //////////////////////////////////////////////////////////
     // Вычисление Дельта-X
@@ -224,6 +224,9 @@ void reload_active_isotop_time()
     Settings.ACAL_count = Settings.Isotop_ACAL_th228;
     break;
   }
+
+  Settings.AMODUL_Alarm_level_raw = (Settings.AMODUL_Alarm_level * Settings.ACAL_count) / 100;
+
   plus_rad_reset(0x00);
 }
 

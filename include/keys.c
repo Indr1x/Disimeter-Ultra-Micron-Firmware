@@ -171,6 +171,7 @@ void plus_amodul_engage(uint32_t * param)
 {
   int i;
 
+  Settings.AMODUL_Alarm_level_raw = (Settings.AMODUL_Alarm_level * Settings.ACAL_count) / 100;
   Settings.AMODUL_mode = 1;
   for (i = 99; i > 0; i--)
   {
@@ -325,6 +326,83 @@ void plus_one_ref(uint32_t * param)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// +5 -5
+void plus_five(uint32_t * param)        // +5
+{
+  if(Settings.AMODUL_mode > 0)
+  {
+    if(*param > modul_max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
+    if(*Modul_Menu_list[*param - 1].Parameter_value >= Modul_Menu_list[*param - 1].Max_limit)
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Min_limit;
+    } else
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value + 5;  //+5
+    }
+  } else
+  {
+    if(*param > max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
+    if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
+    {
+      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
+    } else
+    {
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 5;      //+5
+    }
+  }
+}
+
+
+void minus_five(uint32_t * param)       // -5
+{
+  if(Settings.AMODUL_mode > 0)
+  {
+    if(*param > modul_max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
+    if(*Modul_Menu_list[*param - 1].Parameter_value <= Modul_Menu_list[*param - 1].Min_limit)
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Max_limit;
+    } else
+    {
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value - 5;  // -5
+    }
+  } else
+  {
+    if(*param > max_struct_index)
+      return;
+    if(*param == 0)
+      return;
+
+    //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
+    if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
+    {
+      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
+    } else
+    {
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 5;      // -5
+    }
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // +10 -10

@@ -160,6 +160,10 @@ typedef struct
   uint32_t Isotop_ACAL_th228;
 
   uint32_t AMODUL_menu;
+  uint32_t AMODUL_Alarm_level;
+  uint32_t AMODUL_Alarm_level_raw;
+
+  uint32_t AMODUL_summ_fon;
 
   uint32_t AMODUL_spect_start;
   uint32_t AMODUL_spect_multi;
@@ -249,7 +253,10 @@ extern uint16_t Detector_massive[Detector_massive_pointer_max + 1];
 extern uint32_t Detector_AB_massive[15];        // 1 минута, интервалами по 4 сек
 
 extern uint32_t AB_fon;         // Фон Альфа-Бета
-extern uint16_t AMODULE_fon[100];       // Фон Альфа-Бета
+extern uint16_t AMODULE_fon[60];        // Фон Модуля-А
+extern uint16_t AMODULE_find[11];       // Фон Модуля-А
+
+extern uint32_t AMODULE_find_summ;
 
 #define FLASH_PAGE_SIZE                 0x100   // (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 #define FLASH_START_ADDR                0x0800F000

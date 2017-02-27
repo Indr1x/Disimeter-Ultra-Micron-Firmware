@@ -675,7 +675,7 @@ void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32_t fonmodule_val, uint8_t label, uint8_t accentuation)
+void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t invert, uint32_t fonmodule_val, uint8_t label, uint8_t accentuation)
 {
   uint32_t digit_num = 0;
   float fonusvh = 0;

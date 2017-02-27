@@ -22,6 +22,9 @@ extern void minus_one_ref(uint32_t * param);
 extern void plus_four(uint32_t * param);
 extern void minus_four(uint32_t * param);
 
+extern void plus_five(uint32_t * param);
+extern void minus_five(uint32_t * param);
+
 extern void plus_ten(uint32_t * param);
 extern void minus_ten(uint32_t * param);
 
