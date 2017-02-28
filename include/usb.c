@@ -155,16 +155,16 @@ void USB_send_madorc_data()
   uint8_t voltIndexLo = 0;      // младший  байт индекса 
 
 
-  impulseLo = madorc_impulse & 0xff;    // разбить индекс на младший байт
-  impulseHi = (madorc_impulse >> 8) & 0xff;     // разбить индекс на старший байт  
-  madorc_impulse = 0;
+  impulseLo = Data.madorc_impulse & 0xff;       // разбить индекс на младший байт
+  impulseHi = (Data.madorc_impulse >> 8) & 0xff;        // разбить индекс на старший байт  
+  Data.madorc_impulse = 0;
 
   voltIndexLo = ((ADCData.Batt_voltage / 10) - 300) & 0xff;     // разбить индекс на младший байт
 
 
-  fonLo = fon_level & 0xff;     // разбить индекс на младший байт
-  fonHi = (fon_level >> 8) & 0xff;      // разбить индекс на старший байт  
-  fonMegaHi = (fon_level >> 16) & 0xff; // разбить индекс на старший байт  
+  fonLo = Data.fon_level & 0xff;        // разбить индекс на младший байт
+  fonHi = (Data.fon_level >> 8) & 0xff; // разбить индекс на старший байт  
+  fonMegaHi = (Data.fon_level >> 16) & 0xff;    // разбить индекс на старший байт  
 
   Send_Buffer[0] = 0xD1;        // передать ключь Marorc
   Send_Buffer[1] = impulseHi;   // передать по ”—јѕѕ 
@@ -275,7 +275,7 @@ void USB_work()
           full_erase_flash();
           DataUpdate.Need_erase_flash = DISABLE;
         }
-        USB_not_active = 0;     // —брос четчика неактивности USB 
+        Data.USB_not_active = 0;        // —брос четчика неактивности USB 
 
         while (Receive_length > current_rcvd_pointer)
         {
@@ -359,13 +359,13 @@ void USB_work()
 
           case 0x35:           // запуск калибровки (RCV 1 байт)
             for (i = 0; i < 19; i++)
-              Cal_count_mass[i] = 0;
+              Data.Cal_count_mass[i] = 0;
             Cal_count = 0;
             Cal_count_time = 0;
             Settings.Cal_mode = 1;
-            menu_select = 0;
-            enter_menu_item = DISABLE;
-            screen = 1;
+            Data.menu_select = 0;
+            Data.enter_menu_item = DISABLE;
+            Data.screen = 1;
             hidden_menu = ENABLE;
             GPIO_ResetBits(GPIOC, GPIO_Pin_13);
             current_rcvd_pointer++;
@@ -373,15 +373,15 @@ void USB_work()
 
           case 0x36:           // выход из калибровки (RCV 1 байт)
             for (i = 0; i < 19; i++)
-              Cal_count_mass[i] = 0;
+              Data.Cal_count_mass[i] = 0;
             Cal_count = 0;
             Cal_count_time = 0;
             Settings.Cal_mode = 0;
-            menu_select = 0;
-            enter_menu_item = DISABLE;
-            screen = 1;
+            Data.menu_select = 0;
+            Data.enter_menu_item = DISABLE;
+            Data.screen = 1;
             hidden_menu = DISABLE;
-            madorc_impulse = 0;
+            Data.madorc_impulse = 0;
             plus_rad_reset(0x0);
             plus_doze_reset(0x0);
             full_erase_flash();
@@ -520,9 +520,9 @@ void USB_send_calibration_data()
     Send_Buffer[0] = 0xF6;      // передать ключь
     Send_Buffer[1] = count_time_hi;
     Send_Buffer[2] = count_time_lo;
-    Send_Buffer[3] = Cal_count_mass[Cal_count - 1] & 0xff;
-    Send_Buffer[4] = (Cal_count_mass[Cal_count - 1] >> 8) & 0xff;
-    Send_Buffer[5] = (Cal_count_mass[Cal_count - 1] >> 16) & 0xff;
+    Send_Buffer[3] = Data.Cal_count_mass[Cal_count - 1] & 0xff;
+    Send_Buffer[4] = (Data.Cal_count_mass[Cal_count - 1] >> 8) & 0xff;
+    Send_Buffer[5] = (Data.Cal_count_mass[Cal_count - 1] >> 16) & 0xff;
     Send_Buffer[6] = (Cal_count - 1) & 0xff;
   } else
   {

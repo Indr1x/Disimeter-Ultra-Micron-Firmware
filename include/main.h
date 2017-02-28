@@ -55,11 +55,9 @@
 typedef struct
 {
   FunctionalState Need_batt_voltage_update;     // Необходимо обновить данные по напряжению батарейки
-//  FunctionalState Need_geiger_voltage_update;  // Необходимо обновить данные по высокому напряжению 
   FunctionalState Need_fon_update;      // Необходимо обновить данные по высокому напряжению 
   FunctionalState Need_display_update;  // Необходимо обновить данные по высокому напряжению 
   uint16_t Batt_update_time_counter;    // счетчик таймаута измерения напряжения АКБ
-//  uint8_t Calibration_update_time_counter;     // счетчик таймаута измерения напряжения АКБ
   uint8_t pump_counter_update_time;
   uint16_t doze_sec_count;      // Служебный счетчик для времени дозы
   uint16_t days_sec_count;
@@ -68,8 +66,6 @@ typedef struct
   FunctionalState Need_update_mainscreen_counters;
   FunctionalState Need_erase_flash;
   FunctionalState RTC_tick_update;
-//  uint8_t second_pump_counter;
-//  uint8_t pump_pulse_by_impulse_counter;
 
 } DataUpdateDef;
 
@@ -79,25 +75,11 @@ typedef struct
   uint32_t Batt_voltage_raw;    // Напряжение АКБ
   uint32_t Batt_voltage;        // Напряжение АКБ
   uint32_t Power_voltage;       // Напряжение питания МК
-//  uint32_t Geiger_voltage_raw;      // Напряжение счетчика
-//  uint32_t Geiger_voltage;          // Напряжение счетчика
   uint32_t Calibration_bit_voltage;     // Цена одного бита
   uint32_t Procent_battery;     // Цена одного бита
   uint32_t DAC_voltage_raw;     // Уровень накачки для DAC
 
 } ADCDataDef;
-
-/*
-typedef struct
-{
-	uint32_t Hour;       
-  uint32_t Minute;
-  uint32_t Second;       
-  uint32_t Day;       
-  uint32_t Month;       
-  uint32_t Year;       
-} RTCDef;
-*/
 
 
 typedef struct
@@ -105,14 +87,6 @@ typedef struct
   uint32_t Alarm_level;         // Уровень аларма
   uint32_t Sleep_time;          // время до ухода в сон
   uint32_t contrast;            // Контраст дисплея
-//  uint32_t second_pump;                              // кол-во импульсов подкачки каждую секунду
-//  uint32_t Geiger_angle_of_counter_characteristics; // угол наклона счетной хакактиристики в десятых долях процента на Вольт
-//  uint32_t Geiger_plato_begin;                      // начало плато
-//  uint32_t Geiger_plato;                            // ширина плато
-//  uint32_t HV_ADC_Corr;                             // Корректировка ВВ делителя
-//  uint32_t pump_pulse_by_impulse;                   // кол-во импульсов подкачки на каждый импульс датчика
-//  uint32_t pump_skvagennost;                        // скваженность накачки
-//  uint32_t Sound_freq;                                    // Частота звука в кГц
   uint32_t Power_comp;          // Уровень потребления
   uint32_t Geiger_voltage;      // Напряжение датчика
   uint32_t Pump_Energy;
@@ -133,6 +107,8 @@ typedef struct
   uint32_t serial1;
   uint32_t serial2;
   uint32_t serial3;
+
+  uint32_t Beep_freq;
 
   uint32_t Cal_mode;
   uint32_t Isotop;
@@ -221,12 +197,13 @@ typedef struct
   FunctionalState Pump_deny;
 } PowerDef;
 
+
 static __IO uint8_t timer_is_reload = 0;        // counts 1ms timeTicks
 extern uint16_t key;            // массив нажатых кнопок [012]
 extern uint32_t ix;
 extern uint32_t ix_update;
 
-extern uint32_t fonmodule;
+
 
 // Режим отображения больших цифр
 #define QUANT 0
@@ -252,11 +229,7 @@ extern uint16_t Detector_massive[Detector_massive_pointer_max + 1];
 
 extern uint32_t Detector_AB_massive[15];        // 1 минута, интервалами по 4 сек
 
-extern uint32_t AB_fon;         // Фон Альфа-Бета
-extern uint16_t AMODULE_fon[60];        // Фон Модуля-А
-extern uint16_t AMODULE_find[11];       // Фон Модуля-А
 
-extern uint32_t AMODULE_find_summ;
 
 #define FLASH_PAGE_SIZE                 0x100   // (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 #define FLASH_START_ADDR                0x0800F000
@@ -277,42 +250,80 @@ extern uint32_t AMODULE_find_summ;
 
 #define doze_length 32          // длинна массива в памяти (НЕ ТРОГАТЬ! развилится оптимизация USB обмена!!)
 
+
+
+
+typedef struct
+{
+// Серийный номер
+  uint32_t unlock_0_serial;
+  uint32_t unlock_1_serial;
+  uint32_t unlock_2_serial;
+  uint32_t unlock_3_serial;
+
+// Данные дозы
+  uint16_t Doze_sec_count;      // Счет времени для дозы
+  uint32_t Doze_day_count;      // Доза за день
+  uint32_t Doze_hour_count;     // Доза за час
+  uint32_t Doze_week_count;     // Доза за неделю
+  uint32_t Doze_month_count;    // Доза за месяц
+  uint32_t Doze_2month_count;   // Доза за два месяца
+
+
+  uint32_t Max_fon;             // Максимум фона
+
+  // Меню
+  uint8_t main_menu_stat;
+  uint32_t menu_select;
+  uint32_t modul_menu_select;
+  FunctionalState enter_menu_item;
+  uint8_t screen;
+  uint8_t stat_screen_number;
+
+  uint16_t pump_counter_avg_impulse_by_1sec[2]; // Колличество импульсов накачки
+  uint32_t fon_level;           // Фон
+  uint32_t working_days;        // Наработка дней
+  uint8_t auto_speedup_factor;  // Коэфицент ускорения счета фона
+  uint32_t madorc_impulse;      // данные для алгоритма MadOrc'а
+  uint32_t USB_not_active;      // Активность интерфейса USB
+  uint32_t last_count_pump_on_impulse;  //
+
+
+  uint32_t Cal_count_mass[20];  // Массив данных калибровки
+
+
+
+  // Слюдяной датчик
+  uint32_t AB_fon;              // Фон Альфа-Бета
+
+  // Модуль-А
+  uint32_t fonmodule;
+  uint16_t AMODULE_fon[60];     // Массив импульсов по секундам
+  uint16_t AMODULE_find[11];    // Массив импульсов по 100 мс.
+  uint32_t AMODULE_find_summ;   // Сумма импульсов за одну секунду
+
+  uint32_t AMODULE_timend;      // Время начала импульса с модуля
+  uint32_t AMODULE_timstart;    // Время конца импульса с модуля
+  uint32_t AMODULE_Capture;
+  uint8_t AMODULE_page;
+  uint16_t AMODULE_len[100];    // Массив для спектрометра
+  uint32_t AMODULE_count;
+
+
+} DataDef;
+
+
+
+
 extern uint32_t ram_Doze_massive[doze_length + 1];      // 1 ячейка = 10 минут
 extern uint32_t ram_max_fon_massive[doze_length + 1];   // 1 ячейка = 10 минут
 extern uint16_t USB_maxfon_massive_pointer;
 extern uint16_t USB_doze_massive_pointer;
-
-extern uint16_t Doze_sec_count;
-extern uint32_t Doze_day_count;
-extern uint32_t Doze_hour_count;
-extern uint32_t Doze_week_count;
-extern uint32_t Doze_month_count;
-extern uint32_t Doze_2month_count;
-extern uint32_t Max_fon;
-extern uint8_t main_menu_stat;
-extern uint32_t menu_select;
-extern uint32_t modul_menu_select;
-extern FunctionalState enter_menu_item;
-extern uint8_t screen;
-extern uint8_t stat_screen_number;
-extern uint16_t Detector_massive_pointer;
-extern uint16_t pump_counter_avg_impulse_by_1sec[2];
-extern uint32_t fon_level;
-extern uint32_t working_days;
-extern uint8_t auto_speedup_factor;
-extern uint32_t madorc_impulse;
-extern uint32_t USB_not_active;
-extern uint32_t last_count_pump_on_impulse;
-extern uint32_t Cal_count_mass[];
+extern uint16_t Detector_massive_pointer;       // Указатель на ячейку в массиве фона
 
 extern FunctionalState pump_on_impulse;
 
 extern FunctionalState spect_impulse;
-
-extern uint32_t unlock_0_serial;
-extern uint32_t unlock_1_serial;
-extern uint32_t unlock_2_serial;
-extern uint32_t unlock_3_serial;
 
 extern uint32_t Isotop_counts;
 
@@ -320,13 +331,6 @@ extern uint32_t Cal_count;
 extern uint32_t Cal_count_time;
 
 extern uint8_t Pump_on_alarm_count;
-
-extern uint32_t AMODULE_timend;
-extern uint32_t AMODULE_timstart;
-extern uint32_t AMODULE_Capture;
-extern uint8_t AMODULE_page;
-extern uint16_t AMODULE_len[];
-extern uint32_t AMODULE_count;
 
 extern uint16_t eeprom_address;
 
@@ -337,17 +341,14 @@ extern uint32_t fullstop;
 extern FunctionalState Sound_key_pressed;
 extern FunctionalState Pump_on_alarm;
 extern uint16_t current_pulse_count;
+extern uint8_t pump_count;
 
 extern ADCDataDef ADCData;
 extern DataUpdateDef DataUpdate;
 extern PowerDef Power;
+extern DataDef Data;
 extern SettingsDef Settings;
 extern AlarmDef Alarm;
-#ifdef debug
-extern WakeupDef Wakeup;
-extern uint32_t debug_wutr;
-#endif
-extern uint8_t pump_count;
 
 void sleep_mode(FunctionalState sleep);
 FunctionalState check_license(void);

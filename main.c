@@ -4,44 +4,31 @@
 
 #include "main.h"
 
+DataUpdateDef DataUpdate;
+ADCDataDef ADCData;
+SettingsDef Settings;
+AlarmDef Alarm;
+PowerDef Power;
+DataDef Data;
 
 uint16_t key;                   // массив нажатых кнопок [012]
-uint32_t ix;
-uint32_t ix_update;
 
 uint16_t Detector_massive[Detector_massive_pointer_max + 1];
 uint32_t ram_Doze_massive[doze_length + 1];     // 1 ячейка = 10 минут, на протяжении суток
 uint32_t ram_max_fon_massive[doze_length + 1];  // 1 ячейка = 10 минут, на протяжении суток
-uint32_t Cal_count_mass[20];
+
 uint16_t USB_maxfon_massive_pointer = 0;
 uint16_t USB_doze_massive_pointer = 0;
 uint16_t current_pulse_count = 0;
 uint16_t eeprom_address = 0;
-uint8_t pump_count = 0;
 uint8_t Pump_on_alarm_count = 0;
-uint32_t Doze_day_count = 0;
-uint32_t Doze_week_count = 0;
-uint32_t Doze_hour_count = 0;
-uint32_t Doze_month_count = 0;
-uint32_t Doze_2month_count = 0;
-uint32_t Max_fon = 0;
-uint8_t main_menu_stat = 1;
+
+
 uint16_t Detector_massive_pointer = 0;
-uint8_t auto_speedup_factor = 0;
 uint32_t Cal_count = 0;
 uint32_t Cal_count_time = 0;
-uint32_t USB_not_active = 0;
-uint32_t last_count_pump_on_impulse = 0;
 FunctionalState pump_on_impulse = DISABLE;
-uint32_t menu_select = 0;
-uint32_t modul_menu_select = 0;
-FunctionalState enter_menu_item = DISABLE;
-uint8_t screen = 1;
-uint8_t stat_screen_number = 0;
-uint16_t pump_counter_avg_impulse_by_1sec[2];
-uint32_t fon_level = 0;
 uint32_t Isotop_counts = 0;
-uint32_t fonmodule = 0;
 
 FunctionalState poweroff_state = DISABLE;
 FunctionalState hidden_menu = DISABLE;
@@ -49,40 +36,12 @@ FunctionalState Pump_on_alarm = DISABLE;
 
 FunctionalState spect_impulse = DISABLE;
 
-uint32_t unlock_0_serial = 0;
-uint32_t unlock_1_serial = 0;
-uint32_t unlock_2_serial = 0;
-uint32_t unlock_3_serial = 0;
-
-uint32_t AMODULE_timend = 0;
-uint32_t AMODULE_timstart = 0;
-uint32_t AMODULE_Capture = 0;
-uint8_t AMODULE_page = 0;
-
-uint32_t AMODULE_find_summ = 0;
-
-uint16_t AMODULE_fon[60];       // Фон Модуля-А
-uint16_t AMODULE_find[11];      // Фон Модуля-А
-uint16_t AMODULE_len[100];
-uint32_t AMODULE_count = 0;
-
 uint16_t bat_cal_running = 0;
 
-uint32_t working_days = 0;
-
-uint32_t madorc_impulse = 0;
-
 uint32_t Detector_AB_massive[15];       // 1 минута, интервалами по 4 сек
-uint32_t AB_fon = 0;            // Фон Альфа-Бета
-
 
 FunctionalState Sound_key_pressed = DISABLE;
 
-DataUpdateDef DataUpdate;
-ADCDataDef ADCData;
-SettingsDef Settings;
-AlarmDef Alarm;
-PowerDef Power;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -99,10 +58,10 @@ int main(void)
   Power.sleep_now = DISABLE;
 
   DataUpdate.Need_erase_flash = ENABLE;
+  Data.main_menu_stat = 1;
 
   Settings.Geiger_voltage = 360;        // Напряжение на датчике 360 вольт
   Settings.Pump_Energy = 350;   // энергия накачки 350 мТл
-//  Settings.AMODUL_time = 5;
   DataUpdate.current_flash_page = 0;
 
   io_init();                    // Инициализация потров МК
@@ -110,8 +69,8 @@ int main(void)
   eeprom_write_default_settings();      // Проверка, заполнен ли EEPROM
   eeprom_read_settings();       // Чтение настроек из EEPROM
   reload_active_isotop_time();  // Перезагрузка времени счета по изотопам
-  screen = 1;
-  AB_fon = 0;
+  Data.screen = 1;
+  Data.AB_fon = 0;
   Power.USB_active = DISABLE;
   Power.sleep_time = Settings.Sleep_time;
   Power.Display_active = ENABLE;
@@ -184,11 +143,11 @@ int main(void)
       {
         DataUpdate.Need_display_update = DISABLE;
         LcdClear_massive();
-        if(screen == 1)
+        if(Data.screen == 1)
           main_screen();
-        if(screen == 2)
+        if(Data.screen == 2)
           menu_screen(NORMAL_menu_mode);
-        if(screen == 3)
+        if(Data.screen == 3)
           stat_screen();
       }
 ///////////////////////////////////////////////////////////////////////////////
@@ -205,12 +164,12 @@ int main(void)
       if(bat_cal_running > 0)
         Power.sleep_time = Settings.Sleep_time; // В режиме калибровки АКБ не спать
 
-      if((current_pulse_count < 30) && (fon_level < 10000) && (AB_fon < 10000) && (Settings.AMODUL_mode == 0))  // Если счетчик не зашкаливает, то можно уйти в сон
+      if((current_pulse_count < 30) && (Data.fon_level < 10000) && (Data.AB_fon < 10000))       // Если счетчик не зашкаливает, то можно уйти в сон
       {
         if(SystemCoreClock > 20000000)  // Если частота выше 20 мгц, понизить частоту
           set_msi();
 
-        if(!Power.Pump_active && !Power.Sound_active)
+        if(!Power.Pump_active && !Power.Sound_active && (Settings.AMODUL_mode == 0))
         {
           PWR_FastWakeUpCmd(ENABLE);
           PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI); // Переходим в сон
@@ -223,8 +182,8 @@ int main(void)
       {                         // Если фон очень высокий, переключаем частоту МК на максимум
         if((ADCData.Power_voltage > 2800) && (SystemCoreClock < 20000000))      // Если частота ниже 20 мгц, поднять частоту
           set_pll_for_usb();
-        if(Settings.AMODUL_mode != 0)   // Если включен модуль, переходить в режим SLEEP
-          PWR_EnterSleepMode(PWR_Regulator_ON, PWR_SLEEPEntry_WFI);
+//        if(Settings.AMODUL_mode != 0)   // Если включен модуль, переходить в режим SLEEP
+//          PWR_EnterSleepMode(PWR_Regulator_ON, PWR_SLEEPEntry_WFI);
 
       }
 

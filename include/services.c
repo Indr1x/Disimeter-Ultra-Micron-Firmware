@@ -22,12 +22,12 @@ uint32_t precision_measure()
   float delta_x = 0;
   float epsi = 0;
 
-  avg = fonmodule;
+  avg = Data.fonmodule;
 
   //////////////////////////////////////////////////////////
   for (i = 1; i <= 30; i++)     // Поиск адекватных элементов массива
   {
-    if((AMODULE_fon[i] > (avg * 1.5)) || (AMODULE_fon[i] < (avg / 1.5)))        // Если замер двухкрано превышает среднее число
+    if((Data.AMODULE_fon[i] > (avg * 1.5)) || (Data.AMODULE_fon[i] < (avg / 1.5)))      // Если замер двухкрано превышает среднее число
     {
       fail++;
       if(fail > 1)              // если ошибочных замеров больше двух, пересчет.
@@ -36,7 +36,7 @@ uint32_t precision_measure()
       }
     } else
     {
-      if(AMODULE_fon[i] == 0)
+      if(Data.AMODULE_fon[i] == 0)
         break;
 
       n++;
@@ -45,12 +45,12 @@ uint32_t precision_measure()
 
   if(n < 2)
   {                             // Если недостаточно данных для вычисления
-    fonmodule = AMODULE_fon[1];
+    Data.fonmodule = Data.AMODULE_fon[1];
   } else
   {
     for (i = 1; i <= n; i++)    // Расчет среднего
     {
-      avg_summ += AMODULE_fon[i];
+      avg_summ += Data.AMODULE_fon[i];
     }
 
     avg = avg_summ / n;
@@ -59,7 +59,7 @@ uint32_t precision_measure()
     for (i = 1; i <= n; i++)
     {
       xshtr_xi_q[i] = avg;
-      xshtr_xi_q[i] -= AMODULE_fon[i];
+      xshtr_xi_q[i] -= Data.AMODULE_fon[i];
       xshtr_xi_q[i] *= xshtr_xi_q[i];
       xshtr_xi_q_summ += xshtr_xi_q[i];
     }
@@ -172,7 +172,7 @@ uint32_t precision_measure()
     // Вычисление Э
     epsi = (delta_x / avg) * 100;
 
-    fonmodule = avg;
+    Data.fonmodule = avg;
 
     return epsi * 10;
   }
@@ -363,7 +363,7 @@ uint32_t calc_ab(void)
   {
     AB_level += Detector_AB_massive[i]; // подсчет импульсов за минуту
   }
-  gamma_level = (float) fon_level / ((float) Settings.Second_count / 60);       // 198 имп/м
+  gamma_level = (float) Data.fon_level / ((float) Settings.Second_count / 60);  // 198 имп/м
 
   if(AB_level <= gamma_level)
     return 0;
@@ -388,9 +388,9 @@ void recalculate_fon(void)
 {
   uint32_t i, pointer;
   uint32_t massive_len = Settings.Second_count >> 2;    // 50@200 62@250
-  uint32_t recalc_len = massive_len / auto_speedup_factor;      // 62/9 = 6.8
+  uint32_t recalc_len = massive_len / Data.auto_speedup_factor; // 62/9 = 6.8
 
-  fon_level = 0;
+  Data.fon_level = 0;
 
   for (i = 0; i < recalc_len; i++)
   {
@@ -401,10 +401,10 @@ void recalculate_fon(void)
     {
       pointer = massive_len - (i - Detector_massive_pointer);
     }
-    fon_level += Detector_massive[pointer];
+    Data.fon_level += Detector_massive[pointer];
   }
 
-  fon_level = (fon_level * auto_speedup_factor) + ((fon_level / recalc_len) * (massive_len % auto_speedup_factor));     // фон 6-ти ячеек * 9 + ячейка 24000/6=4000; остаток от деления 8
+  Data.fon_level = (Data.fon_level * Data.auto_speedup_factor) + ((Data.fon_level / recalc_len) * (massive_len % Data.auto_speedup_factor));    // фон 6-ти ячеек * 9 + ячейка 24000/6=4000; остаток от деления 8
   // (4000/9*)8=3552; 24000+3552=27552
 }
 
@@ -460,13 +460,13 @@ void geiger_calc_fon(void)
 {
   DataUpdate.Need_fon_update = DISABLE;
   DataUpdate.Need_display_update = ENABLE;
-  if(fon_level > Settings.Alarm_level && Settings.Alarm_level > 0 && Alarm.Alarm_active == DISABLE)
+  if(Data.fon_level > Settings.Alarm_level && Settings.Alarm_level > 0 && Alarm.Alarm_active == DISABLE)
   {
     Alarm.Alarm_active = ENABLE;
     Alarm.User_cancel = DISABLE;
     if(Power.Display_active == DISABLE)
     {
-      screen = 1;
+      Data.screen = 1;
       Power.sleep_time = Settings.Sleep_time;
       sleep_mode(DISABLE);
       sound_activate();
@@ -474,7 +474,7 @@ void geiger_calc_fon(void)
       sound_activate();
 
   }
-  if((Alarm.Alarm_active && fon_level < Settings.Alarm_level) || (Alarm.Alarm_active && Settings.Alarm_level == 0))
+  if((Alarm.Alarm_active && Data.fon_level < Settings.Alarm_level) || (Alarm.Alarm_active && Settings.Alarm_level == 0))
   {
     sound_deactivate();
     Power.Sound_active = DISABLE;

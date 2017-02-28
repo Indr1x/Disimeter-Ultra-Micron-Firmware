@@ -84,6 +84,8 @@ typedef enum
 
 #define AMODUL_Alarm_level_address         0xEC
 
+#define Beep_freq_address         				 0xF0
+
 extern uint32_t NbrOfPage, Address;
 
 

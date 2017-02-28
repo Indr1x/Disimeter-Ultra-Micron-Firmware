@@ -136,7 +136,7 @@ void ab_meas_on()
   Settings.AB_mode = 2;
   for (i = 0; i < 15; i++)
     Detector_AB_massive[i] = 0; // подсчет импульсов за минуту
-  AB_fon = 0;
+  Data.AB_fon = 0;
 
 }
 
@@ -159,10 +159,10 @@ void plus_ab_engage(uint32_t * param)
   Settings.AB_mode = 1;
   for (i = 0; i < 15; i++)
     Detector_AB_massive[i] = 0; // подсчет импульсов за минуту
-  AB_fon = 0;
-  menu_select = 0;
-  enter_menu_item = DISABLE;
-  screen = 1;
+  Data.AB_fon = 0;
+  Data.menu_select = 0;
+  Data.enter_menu_item = DISABLE;
+  Data.screen = 1;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,21 +173,25 @@ void plus_amodul_engage(uint32_t * param)
 
   Settings.AMODUL_Alarm_level_raw = (Settings.AMODUL_Alarm_level * Settings.ACAL_count) / 100;
   Settings.AMODUL_mode = 1;
+
+  // Запуск подсистем модуля
+  tim4_Config();
+
   for (i = 99; i > 0; i--)
   {
-    AMODULE_fon[i] = 0;
+    Data.AMODULE_fon[i] = 0;
   }
-  AMODULE_fon[0] = 0;
+  Data.AMODULE_fon[0] = 0;
 
   Set_next_B_alarm_wakeup();
   RTC_ITConfig(RTC_IT_ALRB, ENABLE);
   RTC_AlarmCmd(RTC_Alarm_B, ENABLE);
   RTC_ClearFlag(RTC_FLAG_ALRBF);
 
-  menu_select = 0;
-  modul_menu_select = 0;
-  enter_menu_item = DISABLE;
-  screen = 1;
+  Data.menu_select = 0;
+  Data.modul_menu_select = 0;
+  Data.enter_menu_item = DISABLE;
+  Data.screen = 1;
 
 }
 
@@ -201,13 +205,13 @@ void plus_doze_reset(uint32_t * param)  // Сброс дозы
   {
     ram_Doze_massive[i] = 0;
     ram_max_fon_massive[i] = 0;
-    Doze_hour_count += ram_Doze_massive[i];
-    Doze_day_count += ram_Doze_massive[i];
-    Doze_week_count += ram_Doze_massive[i];
+    Data.Doze_hour_count += ram_Doze_massive[i];
+    Data.Doze_day_count += ram_Doze_massive[i];
+    Data.Doze_week_count += ram_Doze_massive[i];
   }
-  Doze_hour_count = 0;
-  Doze_day_count = 0;
-  Doze_week_count = 0;
+  Data.Doze_hour_count = 0;
+  Data.Doze_day_count = 0;
+  Data.Doze_week_count = 0;
   DataUpdate.doze_sec_count = 0;
 
 }
@@ -757,7 +761,7 @@ void minus_poweroff(uint32_t * param)   // выключение
 // перезагрузка и выключение
 void usb_activate(uint32_t * param)     // Включение USB
 {
-  USB_not_active = 0;
+  Data.USB_not_active = 0;
   if(!Power.USB_active)
   {
     USB_on();
@@ -813,9 +817,9 @@ void keys_proccessing(void)
       {
       } else
       {
-        AMODULE_page++;
-        if(AMODULE_page >= 5)
-          AMODULE_page = 0;
+        Data.AMODULE_page++;
+        if(Data.AMODULE_page >= 5)
+          Data.AMODULE_page = 0;
       }
     }
 
@@ -826,63 +830,63 @@ void keys_proccessing(void)
     } else
     {
 
-      if((screen == 2 && enter_menu_item == DISABLE) && (Settings.AMODUL_menu == 0))
-        menu_select--;
-      if((Settings.AMODUL_menu > 0) && (enter_menu_item == DISABLE))
-        modul_menu_select--;
-      if(screen == 1)
-        main_menu_stat++;
-      if(screen == 3)
+      if((Data.screen == 2 && Data.enter_menu_item == DISABLE) && (Settings.AMODUL_menu == 0))
+        Data.menu_select--;
+      if((Settings.AMODUL_menu > 0) && (Data.enter_menu_item == DISABLE))
+        Data.modul_menu_select--;
+      if(Data.screen == 1)
+        Data.main_menu_stat++;
+      if(Data.screen == 3)
       {
-        if(stat_screen_number == 1)
+        if(Data.stat_screen_number == 1)
         {
-          stat_screen_number = 0;
+          Data.stat_screen_number = 0;
         } else
         {
-          stat_screen_number++;
+          Data.stat_screen_number++;
         }
       }
       if(hidden_menu)
       {
-        if(menu_select > max_struct_index)
-          menu_select = max_struct_index;
+        if(Data.menu_select > max_struct_index)
+          Data.menu_select = max_struct_index;
       } else
       {
-        if(menu_select > max_public_string_count)
-          menu_select = max_public_string_count;
+        if(Data.menu_select > max_public_string_count)
+          Data.menu_select = max_public_string_count;
       }
-      if(modul_menu_select > modul_max_struct_index)
-        modul_menu_select = modul_max_struct_index;
+      if(Data.modul_menu_select > modul_max_struct_index)
+        Data.modul_menu_select = modul_max_struct_index;
 
 
       key = 0;
 
       ///////////
-      if((enter_menu_item == ENABLE) && (Settings.AMODUL_menu == 0))
+      if((Data.enter_menu_item == ENABLE) && (Settings.AMODUL_menu == 0))
       {
 
-        if(menu_select > max_struct_index)
+        if(Data.menu_select > max_struct_index)
           return;
-        if(menu_select == 0)
+        if(Data.menu_select == 0)
           return;
 
-        if(Menu_list[menu_select - 1].Plus_reaction != 0x00)    // Если адрес функции существует, то выполнить ее.
+        if(Menu_list[Data.menu_select - 1].Plus_reaction != 0x00)       // Если адрес функции существует, то выполнить ее.
         {
-          (*Menu_list[menu_select - 1].Plus_reaction) (&menu_select);   // запуск  функции - гиперхак мать его :)
+          (*Menu_list[Data.menu_select - 1].Plus_reaction) (&Data.menu_select); // запуск  функции - гиперхак мать его :)
         }
       }
       ///////////
-      if((Settings.AMODUL_menu > 0) && (enter_menu_item == ENABLE))
+      if((Settings.AMODUL_menu > 0) && (Data.enter_menu_item == ENABLE))
       {
 
-        if(modul_menu_select > modul_max_struct_index)
+        if(Data.modul_menu_select > modul_max_struct_index)
           return;
-        if(modul_menu_select == 0)
+        if(Data.modul_menu_select == 0)
           return;
 
-        if(Modul_Menu_list[modul_menu_select - 1].Plus_reaction != 0x00)        // Если адрес функции существует, то выполнить ее.
+        if(Modul_Menu_list[Data.modul_menu_select - 1].Plus_reaction != 0x00)   // Если адрес функции существует, то выполнить ее.
         {
-          (*Modul_Menu_list[modul_menu_select - 1].Plus_reaction) (&modul_menu_select); // запуск  функции - гиперхак мать его :)
+          (*Modul_Menu_list[Data.modul_menu_select - 1].Plus_reaction) (&Data.modul_menu_select);       // запуск  функции - гиперхак мать его :)
         }
       }
     }
@@ -902,7 +906,7 @@ void keys_proccessing(void)
       if(Settings.AMODUL_unit == 3)
       {
         for (i = 0; i < 100; i++)
-          AMODULE_len[i] = 0;
+          Data.AMODULE_len[i] = 0;
       }
       if(Settings.AMODUL_unit > 3)
         Settings.AMODUL_unit = 0;
@@ -914,61 +918,61 @@ void keys_proccessing(void)
       key = 0;
     } else
     {
-      if((screen == 2 && enter_menu_item == DISABLE) && (Settings.AMODUL_menu == 0))
-        menu_select++;
-      if((Settings.AMODUL_menu != 0) && (enter_menu_item == DISABLE))
-        modul_menu_select++;
-      if(screen == 1)
-        main_menu_stat--;
-      if(screen == 3)
+      if((Data.screen == 2 && Data.enter_menu_item == DISABLE) && (Settings.AMODUL_menu == 0))
+        Data.menu_select++;
+      if((Settings.AMODUL_menu != 0) && (Data.enter_menu_item == DISABLE))
+        Data.modul_menu_select++;
+      if(Data.screen == 1)
+        Data.main_menu_stat--;
+      if(Data.screen == 3)
       {
-        if(stat_screen_number == 0)
+        if(Data.stat_screen_number == 0)
         {
 
-          stat_screen_number = 1;
+          Data.stat_screen_number = 1;
         } else
         {
-          stat_screen_number--;
+          Data.stat_screen_number--;
         }
       }
       if(hidden_menu)
       {
-        if(menu_select > max_struct_index)
-          menu_select = 0;
+        if(Data.menu_select > max_struct_index)
+          Data.menu_select = 0;
       } else
       {
-        if(menu_select > max_public_string_count)
-          menu_select = 0;
+        if(Data.menu_select > max_public_string_count)
+          Data.menu_select = 0;
       }
-      if(modul_menu_select > modul_max_struct_index)
-        modul_menu_select = 0;
+      if(Data.modul_menu_select > modul_max_struct_index)
+        Data.modul_menu_select = 0;
 
       key = 0;
 
       ///////////
-      if((enter_menu_item == ENABLE) && (Settings.AMODUL_menu == 0))
+      if((Data.enter_menu_item == ENABLE) && (Settings.AMODUL_menu == 0))
       {
-        if(menu_select > max_struct_index)
+        if(Data.menu_select > max_struct_index)
           return;
-        if(menu_select == 0)
+        if(Data.menu_select == 0)
           return;
 
-        if(Menu_list[menu_select - 1].Minus_reaction != 0x00)   // Если адрес функции существует, то выполнить ее.
+        if(Menu_list[Data.menu_select - 1].Minus_reaction != 0x00)      // Если адрес функции существует, то выполнить ее.
         {
-          (*Menu_list[menu_select - 1].Minus_reaction) (&menu_select);  // запуск  функции - гиперхак мать его :)
+          (*Menu_list[Data.menu_select - 1].Minus_reaction) (&Data.menu_select);        // запуск  функции - гиперхак мать его :)
         }
       }
       ///////////
-      if((Settings.AMODUL_menu != 0) && (enter_menu_item == ENABLE))
+      if((Settings.AMODUL_menu != 0) && (Data.enter_menu_item == ENABLE))
       {
-        if(modul_menu_select > modul_max_struct_index)
+        if(Data.modul_menu_select > modul_max_struct_index)
           return;
-        if(modul_menu_select == 0)
+        if(Data.modul_menu_select == 0)
           return;
 
-        if(Modul_Menu_list[modul_menu_select - 1].Minus_reaction != 0x00)       // Если адрес функции существует, то выполнить ее.
+        if(Modul_Menu_list[Data.modul_menu_select - 1].Minus_reaction != 0x00)  // Если адрес функции существует, то выполнить ее.
         {
-          (*Modul_Menu_list[modul_menu_select - 1].Minus_reaction) (&modul_menu_select);        // запуск  функции - гиперхак мать его :)
+          (*Modul_Menu_list[Data.modul_menu_select - 1].Minus_reaction) (&Data.modul_menu_select);      // запуск  функции - гиперхак мать его :)
         }
       }
     }
@@ -991,19 +995,15 @@ void keys_proccessing(void)
     if(Settings.AMODUL_mode > 0)
     {
 //      Если нажали кнопку в режиме модуля-А
-//      Settings.AMODUL_mode = 0;
-//      RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
-//      RTC_ITConfig(RTC_IT_ALRB, DISABLE);
-//      RTC_ClearFlag(RTC_FLAG_ALRBF);
 
-      if(modul_menu_select > 0)
+      if(Data.modul_menu_select > 0)
       {
-        if(enter_menu_item == DISABLE)
+        if(Data.enter_menu_item == DISABLE)
         {
-          enter_menu_item = ENABLE;
+          Data.enter_menu_item = ENABLE;
         } else
         {
-          enter_menu_item = DISABLE;
+          Data.enter_menu_item = DISABLE;
           eeprom_apply_settings();      //применяем параметры
           eeprom_write_settings();      //сохраняем параметры
         }
@@ -1020,27 +1020,27 @@ void keys_proccessing(void)
       if(Settings.AB_mode > 0)
       {
         Settings.AB_mode = 0;   // отмена режима Альфа-Бета
-        AB_fon = 0;
+        Data.AB_fon = 0;
       } else
       {
-        if(menu_select > 0)
+        if(Data.menu_select > 0)
         {
-          if(enter_menu_item == DISABLE)
+          if(Data.enter_menu_item == DISABLE)
           {
-            enter_menu_item = ENABLE;
+            Data.enter_menu_item = ENABLE;
           } else
           {
-            enter_menu_item = DISABLE;
+            Data.enter_menu_item = DISABLE;
             eeprom_apply_settings();    //применяем параметры
             eeprom_write_settings();    //сохраняем параметры
           }
         }
       }
-      if(menu_select == 0)
-        screen++;
+      if(Data.menu_select == 0)
+        Data.screen++;
     }
   }
-  if(screen > 3)
-    screen = 1;
+  if(Data.screen > 3)
+    Data.screen = 1;
 
 }

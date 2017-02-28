@@ -27,6 +27,7 @@ void eeprom_write_default_settings(void)
     Settings.VRef = 1224;
     Settings.Pump_aggressive = 0;
     Settings.Speedup = 0;
+    Settings.Beep_freq = 80;
     Settings.Isotop = 0;
     Settings.Isotop_counts = 1;
     Settings.Isotop_count_cs137 = 250;
@@ -97,6 +98,8 @@ void eeprom_write_settings(void)
     eeprom_write(units_address, Settings.units);
   if(eeprom_read(Speedup_address) != Settings.Speedup)
     eeprom_write(Speedup_address, Settings.Speedup);
+  if(eeprom_read(Beep_freq_address) != Settings.Beep_freq)
+    eeprom_write(Beep_freq_address, Settings.Beep_freq);
 
   if(eeprom_read(Isotop_address) != Settings.Isotop)
     eeprom_write(Isotop_address, Settings.Isotop);
@@ -192,6 +195,11 @@ void eeprom_apply_settings(void)
   }
   // -------------------------------------------------------------------
   if(eeprom_read(v4_target_pump_address) != Settings.v4_target_pump)
+  {
+    reset_TIM_prescallers_and_Compare();
+  }
+  // -------------------------------------------------------------------
+  if(eeprom_read(Beep_freq_address) != Settings.Beep_freq)
   {
     reset_TIM_prescallers_and_Compare();
   }
@@ -343,6 +351,7 @@ void eeprom_read_settings(void)
   Settings.VRef = eeprom_read(VRef_address);
   Settings.Pump_aggressive = eeprom_read(Pump_aggressive_address);
   Settings.Speedup = eeprom_read(Speedup_address);
+  Settings.Beep_freq = eeprom_read(Beep_freq_address);
 
   Settings.Isotop = eeprom_read(Isotop_address);
   Settings.Isotop_counts = eeprom_read(Isotop_counts_address);

@@ -61,9 +61,9 @@ void reset_TIM_prescallers_and_Compare(void)
   uint32_t pump_period;
 
   SystemCoreClockUpdate();
-  TIM_PrescalerConfig(TIM10, (uint32_t) (SystemCoreClock / 128000) - 1, TIM_PSCReloadMode_Immediate);   // частота таймера 128 к√ц
+  TIM_PrescalerConfig(TIM10, (uint32_t) (SystemCoreClock / (Settings.Beep_freq * 16)) - 1, TIM_PSCReloadMode_Immediate);        // частота таймера 128 к√ц
   TIM_PrescalerConfig(TIM3, (uint32_t) (SystemCoreClock / 800) - 1, TIM_PSCReloadMode_Immediate);       // ƒелитель (1 тик = 1.25мс)
-  TIM_PrescalerConfig(TIM4, (uint32_t) (SystemCoreClock / 1000) - 1, TIM_PSCReloadMode_Immediate);      // ƒелитель (1 тик = 10мс)
+  TIM_PrescalerConfig(TIM4, (uint32_t) (SystemCoreClock / 100) - 1, TIM_PSCReloadMode_Immediate);       // ƒелитель (1 тик = 10мс)
   TIM_PrescalerConfig(TIM9, (uint32_t) (SystemCoreClock / 4000000) - 1, TIM_PSCReloadMode_Immediate);   // 0.25 мкс
 
 #ifdef version_401
@@ -159,7 +159,7 @@ void timer10_Config(void)       // генераци€ звука
   TIM_OCConfig.TIM_OutputState = TIM_OutputState_Enable;
   TIM_OCConfig.TIM_OCPolarity = TIM_OCPolarity_High;
 
-  TIM_BaseConfig.TIM_Prescaler = (uint32_t) (SystemCoreClock / 128000) - 1;     // частота таймера 32 к√ц
+  TIM_BaseConfig.TIM_Prescaler = (uint32_t) (SystemCoreClock / (Settings.Beep_freq * 16)) - 1;  // частота таймера 16 к√ц
   TIM_BaseConfig.TIM_Period = 16;       // ~8 к√ц
   TIM_OCConfig.TIM_Pulse = 8;   // —кваженность ~50% 
   //  ак € пон€л - автоматическа€ перезар€дка таймера, если неправ - поправте.
@@ -175,7 +175,7 @@ void timer10_Config(void)       // генераци€ звука
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;    // Ќожка
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
   GPIO_Init(GPIOB, &GPIO_InitStructure);        // «агружаем конфигурацию
   GPIO_PinAFConfig(GPIOB, GPIO_PinSource12, GPIO_AF_TIM10);
 // ===============================================================================================  
@@ -269,9 +269,9 @@ void tim4_Config()              // ћодуль-ј - поиск
 
   TIM_TimeBaseStructInit(&TIM_BaseConfig);
 
-  TIM_BaseConfig.TIM_Prescaler = (uint16_t) (SystemCoreClock / 1000) - 1;       // ƒелитель (1 тик = 1мс)
+  TIM_BaseConfig.TIM_Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;        // ƒелитель (1 тик = 10мс)
   TIM_BaseConfig.TIM_ClockDivision = 0;
-  TIM_BaseConfig.TIM_Period = 100;      // ќбщее количество тиков
+  TIM_BaseConfig.TIM_Period = 10;       // ќбщее количество тиков
   TIM_BaseConfig.TIM_CounterMode = TIM_CounterMode_Up;
 
   TIM_ARRPreloadConfig(TIM4, ENABLE);

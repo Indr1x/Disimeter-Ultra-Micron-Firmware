@@ -1,13 +1,8 @@
 #include "stm32l1xx_it.h"
 #include "main.h"
 
-
-
-uint16_t tmpCC1[2] = { 0, 0 };
-
-extern __IO uint32_t CaptureNumber, PeriodValue;
-uint32_t IC1ReadValue1 = 0, IC1ReadValue2 = 0;
-
+//extern __IO uint32_t CaptureNumber, PeriodValue;
+//uint32_t IC1ReadValue1 = 0, IC1ReadValue2 = 0;
 
 // ===============================================================================================
 void NMI_Handler(void)
@@ -188,13 +183,13 @@ void EXTI9_5_IRQHandler(void)
 
       if(Power.Pump_active == DISABLE)
       {
-        if(last_count_pump_on_impulse > 10)
+        if(Data.last_count_pump_on_impulse > 10)
         {
           pump_on_impulse = ENABLE;
-          last_count_pump_on_impulse = 0;
+          Data.last_count_pump_on_impulse = 0;
           Pump_now(ENABLE);
         } else
-          last_count_pump_on_impulse++;
+          Data.last_count_pump_on_impulse++;
       }
       if(Settings.Sound && !(Alarm.Alarm_active && !Alarm.User_cancel))
       {
@@ -243,7 +238,7 @@ void TIM9_IRQHandler(void)
   if((TIM9->CCER & (TIM_CCx_Enable << TIM_Channel_1)) && !poweroff_state)
   {
     current_pulse_count++;
-    pump_counter_avg_impulse_by_1sec[0]++;
+    Data.pump_counter_avg_impulse_by_1sec[0]++;
     if(COMP->CSR & COMP_CSR_INSEL)      // если компаратор активен
     {
       if(Power.Pump_active == DISABLE)
@@ -324,22 +319,22 @@ void TIM2_IRQHandler(void)
       if(!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1))
       {
         spect_impulse = ENABLE;
-        AMODULE_timstart = TIM_GetCapture2(TIM2);
-        AMODULE_fon[0]++;
-        AMODULE_find[0]++;
+        Data.AMODULE_timstart = TIM_GetCapture2(TIM2);
+        Data.AMODULE_fon[0]++;
+        Data.AMODULE_find[0]++;
       }
     } else
     {
       spect_impulse = DISABLE;
-      AMODULE_timend = TIM_GetCapture2(TIM2);
+      Data.AMODULE_timend = TIM_GetCapture2(TIM2);
 
       /* Capture computation */
-      if(AMODULE_timend > AMODULE_timstart)
+      if(Data.AMODULE_timend > Data.AMODULE_timstart)
       {
-        i = (AMODULE_timend - AMODULE_timstart) - 1;
-      } else if(AMODULE_timend < AMODULE_timstart)
+        i = (Data.AMODULE_timend - Data.AMODULE_timstart) - 1;
+      } else if(Data.AMODULE_timend < Data.AMODULE_timstart)
       {
-        i = ((0xFFFF - AMODULE_timstart) + AMODULE_timend) - 1;
+        i = ((0xFFFF - Data.AMODULE_timstart) + Data.AMODULE_timend) - 1;
       } else
       {
         i = 0;
@@ -351,7 +346,7 @@ void TIM2_IRQHandler(void)
 
       if(i < 100)
       {
-        AMODULE_len[i]++;       // Фон Модуля-А
+        Data.AMODULE_len[i]++;  // Фон Модуля-А
       }
     }
     if(Isotop_counts >= Settings.Isotop_counts)
@@ -377,19 +372,19 @@ void TIM4_IRQHandler(void)
     if(Settings.AMODUL_mode != 0)
     {
 
-      AMODULE_find_summ = AMODULE_find[0];
+      Data.AMODULE_find_summ = Data.AMODULE_find[0];
       for (i = 9; i > 0; i--)
       {
-        AMODULE_find_summ += AMODULE_find[i];
-        AMODULE_find[i] = AMODULE_find[i - 1];
+        Data.AMODULE_find_summ += Data.AMODULE_find[i];
+        Data.AMODULE_find[i] = Data.AMODULE_find[i - 1];
       }
-      AMODULE_find[0] = 0;
+      Data.AMODULE_find[0] = 0;
 
       if(Settings.AMODUL_unit == 2)
         DataUpdate.Need_display_update = ENABLE;
 
       if(Settings.AMODUL_Alarm_level > 0)
-        if(AMODULE_find_summ > Settings.AMODUL_Alarm_level_raw)
+        if(Data.AMODULE_find_summ > Settings.AMODUL_Alarm_level_raw)
         {
           if(Alarm.Alarm_active == DISABLE)
             Alarm.User_cancel = DISABLE;
@@ -437,23 +432,29 @@ void RTC_Alarm_IRQHandler(void)
       {
         for (i = 59; i > 0; i--)
         {
-          AMODULE_fon[i] = AMODULE_fon[i - 1];
+          Data.AMODULE_fon[i] = Data.AMODULE_fon[i - 1];
         }
 
-        AMODULE_fon[0] = 0;
+        Data.AMODULE_fon[0] = 0;
 
-        if((AMODULE_fon[0] == 0) && (AMODULE_fon[1] == 0) && (AMODULE_fon[2] == 0))     // Если от модуля-А не поступает данных три цыкла, деактивируем его.
+        if((Data.AMODULE_fon[0] == 0) && (Data.AMODULE_fon[1] == 0) && (Data.AMODULE_fon[2] == 0))      // Если от модуля-А не поступает данных три цыкла, деактивируем его.
         {
 
           Settings.AMODUL_mode = 0;
-          modul_menu_select = 0;
-          menu_select = 0;
+          Data.modul_menu_select = 0;
+          Data.menu_select = 0;
           Settings.AMODUL_menu = 0;
-          enter_menu_item = DISABLE;
+          Data.enter_menu_item = DISABLE;
 
           RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
           RTC_ITConfig(RTC_IT_ALRB, DISABLE);
           RTC_ClearFlag(RTC_FLAG_ALRBF);
+
+          TIM_ITConfig(TIM4, TIM_IT_Update, DISABLE);
+          TIM_Cmd(TIM4, DISABLE);
+          RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, DISABLE);
+
+
         }
         DataUpdate.Need_display_update = ENABLE;
       }
@@ -481,7 +482,7 @@ void RTC_Alarm_IRQHandler(void)
           if(Settings.Second_count > Cal_count_time)
           {
             Cal_count_time += 4;
-            Cal_count_mass[Cal_count] += Detector_massive[Detector_massive_pointer];
+            Data.Cal_count_mass[Cal_count] += Detector_massive[Detector_massive_pointer];
           } else
           {
             Cal_count_time = 0;
@@ -492,9 +493,9 @@ void RTC_Alarm_IRQHandler(void)
 
       if(Power.USB_active)
       {
-        USB_not_active++;       // Счетчик неактивности USB
+        Data.USB_not_active++;  // Счетчик неактивности USB
         if(Settings.AB_mode < 2)
-          madorc_impulse += Detector_massive[Detector_massive_pointer]; // Счетчик импульсов для передачи по USB
+          Data.madorc_impulse += Detector_massive[Detector_massive_pointer];    // Счетчик импульсов для передачи по USB
       }
       // Счетчик времени для обновления напряжения АКБ (каждые 4 минуты)
       if(DataUpdate.Batt_update_time_counter > 75)
@@ -513,13 +514,13 @@ void RTC_Alarm_IRQHandler(void)
       if(DataUpdate.pump_counter_update_time > 14)
       {
         if(!Power.USB_active)
-          madorc_impulse = 0;
+          Data.madorc_impulse = 0;
 
-        pump_counter_avg_impulse_by_1sec[1] = pump_counter_avg_impulse_by_1sec[0];
-        pump_counter_avg_impulse_by_1sec[0] = 0;
+        Data.pump_counter_avg_impulse_by_1sec[1] = Data.pump_counter_avg_impulse_by_1sec[0];
+        Data.pump_counter_avg_impulse_by_1sec[0] = 0;
         DataUpdate.pump_counter_update_time = 0;
 
-        if(pump_counter_avg_impulse_by_1sec[1] == 0)    //затычка на случай глюка с накачкой
+        if(Data.pump_counter_avg_impulse_by_1sec[1] == 0)       //затычка на случай глюка с накачкой
         {
 //          dac_init();
           Pump_now(DISABLE);
@@ -536,7 +537,7 @@ void RTC_Alarm_IRQHandler(void)
       if(DataUpdate.days_sec_count >= 24600)    // каждые 24 часа минут
       {
         DataUpdate.days_sec_count = 0;
-        working_days++;
+        Data.working_days++;
 
       } else
         DataUpdate.days_sec_count++;
@@ -581,7 +582,7 @@ void RTC_Alarm_IRQHandler(void)
 
       if(Settings.AB_mode == 2)
       {
-        AB_fon = calc_ab();
+        Data.AB_fon = calc_ab();
 
         for (i = 14; i > 0; i--)
         {
@@ -594,53 +595,53 @@ void RTC_Alarm_IRQHandler(void)
       if(Settings.AB_mode < 2)
         if(Detector_massive[Detector_massive_pointer] >= 10 && Settings.Speedup == 1)
         {
-          auto_speedup_factor = 1;
+          Data.auto_speedup_factor = 1;
           if(Detector_massive[Detector_massive_pointer] > 300)  // деление на 9 при фоне более 10 000
           {
-            if(auto_speedup_factor != 99)
-              auto_speedup_factor = 99;
+            if(Data.auto_speedup_factor != 99)
+              Data.auto_speedup_factor = 99;
           } else
           {
             if(Detector_massive[Detector_massive_pointer] > 199)        // деление на 9 при фоне более 10 000
             {
-              if(auto_speedup_factor != 30)
-                auto_speedup_factor = 30;
+              if(Data.auto_speedup_factor != 30)
+                Data.auto_speedup_factor = 30;
             } else
             {
               if(Detector_massive[Detector_massive_pointer] > 99)       // деление на 5 при фоне более 5 000
               {
-                if(auto_speedup_factor != 10)
-                  auto_speedup_factor = 10;
+                if(Data.auto_speedup_factor != 10)
+                  Data.auto_speedup_factor = 10;
               } else
               {
                 if(Detector_massive[Detector_massive_pointer] > 19)     // деление на 3 при фоне более 1 000
                 {
-                  if(auto_speedup_factor != 4)
-                    auto_speedup_factor = 4;
+                  if(Data.auto_speedup_factor != 4)
+                    Data.auto_speedup_factor = 4;
                 } else
                 {               // деление на 2 при фоне более 500
-                  if(auto_speedup_factor != 2)
-                    auto_speedup_factor = 2;
+                  if(Data.auto_speedup_factor != 2)
+                    Data.auto_speedup_factor = 2;
                 }
               }
             }
           }
 
-          if(auto_speedup_factor > (Settings.Second_count >> 3))
-            auto_speedup_factor = (Settings.Second_count >> 3); // пересчет фона, если активированно ускорение
-          if(auto_speedup_factor != 1)
+          if(Data.auto_speedup_factor > (Settings.Second_count >> 3))
+            Data.auto_speedup_factor = (Settings.Second_count >> 3);    // пересчет фона, если активированно ускорение
+          if(Data.auto_speedup_factor != 1)
             recalculate_fon();  // пересчет фона, если активированно ускорение
 
         } else
         {                       // если ускорение не требуется
-          if(auto_speedup_factor != 1)
+          if(Data.auto_speedup_factor != 1)
           {
-            auto_speedup_factor = 1;
+            Data.auto_speedup_factor = 1;
             recalculate_fon();
           } else
           {
             if(Settings.AB_mode < 2)
-              fon_level += Detector_massive[Detector_massive_pointer];
+              Data.fon_level += Detector_massive[Detector_massive_pointer];
           }
         }
 
@@ -649,18 +650,18 @@ void RTC_Alarm_IRQHandler(void)
         Detector_massive_pointer++;
         if(Detector_massive_pointer >= (Settings.Second_count >> 2))
         {
-          if(auto_speedup_factor == 1)
-            fon_level -= Detector_massive[0];
+          if(Data.auto_speedup_factor == 1)
+            Data.fon_level -= Detector_massive[0];
           Detector_massive[0] = 0;
           Detector_massive_pointer = 0;
         } else
         {
-          if(auto_speedup_factor == 1)
-            fon_level -= Detector_massive[Detector_massive_pointer];
+          if(Data.auto_speedup_factor == 1)
+            Data.fon_level -= Detector_massive[Detector_massive_pointer];
           Detector_massive[Detector_massive_pointer] = 0;
         }
-        if(fon_level > ram_max_fon_massive[0])
-          ram_max_fon_massive[0] = fon_level;   // заполнение массива максимального фона
+        if(Data.fon_level > ram_max_fon_massive[0])
+          ram_max_fon_massive[0] = Data.fon_level;      // заполнение массива максимального фона
       }
       DataUpdate.Need_fon_update = ENABLE;
       ////////////////////////////////////////////////////

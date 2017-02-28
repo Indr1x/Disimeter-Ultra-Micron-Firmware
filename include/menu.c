@@ -34,6 +34,7 @@ MenuItem Menu_list[max_struct_index] = {
 {0x01, LANG_BPROCENT,	"",						"",				LANG_BPROCENT_,	&Settings.Beta_procent,			1,			100,		37,			&plus_one,				&minus_one},
 {0x01, LANG_REF_VOLT,	"",						"",				LANG_REF_VOLT_,	&ADCData.Power_voltage,			1202,		1242,		1224,		&plus_one_ref,		&minus_one_ref},
 {0x01, LANG_BAT_CAL,	"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_batcal,			0x00},
+{0x01, LANG_SOUND,	  "",  					"",				LANG_UHZ2,			&Settings.Beep_freq,				1000,	  20000,	8000,		&plus_500,				&minus_500},
 {0x01, LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            &Settings.Pump_aggressive,	0,	    1,  		0,  		&plus_one,		   	&minus_one},
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,44 +89,44 @@ void main_screen()
       LcdBatt(84, 19, 84 + 10, 19 + 19, cal_read(ADCData.Batt_voltage));
     }
 
-    if(main_menu_stat > 8)
-      main_menu_stat = 1;
-    if(main_menu_stat < 1)
-      main_menu_stat = 8;
+    if(Data.main_menu_stat > 8)
+      Data.main_menu_stat = 1;
+    if(Data.main_menu_stat < 1)
+      Data.main_menu_stat = 8;
 
     if(DataUpdate.Need_update_mainscreen_counters == ENABLE)    // Если требуется обновление счетчиков
     {
       DataUpdate.Need_update_mainscreen_counters = DISABLE;
-      Max_fon = 0;
-      Doze_day_count = 0;
-      Doze_week_count = 0;
-      Doze_month_count = 0;
-      Doze_hour_count = 0;
-      Doze_2month_count = 0;
+      Data.Max_fon = 0;
+      Data.Doze_day_count = 0;
+      Data.Doze_week_count = 0;
+      Data.Doze_month_count = 0;
+      Data.Doze_hour_count = 0;
+      Data.Doze_2month_count = 0;
 
       for (i = doze_length_2month; i > 0; i--)
       {
         if(i < doze_length_hour)
-          Doze_hour_count += flash_read_massive(i, dose_select);        // расчет недельной дозы
+          Data.Doze_hour_count += flash_read_massive(i, dose_select);   // расчет недельной дозы
         if(i < doze_length_day)
-          Doze_day_count += flash_read_massive(i, dose_select); // расчет дневной дозы
+          Data.Doze_day_count += flash_read_massive(i, dose_select);    // расчет дневной дозы
         if(i < doze_length_week)
         {
-          Doze_week_count += flash_read_massive(i, dose_select);        // расчет недельной дозы
+          Data.Doze_week_count += flash_read_massive(i, dose_select);   // расчет недельной дозы
           x = flash_read_massive(i, max_fon_select);
-          if(x > Max_fon)
-            Max_fon = x;        // расчет максимального фона
+          if(x > Data.Max_fon)
+            Data.Max_fon = x;   // расчет максимального фона
         }
         if(i < doze_length_month)
-          Doze_month_count += flash_read_massive(i, dose_select);       // расчет месячной дозы
+          Data.Doze_month_count += flash_read_massive(i, dose_select);  // расчет месячной дозы
         if(i < doze_length_2month)
-          Doze_2month_count += flash_read_massive(i, dose_select);      // расчет месячной дозы
+          Data.Doze_2month_count += flash_read_massive(i, dose_select); // расчет месячной дозы
       }
     }
 
     if((Settings.AB_mode == 0) && (Settings.AMODUL_mode == 0))
     {
-      switch (main_menu_stat)
+      switch (Data.main_menu_stat)
       {
       case 0x01:
         sprintf(lcd_buf, LANG_TIME);    // Пишем в буфер значение счетчика
@@ -149,10 +150,10 @@ void main_screen()
 
         if(!Settings.units)
         {
-          sprintf(lcd_buf, LANG_9UMKR, Max_fon);        // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, LANG_9UMKR, Data.Max_fon);   // Пишем в буфер значение счетчика
         } else
         {
-          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv(Max_fon));       // Пишем в буфер значение счетчика
+          sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv(Data.Max_fon));  // Пишем в буфер значение счетчика
         }
         LcdString(1, 5);        // // Выводим обычным текстом содержание буфера
         break;
@@ -186,10 +187,10 @@ void main_screen()
         {
           if(!Settings.units)
           {
-            sprintf(lcd_buf, LANG_9UMKR, ((Doze_hour_count * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKR, ((Data.Doze_hour_count * (Settings.Second_count >> 2)) / 900));        // Пишем в буфер значение счетчика
           } else
           {
-            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_hour_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Data.Doze_hour_count * (Settings.Second_count >> 2)) / 900)); // Пишем в буфер значение счетчика
           }
         } else
         {
@@ -206,10 +207,10 @@ void main_screen()
         {
           if(!Settings.units)
           {
-            sprintf(lcd_buf, LANG_9UMKR, ((Doze_day_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKR, ((Data.Doze_day_count * (Settings.Second_count >> 2)) / 900)); // Пишем в буфер значение счетчика
           } else
           {
-            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_day_count * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Data.Doze_day_count * (Settings.Second_count >> 2)) / 900));  // Пишем в буфер значение счетчика
           }
         } else
         {
@@ -227,10 +228,10 @@ void main_screen()
         {
           if(!Settings.units)
           {
-            sprintf(lcd_buf, LANG_9UMKR, ((Doze_week_count * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKR, ((Data.Doze_week_count * (Settings.Second_count >> 2)) / 900));        // Пишем в буфер значение счетчика
           } else
           {
-            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_week_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Data.Doze_week_count * (Settings.Second_count >> 2)) / 900)); // Пишем в буфер значение счетчика
           }
         } else
         {
@@ -251,10 +252,10 @@ void main_screen()
         {
           if(!Settings.units)
           {
-            sprintf(lcd_buf, LANG_9UMKR, ((Doze_month_count * (Settings.Second_count >> 2)) / 900));    // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKR, ((Data.Doze_month_count * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
           } else
           {
-            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_month_count * (Settings.Second_count >> 2)) / 900));     // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Data.Doze_month_count * (Settings.Second_count >> 2)) / 900));        // Пишем в буфер значение счетчика
           }
         } else
         {
@@ -274,10 +275,10 @@ void main_screen()
         {
           if(!Settings.units)
           {
-            sprintf(lcd_buf, LANG_9UMKR, ((Doze_2month_count * (Settings.Second_count >> 2)) / 900));   // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKR, ((Data.Doze_2month_count * (Settings.Second_count >> 2)) / 900));      // Пишем в буфер значение счетчика
           } else
           {
-            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Doze_2month_count * (Settings.Second_count >> 2)) / 900));    // Пишем в буфер значение счетчика
+            sprintf(lcd_buf, LANG_9UMKZV, convert_mkr_sv((Data.Doze_2month_count * (Settings.Second_count >> 2)) / 900));       // Пишем в буфер значение счетчика
           }
         } else
         {
@@ -295,7 +296,7 @@ void main_screen()
     {
       // Режим "Замер А-В"
       if(Settings.AB_mode > 0)
-        Draw_fon_digit(4, 1, 0, fon_level, BETA, 0);
+        Draw_fon_digit(4, 1, 0, Data.fon_level, BETA, 0);
     }
 
     if(Settings.Cal_mode == 1)
@@ -303,16 +304,16 @@ void main_screen()
       sprintf(lcd_buf, "%2i  %5i", Cal_count, Cal_count_time);  // Пишем в буфер значение счетчика
       LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
 
-      sprintf(lcd_buf, LANG_FON_UMKZV, convert_mkr_sv(Cal_count_mass[Cal_count]));      // Пишем в буфер значение счетчика
+      sprintf(lcd_buf, LANG_FON_UMKZV, convert_mkr_sv(Data.Cal_count_mass[Cal_count])); // Пишем в буфер значение счетчика
       LcdString(1, 2);          // // Выводим обычным текстом содержание буфера    
     } else
     {
       if(!Settings.units)
       {
-        Draw_fon_digit(1, 1, 0, fon_level, MKRH, 1);
+        Draw_fon_digit(1, 1, 0, Data.fon_level, MKRH, 1);
       } else
       {
-        Draw_fon_digit(1, 1, 0, fon_level, SIVERT, 1);
+        Draw_fon_digit(1, 1, 0, Data.fon_level, SIVERT, 1);
       }
     }
     if((Settings.Second_count / 4) > 100)
@@ -323,10 +324,10 @@ void main_screen()
       Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, Detector_massive, Detector_massive_pointer, NORMAL);
     }
 
-    if(auto_speedup_factor > 1)
+    if(Data.auto_speedup_factor > 1)
     {
       Draw_speedup(2, 94, 67 - 25, 67);
-      sprintf(lcd_buf, "x%2u", auto_speedup_factor);    // Пишем в буфер значение счетчика
+      sprintf(lcd_buf, "x%2u", Data.auto_speedup_factor);       // Пишем в буфер значение счетчика
       LcdString(12, 3);         // // Выводим обычным текстом содержание буфера
     }
   } else
@@ -358,7 +359,7 @@ void amodul_screen()
     switch (Settings.AMODUL_unit)
     {
     case 0:
-      Draw_fon_digit(2, 1, 0, fonmodule, QUANT, 0);
+      Draw_fon_digit(2, 1, 0, Data.fonmodule, QUANT, 0);
 
       if(epsi >= 999)
         epsi = 999;
@@ -378,11 +379,11 @@ void amodul_screen()
       LcdBatt(84, 19 + 7, 84 + 10, 19 + 19 + 1, cal_read(ADCData.Batt_voltage));
 
 
-      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, Data.AMODULE_fon, 0, MODUL);
 
       break;
     case 1:
-      Draw_fon_digit(2, 1, 0, fonmodule, SIVERT, 0);
+      Draw_fon_digit(2, 1, 0, Data.fonmodule, SIVERT, 0);
 
       if(epsi >= 999)
         epsi = 999;
@@ -403,15 +404,15 @@ void amodul_screen()
 
 
 
-      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, Data.AMODULE_fon, 0, MODUL);
 
       break;
     case 2:
 
-      Draw_fon_digit(2, 1, 0, AMODULE_find_summ, SIVERT, 0);
-      Draw_fon_digit(4, 1, 0, fonmodule, SIVERT, 0);
+      Draw_fon_digit(2, 1, 0, Data.AMODULE_find_summ, SIVERT, 0);
+      Draw_fon_digit(4, 1, 0, Data.fonmodule, SIVERT, 0);
 
-      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, AMODULE_fon, 0, MODUL);
+      Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, Data.AMODULE_fon, 0, MODUL);
 
       break;
     case 3:
@@ -422,7 +423,7 @@ void amodul_screen()
       LcdString(1, 2);          // // Выводим обычным текстом содержание буфера
       sprintf(lcd_buf, LANG_SPECT_MARK_TEXT3);  // Пишем в буфер значение счетчика
       LcdString(1, 3);          // // Выводим обычным текстом содержание буфера
-      Draw_fon_graph(2, 96, 67 - 38, 67, SMALL_SIZE, AMODULE_len, 0, SPECTR);
+      Draw_fon_graph(2, 96, 67 - 38, 67, SMALL_SIZE, Data.AMODULE_len, 0, SPECTR);
 
       break;
     }
@@ -447,16 +448,16 @@ void menu_screen(uint32_t mode)
   LcdStringInv(1, 1);
   if(mode == AMODUL_menu_mode)  // Меню модуля-А
   {
-    if(modul_menu_select == 0)
+    if(Data.modul_menu_select == 0)
     {
       menu_page = 0;
     } else
     {
 
 
-      if(modul_menu_select <= modul_max_struct_index)
+      if(Data.modul_menu_select <= modul_max_struct_index)
       {
-        menu_page = (modul_menu_select - 1) / (max_string_count - start_offset);        // определение страницы меню (Публичное)
+        menu_page = (Data.modul_menu_select - 1) / (max_string_count - start_offset);   // определение страницы меню (Публичное)
       } else
       {
         menu_page = 0;
@@ -556,7 +557,7 @@ void menu_screen(uint32_t mode)
       // вывод на экран
       // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
       sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
-      if(modul_menu_select == menu_struct_index + 1 && enter_menu_item == DISABLE)      // Определение подсветки
+      if(Data.modul_menu_select == menu_struct_index + 1 && Data.enter_menu_item == DISABLE)    // Определение подсветки
       {
         LcdStringInv(1, i + start_offset + 1);
       } else
@@ -565,7 +566,7 @@ void menu_screen(uint32_t mode)
       }
 
       sprintf(lcd_buf, para_string);    // готовим к выводу на значения "10 сек"
-      if(modul_menu_select == menu_struct_index + 1)    // Определение подсветки
+      if(Data.modul_menu_select == menu_struct_index + 1)       // Определение подсветки
       {
         LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
       } else
@@ -578,7 +579,7 @@ void menu_screen(uint32_t mode)
 //**********************************************************************************************
   if(mode == NORMAL_menu_mode)
   {
-    if(menu_select == 0)
+    if(Data.menu_select == 0)
     {
       menu_page = 0;
     } else
@@ -586,12 +587,12 @@ void menu_screen(uint32_t mode)
 
       if(hidden_menu)
       {
-        menu_page = (menu_select - 1) / (max_string_count - start_offset);      // определение страницы меню (полное)
+        menu_page = (Data.menu_select - 1) / (max_string_count - start_offset); // определение страницы меню (полное)
       } else
       {
-        if(menu_select <= max_public_string_count)
+        if(Data.menu_select <= max_public_string_count)
         {
-          menu_page = (menu_select - 1) / (max_string_count - start_offset);    // определение страницы меню (Публичное)
+          menu_page = (Data.menu_select - 1) / (max_string_count - start_offset);       // определение страницы меню (Публичное)
         } else
         {
           menu_page = 0;
@@ -691,7 +692,7 @@ void menu_screen(uint32_t mode)
       // вывод на экран
       // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
       sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
-      if(menu_select == menu_struct_index + 1 && enter_menu_item == DISABLE)    // Определение подсветки
+      if(Data.menu_select == menu_struct_index + 1 && Data.enter_menu_item == DISABLE)  // Определение подсветки
       {
         LcdStringInv(1, i + start_offset + 1);
       } else
@@ -700,7 +701,7 @@ void menu_screen(uint32_t mode)
       }
 
       sprintf(lcd_buf, para_string);    // готовим к выводу на значения "10 сек"
-      if(menu_select == menu_struct_index + 1)  // Определение подсветки
+      if(Data.menu_select == menu_struct_index + 1)     // Определение подсветки
       {
         LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
       } else
@@ -720,7 +721,7 @@ void menu_screen(uint32_t mode)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void stat_screen()
 {
-  switch (stat_screen_number)
+  switch (Data.stat_screen_number)
   {
   case 0:
     sprintf(lcd_buf, LANG_STAT);
@@ -740,14 +741,14 @@ void stat_screen()
     LcdString(1, 6);            // // Выводим обычным текстом содержание буфера на строку 8
     sprintf(lcd_buf, LANG_IMPMINAR);    // Выводим на дисплей
     LcdString(1, 7);            // // Выводим обычным текстом содержание буфера на строку 8
-    if(pump_counter_avg_impulse_by_1sec[1] == 0)
+    if(Data.pump_counter_avg_impulse_by_1sec[1] == 0)
     {
       sprintf(lcd_buf, LANG_CALC2);
     }                           // Выводим на дисплей
     else
-      sprintf(lcd_buf, "%5i ", pump_counter_avg_impulse_by_1sec[1]);    // Выводим на дисплей
+      sprintf(lcd_buf, "%5i ", Data.pump_counter_avg_impulse_by_1sec[1]);       // Выводим на дисплей
     LcdString(1, 8);            // // Выводим обычным текстом содержание буфера на строку 8
-    sprintf(lcd_buf, LANG_4IDN, working_days);  // Выводим на дисплей
+    sprintf(lcd_buf, LANG_4IDN, Data.working_days);     // Выводим на дисплей
     LcdString(9, 8);            // // Выводим обычным текстом содержание буфера на строку 8
     break;
   case 1:
@@ -768,7 +769,7 @@ void stat_screen()
     LcdString(1, 8);
     break;
   default:
-    stat_screen_number = 0;
+    Data.stat_screen_number = 0;
     break;
   }
   LcdUpdate();

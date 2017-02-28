@@ -653,7 +653,7 @@ void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end
 {
   uint32_t i = 0;
   int massive_len = Settings.Second_count >> 2; // 50@200 62@250
-  int recalc_len = massive_len / auto_speedup_factor;   // 62/9 = 6
+  int recalc_len = massive_len / Data.auto_speedup_factor;      // 62/9 = 6
 
 
   if((Settings.Second_count / 4) > 100)
@@ -740,12 +740,12 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t invert, uint32_t f
     sprintf(lcd_buf, LANG_H);
     LcdString(((start_char + 6) * 2), line + 1);
 
-    if(fon_level <= 999999)     // 1Ð/÷
+    if(Data.fon_level <= 999999)        // 1Ð/÷
     {
-      sprintf(lcd_buf, "%6i", fon_level);
+      sprintf(lcd_buf, "%6i", Data.fon_level);
     } else
     {
-      sprintf(lcd_buf, "%5iK", fon_level / 1000);
+      sprintf(lcd_buf, "%5iK", Data.fon_level / 1000);
     }
     LcdStringBold(start_char, line);
   }
@@ -768,13 +768,13 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t invert, uint32_t f
       LcdString(((start_char + 6) * 2), line + 1);
     }
 
-    if(AB_fon < 1000000)
+    if(Data.AB_fon < 1000000)
     {
-      sprintf(lcd_buf, "%6i", AB_fon);
+      sprintf(lcd_buf, "%6i", Data.AB_fon);
       LcdStringBold(start_char, line);
     } else
     {
-      sprintf(lcd_buf, "%5iK", AB_fon / 1000);
+      sprintf(lcd_buf, "%5iK", Data.AB_fon / 1000);
       LcdStringBold(start_char, line);
     }
   }
