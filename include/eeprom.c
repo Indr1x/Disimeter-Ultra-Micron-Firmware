@@ -27,7 +27,7 @@ void eeprom_write_default_settings(void)
     Settings.VRef = 1224;
     Settings.Pump_aggressive = 0;
     Settings.Speedup = 0;
-    Settings.Beep_freq = 80;
+    Settings.Beep_freq = 8000;
     Settings.Isotop = 0;
     Settings.Isotop_counts = 1;
     Settings.Isotop_count_cs137 = 250;
