@@ -6,28 +6,81 @@ __IO TestStatus DataMemoryProgramStatus = PASSED;
 extern __IO uint8_t Receive_Buffer[VIRTUAL_COM_PORT_DATA_SIZE];
 uint32_t NbrOfPage = 0, j = 0, Address = 0;
 
+void eeprom_menu_working(uint32_t mode, uint32_t menu_massive)
+{
+  uint32_t i, max_element;
+
+  if(menu_massive == MAIN_MENU)
+  {
+    max_element = max_struct_index;
+  }
+
+  if(menu_massive == MODUL_MENU)
+  {
+    max_element = modul_max_struct_index;
+  }
+
+  if(mode == READ)
+  {
+    for (i = 0; i < max_element; i++)   // проход всех строк основного меню
+    {
+      if(Menu_list[i].EEPROM_address == 0xFFFF)
+      {
+        if(Menu_list[i].Parameter_value > 0)
+        {
+          *Menu_list[i].Parameter_value = Menu_list[i].Value_default;
+        }
+      } else
+      {
+
+        if(eeprom_read(Menu_list[i].EEPROM_address) != *Menu_list[i].Parameter_value)
+        {                       // ≈сли значение параметра не соответствует тому что в пам€ти, прочитать его из еепром
+          *Menu_list[i].Parameter_value = eeprom_read(Menu_list[i].EEPROM_address);
+          // ≈сли значение не укладываетс€ в приделы минимума-максмума, сбросить по умолчанию
+          if((*Menu_list[i].Parameter_value > Menu_list[i].Max_limit) || (*Menu_list[i].Parameter_value < Menu_list[i].Min_limit))
+          {
+            *Menu_list[i].Parameter_value = Menu_list[i].Value_default;
+            eeprom_write(Menu_list[i].EEPROM_address, *Menu_list[i].Parameter_value);
+          }
+          // ¬ыполнить обработчик изменений параметра
+          eeprom_apply_settings(i);
+        }
+
+      }
+    }
+  }
+
+  if(mode == WRITE)
+  {
+    for (i = 0; i < max_element; i++)   // проход всех строк основного меню
+    {
+      if(Menu_list[i].EEPROM_address != 0xFFFF)
+      {
+        if(eeprom_read(Menu_list[i].EEPROM_address) != *Menu_list[i].Parameter_value)
+        {                       // ≈сли значение параметра не соответствует тому что в пам€ти, записать его в еепром
+          // ≈сли значение не укладываетс€ в приделы минимума-максмума, сбросить по умолчанию
+          if((*Menu_list[i].Parameter_value > Menu_list[i].Max_limit) || (*Menu_list[i].Parameter_value < Menu_list[i].Min_limit))
+          {
+            *Menu_list[i].Parameter_value = Menu_list[i].Value_default;
+          }
+          // ¬ыполнить запись и обработчик изменений параметра
+          eeprom_write(Menu_list[i].EEPROM_address, *Menu_list[i].Parameter_value);
+          eeprom_apply_settings(i);
+        }
+      }
+    }
+  }
+
+}
+
 //**************************************************************************
 // «апись параметров по умолчанию
 void eeprom_write_default_settings(void)
 {
   if(eeprom_read(Isotop_count_cs137_address) == 0x00)
   {
-    Settings.Alarm_level = 50;
-    Settings.Sound = ENABLE;
-    Settings.Sleep_time = 80;
-    Settings.Display_reverse = 2;
-    Settings.LSI_freq = 37000;
-    Settings.Geiger_voltage = 360;
     Settings.Power_comp = 0;
-    Settings.Vibro = 0;
-    Settings.v4_target_pump = 8;
     Settings.units = 0;
-    Settings.Beta_window = 20;
-    Settings.Beta_procent = 37;
-    Settings.VRef = 1224;
-    Settings.Pump_aggressive = 0;
-    Settings.Speedup = 0;
-    Settings.Beep_freq = 8000;
     Settings.Isotop = 0;
     Settings.Isotop_counts = 1;
     Settings.Isotop_count_cs137 = 250;
@@ -39,73 +92,25 @@ void eeprom_write_default_settings(void)
     Settings.Isotop_count_y88 = 250;
     Settings.Isotop_count_ba133 = 250;
     Settings.Isotop_count_th228 = 250;
-    Settings.Isotop_ACAL_cs137 = 250;
-    Settings.Isotop_ACAL_eu152 = 250;
-    Settings.Isotop_ACAL_na22 = 250;
-    Settings.Isotop_ACAL_cd109 = 250;
-    Settings.Isotop_ACAL_am241 = 250;
-    Settings.Isotop_ACAL_ti44 = 250;
-    Settings.Isotop_ACAL_y88 = 250;
-    Settings.Isotop_ACAL_ba133 = 250;
-    Settings.Isotop_ACAL_th228 = 250;
-    Settings.AMODUL_Alarm_level = 100;
-    Settings.AMODUL_spect_start = 1000;
-    Settings.AMODUL_spect_multi = 14;
-    Settings.AMODUL_spect_mark1 = 10;
-    Settings.AMODUL_spect_mark2 = 20;
-    Settings.AMODUL_spect_mark3 = 30;
-    Settings.AMODUL_spect_mark4 = 40;
-    Settings.AMODUL_spect_mark5 = 50;
 
-
-    eeprom_write_settings();    // «апись
+    eeprom_write_settings(MAIN_MENU);   // «апись
+    eeprom_write_settings(MODUL_MENU);  // «апись
   }
 }
 
 //**************************************************************************
 
-void eeprom_write_settings(void)
+void eeprom_write_settings(uint32_t menu_massive)
 {
 
-  //«апись параметров в EEPROM
-  if(eeprom_read(Alarm_level_address) != Settings.Alarm_level)
-    eeprom_write(Alarm_level_address, Settings.Alarm_level);
-  if(eeprom_read(Sleep_time_address) != Settings.Sleep_time)
-    eeprom_write(Sleep_time_address, Settings.Sleep_time);
-  if(eeprom_read(contrast_address) != Settings.contrast)
-    eeprom_write(contrast_address, Settings.contrast);
-  if(eeprom_read(Display_reverse_address) != Settings.Display_reverse)
-    eeprom_write(Display_reverse_address, Settings.Display_reverse);
-  if(eeprom_read(Sound_address) != Settings.Sound)
-    eeprom_write(Sound_address, Settings.Sound);
-  if(eeprom_read(Power_comp_address) != Settings.Power_comp)
-    eeprom_write(Power_comp_address, Settings.Power_comp);
-  if(eeprom_read(Vibro_address) != Settings.Vibro)
-    eeprom_write(Vibro_address, Settings.Vibro);
-  if(eeprom_read(Geiger_voltage_address) != Settings.Geiger_voltage)
-    eeprom_write(Geiger_voltage_address, Settings.Geiger_voltage);
-  if(eeprom_read(v4_target_pump_address) != Settings.v4_target_pump)
-    eeprom_write(v4_target_pump_address, Settings.v4_target_pump);
-  if(eeprom_read(Beta_window_address) != Settings.Beta_window)
-    eeprom_write(Beta_window_address, Settings.Beta_window);
-  if(eeprom_read(Beta_procent_address) != Settings.Beta_procent)
-    eeprom_write(Beta_procent_address, Settings.Beta_procent);
+  eeprom_menu_working(WRITE, menu_massive);
+
   if(eeprom_read(VRef_address) != Settings.VRef)
     eeprom_write(VRef_address, Settings.VRef);
-  if(eeprom_read(Pump_aggressive_address) != Settings.Pump_aggressive)
-    eeprom_write(Pump_aggressive_address, Settings.Pump_aggressive);
-  if(eeprom_read(units_address) != Settings.units)
-    eeprom_write(units_address, Settings.units);
-  if(eeprom_read(Speedup_address) != Settings.Speedup)
-    eeprom_write(Speedup_address, Settings.Speedup);
-  if(eeprom_read(Beep_freq_address) != Settings.Beep_freq)
-    eeprom_write(Beep_freq_address, Settings.Beep_freq);
 
-  if(eeprom_read(Isotop_address) != Settings.Isotop)
-    eeprom_write(Isotop_address, Settings.Isotop);
-
-  if(eeprom_read(Isotop_counts_address) != Settings.Isotop_counts)
-    eeprom_write(Isotop_counts_address, Settings.Isotop_counts);
+  //«апись параметров в EEPROM
+  if(eeprom_read(Power_comp_address) != Settings.Power_comp)
+    eeprom_write(Power_comp_address, Settings.Power_comp);
 
   if(eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137)
     eeprom_write(Isotop_count_cs137_address, Settings.Isotop_count_cs137);
@@ -126,235 +131,89 @@ void eeprom_write_settings(void)
   if(eeprom_read(Isotop_count_th228_address) != Settings.Isotop_count_th228)
     eeprom_write(Isotop_count_th228_address, Settings.Isotop_count_th228);
 
-  if(eeprom_read(Isotop_ACAL_cs137_address) != Settings.Isotop_ACAL_cs137)
-    eeprom_write(Isotop_ACAL_cs137_address, Settings.Isotop_ACAL_cs137);
-  if(eeprom_read(Isotop_ACAL_eu152_address) != Settings.Isotop_ACAL_eu152)
-    eeprom_write(Isotop_ACAL_eu152_address, Settings.Isotop_ACAL_eu152);
-  if(eeprom_read(Isotop_ACAL_na22_address) != Settings.Isotop_ACAL_na22)
-    eeprom_write(Isotop_ACAL_na22_address, Settings.Isotop_ACAL_na22);
-  if(eeprom_read(Isotop_ACAL_cd109_address) != Settings.Isotop_ACAL_cd109)
-    eeprom_write(Isotop_ACAL_cd109_address, Settings.Isotop_ACAL_cd109);
-  if(eeprom_read(Isotop_ACAL_am241_address) != Settings.Isotop_ACAL_am241)
-    eeprom_write(Isotop_ACAL_am241_address, Settings.Isotop_ACAL_am241);
-  if(eeprom_read(Isotop_ACAL_ti44_address) != Settings.Isotop_ACAL_ti44)
-    eeprom_write(Isotop_ACAL_ti44_address, Settings.Isotop_ACAL_ti44);
-  if(eeprom_read(Isotop_ACAL_y88_address) != Settings.Isotop_ACAL_y88)
-    eeprom_write(Isotop_ACAL_y88_address, Settings.Isotop_ACAL_y88);
-  if(eeprom_read(Isotop_ACAL_ba133_address) != Settings.Isotop_ACAL_ba133)
-    eeprom_write(Isotop_ACAL_ba133_address, Settings.Isotop_ACAL_ba133);
-  if(eeprom_read(Isotop_ACAL_th228_address) != Settings.Isotop_ACAL_th228)
-    eeprom_write(Isotop_ACAL_th228_address, Settings.Isotop_ACAL_th228);
 
-  if(eeprom_read(AMODUL_Alarm_level_address) != Settings.AMODUL_Alarm_level)
-    eeprom_write(AMODUL_Alarm_level_address, Settings.AMODUL_Alarm_level);
-
-  if(eeprom_read(AMODUL_spect_start_address) != Settings.AMODUL_spect_start)
-    eeprom_write(AMODUL_spect_start_address, Settings.AMODUL_spect_start);
-  if(eeprom_read(AMODUL_spect_multi_address) != Settings.AMODUL_spect_multi)
-    eeprom_write(AMODUL_spect_multi_address, Settings.AMODUL_spect_multi);
-
-  if(eeprom_read(AMODUL_spect_mark1_address) != Settings.AMODUL_spect_mark1)
-    eeprom_write(AMODUL_spect_mark1_address, Settings.AMODUL_spect_mark1);
-  if(eeprom_read(AMODUL_spect_mark2_address) != Settings.AMODUL_spect_mark2)
-    eeprom_write(AMODUL_spect_mark2_address, Settings.AMODUL_spect_mark2);
-  if(eeprom_read(AMODUL_spect_mark3_address) != Settings.AMODUL_spect_mark3)
-    eeprom_write(AMODUL_spect_mark3_address, Settings.AMODUL_spect_mark3);
-  if(eeprom_read(AMODUL_spect_mark4_address) != Settings.AMODUL_spect_mark4)
-    eeprom_write(AMODUL_spect_mark4_address, Settings.AMODUL_spect_mark4);
-  if(eeprom_read(AMODUL_spect_mark5_address) != Settings.AMODUL_spect_mark5)
-    eeprom_write(AMODUL_spect_mark5_address, Settings.AMODUL_spect_mark5);
-
-
-  if(Settings.LSI_freq != 0x00) // если запустилс€ кварц, попытки сохранени€ игнорировать
+/*  if(Settings.LSI_freq != 0x00) // если запустилс€ кварц, попытки сохранени€ игнорировать
   {
     if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
       eeprom_write(LSI_freq_address, Settings.LSI_freq);
   }
+	*/
 }
 
 //**************************************************************************
-void eeprom_apply_settings(void)
+void eeprom_apply_settings(uint32_t addr)
 {
-  if(eeprom_read(contrast_address) != Settings.contrast)
+  uint32_t eaddr;
+
+  if(addr == 0xFFFF)
+    return;
+
+  eaddr = Menu_list[addr].EEPROM_address;
+
+  // контраст и реверс диспле€
+  if((eaddr == 0x0C) || (eaddr == 0x08))
   {
     display_off();
     delay_ms(200);
     display_on();
   }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Display_reverse_address) != Settings.Display_reverse)
-  {
-    display_off();
-    delay_ms(200);
-    display_on();
-  }
-
-  if(eeprom_read(units_address) != Settings.units)
-  {
-//              Settings.units=0;
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(v4_target_pump_address) != Settings.v4_target_pump)
+  // ƒлительность накачки, частота звука
+  if((eaddr == 0x54) || (eaddr == 0xF0))
   {
     reset_TIM_prescallers_and_Compare();
   }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Beep_freq_address) != Settings.Beep_freq)
-  {
-    reset_TIM_prescallers_and_Compare();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Geiger_voltage_address) != Settings.Geiger_voltage)
-  {
-//    dac_reload();               //перезагрузить в ÷јѕ новое напр€жение отсечки накачки
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
-  {
-    if(Settings.LSI_freq != 0x00)       // если запустилс€ кварц, попытки сохранени€ игнорировать
-    {
-      eeprom_write(LSI_freq_address, Settings.LSI_freq);
-      NVIC_SystemReset();
-    }
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_address) != Settings.Isotop)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_counts_address) != Settings.Isotop_counts)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_eu152_address) != Settings.Isotop_count_eu152)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_na22_address) != Settings.Isotop_count_na22)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_cd109_address) != Settings.Isotop_count_cd109)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_am241_address) != Settings.Isotop_count_am241)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_ti44_address) != Settings.Isotop_count_ti44)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_y88_address) != Settings.Isotop_count_y88)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_ba133_address) != Settings.Isotop_count_ba133)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_count_th228_address) != Settings.Isotop_count_th228)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-
-  if(eeprom_read(Isotop_ACAL_cs137_address) != Settings.Isotop_ACAL_cs137)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_eu152_address) != Settings.Isotop_ACAL_eu152)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_na22_address) != Settings.Isotop_ACAL_na22)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_cd109_address) != Settings.Isotop_ACAL_cd109)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_am241_address) != Settings.Isotop_ACAL_am241)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_ti44_address) != Settings.Isotop_ACAL_ti44)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_y88_address) != Settings.Isotop_ACAL_y88)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_ba133_address) != Settings.Isotop_ACAL_ba133)
-  {
-    reload_active_isotop_time();
-  }
-  // -------------------------------------------------------------------
-  if(eeprom_read(Isotop_ACAL_th228_address) != Settings.Isotop_ACAL_th228)
+  // ¬се пункты меню, где требуетс€ перезагрузка времени и параметров счета фона
+  if((eaddr == 0x80) || (eaddr == 0xE8) || (eaddr == 0x94) || (eaddr == 0x98) || (eaddr == 0x9C) ||
+     (eaddr == 0xA0) || (eaddr == 0xC4) || (eaddr == 0xD4) || (eaddr == 0xCC) || (eaddr == 0xDC) || (eaddr == 0xE4) || (eaddr == 0xEC))
   {
     reload_active_isotop_time();
   }
 
-  if(eeprom_read(AMODUL_Alarm_level_address) != Settings.AMODUL_Alarm_level)
+
+  /*  if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
+     {
+     if(Settings.LSI_freq != 0x00)       // если запустилс€ кварц, попытки сохранени€ игнорировать
+     {
+     eeprom_write(LSI_freq_address, Settings.LSI_freq);
+     NVIC_SystemReset();
+     }
+     }
+   */
+
+  // -------------------------------------------------------------------
+  if((eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137) ||
+     (eeprom_read(Isotop_count_eu152_address) != Settings.Isotop_count_eu152) ||
+     (eeprom_read(Isotop_count_na22_address) != Settings.Isotop_count_na22) ||
+     (eeprom_read(Isotop_count_cd109_address) != Settings.Isotop_count_cd109) ||
+     (eeprom_read(Isotop_count_am241_address) != Settings.Isotop_count_am241) ||
+     (eeprom_read(Isotop_count_ti44_address) != Settings.Isotop_count_ti44) ||
+     (eeprom_read(Isotop_count_y88_address) != Settings.Isotop_count_y88) ||
+     (eeprom_read(Isotop_count_ba133_address) != Settings.Isotop_count_ba133) ||
+     (eeprom_read(Isotop_count_th228_address) != Settings.Isotop_count_th228))
   {
     reload_active_isotop_time();
   }
+  // -------------------------------------------------------------------
 
 }
 
 //**************************************************************************
 
-void eeprom_read_settings(void)
+void eeprom_read_settings(uint32_t menu_massive)
 {
+
+  eeprom_menu_working(READ, menu_massive);
+
   //„тение параметров из EEPROM
-  Settings.Alarm_level = eeprom_read(Alarm_level_address);
-  Settings.Sleep_time = eeprom_read(Sleep_time_address);
-  Settings.contrast = eeprom_read(contrast_address);
-  Settings.Display_reverse = eeprom_read(Display_reverse_address);
-  Settings.Sound = eeprom_read(Sound_address);
-  Settings.LSI_freq = eeprom_read(LSI_freq_address);
+  Settings.VRef = eeprom_read(VRef_address);
+  if(Settings.VRef == 0)
+    Settings.VRef = 1224;
+
   Settings.Power_comp = eeprom_read(Power_comp_address);
-  Settings.Vibro = eeprom_read(Vibro_address);
-  Settings.Geiger_voltage = eeprom_read(Geiger_voltage_address);
-  Settings.v4_target_pump = eeprom_read(v4_target_pump_address);
-  Settings.units = eeprom_read(units_address);
   Settings.serial0 = eeprom_read(unlock_0_address);
   Settings.serial1 = eeprom_read(unlock_1_address);
   Settings.serial2 = eeprom_read(unlock_2_address);
   Settings.serial3 = eeprom_read(unlock_3_address);
-  Settings.Beta_window = eeprom_read(Beta_window_address);
-  Settings.Beta_procent = eeprom_read(Beta_procent_address);
-  Settings.VRef = eeprom_read(VRef_address);
-  Settings.Pump_aggressive = eeprom_read(Pump_aggressive_address);
-  Settings.Speedup = eeprom_read(Speedup_address);
-  Settings.Beep_freq = eeprom_read(Beep_freq_address);
-
-  Settings.Isotop = eeprom_read(Isotop_address);
-  Settings.Isotop_counts = eeprom_read(Isotop_counts_address);
   Settings.Isotop_count_cs137 = eeprom_read(Isotop_count_cs137_address);
   Settings.Isotop_count_eu152 = eeprom_read(Isotop_count_eu152_address);
   Settings.Isotop_count_na22 = eeprom_read(Isotop_count_na22_address);
@@ -364,42 +223,6 @@ void eeprom_read_settings(void)
   Settings.Isotop_count_ba133 = eeprom_read(Isotop_count_ba133_address);
   Settings.Isotop_count_th228 = eeprom_read(Isotop_count_th228_address);
   Settings.Isotop_count_am241 = eeprom_read(Isotop_count_am241_address);
-
-  Settings.Isotop_ACAL_cs137 = eeprom_read(Isotop_ACAL_cs137_address);
-  Settings.Isotop_ACAL_eu152 = eeprom_read(Isotop_ACAL_eu152_address);
-  Settings.Isotop_ACAL_na22 = eeprom_read(Isotop_ACAL_na22_address);
-  Settings.Isotop_ACAL_cd109 = eeprom_read(Isotop_ACAL_cd109_address);
-  Settings.Isotop_ACAL_ti44 = eeprom_read(Isotop_ACAL_ti44_address);
-  Settings.Isotop_ACAL_y88 = eeprom_read(Isotop_ACAL_y88_address);
-  Settings.Isotop_ACAL_ba133 = eeprom_read(Isotop_ACAL_ba133_address);
-  Settings.Isotop_ACAL_th228 = eeprom_read(Isotop_ACAL_th228_address);
-  Settings.Isotop_ACAL_am241 = eeprom_read(Isotop_ACAL_am241_address);
-
-  Settings.AMODUL_Alarm_level = eeprom_read(AMODUL_Alarm_level_address);
-
-  Settings.AMODUL_spect_start = eeprom_read(AMODUL_spect_start_address);
-  Settings.AMODUL_spect_multi = eeprom_read(AMODUL_spect_multi_address);
-
-  Settings.AMODUL_spect_mark1 = eeprom_read(AMODUL_spect_mark1_address);
-  Settings.AMODUL_spect_mark2 = eeprom_read(AMODUL_spect_mark2_address);
-  Settings.AMODUL_spect_mark3 = eeprom_read(AMODUL_spect_mark3_address);
-  Settings.AMODUL_spect_mark4 = eeprom_read(AMODUL_spect_mark4_address);
-  Settings.AMODUL_spect_mark5 = eeprom_read(AMODUL_spect_mark5_address);
-
-
-
-  // ≈сли не установленны какие-то из важных параметров, то произвести сброс.
-  if((Settings.VRef == 0) ||
-     (Settings.v4_target_pump == 0) || (Settings.Geiger_voltage == 0) || (Settings.Beta_procent == 0) || (Settings.Beta_window == 0))
-  {
-    Settings.Geiger_voltage = 360;
-    Settings.v4_target_pump = 8;
-    Settings.Beta_window = 20;
-    Settings.Beta_procent = 37;
-    Settings.VRef = 1224;
-
-    eeprom_write_settings();    // «апись
-  }
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -486,7 +309,8 @@ void eeprom_loading(uint32_t current_rcvd_pointer)      // «апись в EEPROM
   if(eeprom_read(eeprom_write_address) != eeprom_data)
   {
     eeprom_write(eeprom_write_address, eeprom_data);
-    eeprom_read_settings();
+    eeprom_read_settings(MAIN_MENU);
+    eeprom_read_settings(MODUL_MENU);
     reload_active_isotop_time();
   }
 

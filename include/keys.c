@@ -1004,8 +1004,7 @@ void keys_proccessing(void)
         } else
         {
           Data.enter_menu_item = DISABLE;
-          eeprom_apply_settings();      //применяем параметры
-          eeprom_write_settings();      //сохраняем параметры
+          eeprom_write_settings(MODUL_MENU);    //сохраняем параметры
         }
       } else
       {
@@ -1031,8 +1030,7 @@ void keys_proccessing(void)
           } else
           {
             Data.enter_menu_item = DISABLE;
-            eeprom_apply_settings();    //применяем параметры
-            eeprom_write_settings();    //сохраняем параметры
+            eeprom_write_settings(MAIN_MENU);   //сохраняем параметры
           }
         }
       }

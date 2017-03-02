@@ -220,6 +220,12 @@ extern uint32_t ix_update;
 #define MODUL 1
 #define SPECTR 2
 
+// –ежим работы с меню в eeprom
+#define READ 0
+#define WRITE 1
+#define MAIN_MENU 0
+#define MODUL_MENU 1
+
 extern uint16_t bat_cal_running;
 
 

@@ -67,7 +67,8 @@ int main(void)
   io_init();                    // Инициализация потров МК
 
   eeprom_write_default_settings();      // Проверка, заполнен ли EEPROM
-  eeprom_read_settings();       // Чтение настроек из EEPROM
+  eeprom_read_settings(MAIN_MENU);      // Чтение настроек из EEPROM
+  eeprom_read_settings(MODUL_MENU);     // Чтение настроек из EEPROM
   reload_active_isotop_time();  // Перезагрузка времени счета по изотопам
   Data.screen = 1;
   Data.AB_fon = 0;

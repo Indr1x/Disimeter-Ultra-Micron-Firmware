@@ -17,6 +17,7 @@
 typedef struct
 {
   int8_t Hide;
+  uint16_t EEPROM_address;
   char Text[17];
   char Param_is_0[10];
   char Param_is_1[10];
