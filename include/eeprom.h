@@ -55,13 +55,13 @@ extern uint32_t NbrOfPage, Address;
 
 void eeprom_erase(void);
 uint32_t eeprom_read(uint32_t address_of_read);
-void eeprom_write(uint32_t address_of_read, uint32_t data);
+void eeprom_write(uint32_t, uint32_t);
 void eeprom_write_settings(uint32_t);
 void eeprom_apply_settings(uint32_t);
 void eeprom_write_default_settings(void);
 void eeprom_read_settings(uint32_t);
-void eeprom_loading(uint32_t current_rcvd_pointer);
+void eeprom_loading(uint32_t);
 void cal_write(void);
-uint32_t cal_read(uint32_t voltage);
+uint32_t cal_read(uint32_t);
 
 #endif

@@ -10,42 +10,44 @@ void eeprom_menu_working(uint32_t mode, uint32_t menu_massive)
 {
   uint32_t i, max_element;
 
+  MenuItem *structures = NULL;
+
   if(menu_massive == MAIN_MENU)
   {
     max_element = max_struct_index;
+    structures = Menu_list;
   }
 
   if(menu_massive == MODUL_MENU)
   {
     max_element = modul_max_struct_index;
+    structures = Modul_Menu_list;
   }
 
   if(mode == READ)
   {
     for (i = 0; i < max_element; i++)   // проход всех строк основного меню
     {
-      if(Menu_list[i].EEPROM_address == 0xFFFF)
+      if(structures[i].EEPROM_address == 0xFFFF)
       {
-        if(Menu_list[i].Parameter_value > 0)
+        if(structures[i].Parameter_value > 0)
         {
-          *Menu_list[i].Parameter_value = Menu_list[i].Value_default;
+          *structures[i].Parameter_value = structures[i].Value_default;
         }
       } else
       {
-
-        if(eeprom_read(Menu_list[i].EEPROM_address) != *Menu_list[i].Parameter_value)
+        if(eeprom_read(structures[i].EEPROM_address) != *structures[i].Parameter_value)
         {                       // Если значение параметра не соответствует тому что в памяти, прочитать его из еепром
-          *Menu_list[i].Parameter_value = eeprom_read(Menu_list[i].EEPROM_address);
+          *structures[i].Parameter_value = eeprom_read(structures[i].EEPROM_address);
           // Если значение не укладывается в приделы минимума-максмума, сбросить по умолчанию
-          if((*Menu_list[i].Parameter_value > Menu_list[i].Max_limit) || (*Menu_list[i].Parameter_value < Menu_list[i].Min_limit))
+          if((*structures[i].Parameter_value > structures[i].Max_limit) || (*structures[i].Parameter_value < structures[i].Min_limit))
           {
-            *Menu_list[i].Parameter_value = Menu_list[i].Value_default;
-            eeprom_write(Menu_list[i].EEPROM_address, *Menu_list[i].Parameter_value);
+            *structures[i].Parameter_value = structures[i].Value_default;
+            eeprom_write(structures[i].EEPROM_address, *structures[i].Parameter_value);
           }
           // Выполнить обработчик изменений параметра
-          eeprom_apply_settings(i);
+          eeprom_apply_settings(structures[i].EEPROM_address);
         }
-
       }
     }
   }
@@ -54,18 +56,18 @@ void eeprom_menu_working(uint32_t mode, uint32_t menu_massive)
   {
     for (i = 0; i < max_element; i++)   // проход всех строк основного меню
     {
-      if(Menu_list[i].EEPROM_address != 0xFFFF)
+      if(structures[i].EEPROM_address != 0xFFFF)
       {
-        if(eeprom_read(Menu_list[i].EEPROM_address) != *Menu_list[i].Parameter_value)
+        if(eeprom_read(structures[i].EEPROM_address) != *structures[i].Parameter_value)
         {                       // Если значение параметра не соответствует тому что в памяти, записать его в еепром
           // Если значение не укладывается в приделы минимума-максмума, сбросить по умолчанию
-          if((*Menu_list[i].Parameter_value > Menu_list[i].Max_limit) || (*Menu_list[i].Parameter_value < Menu_list[i].Min_limit))
+          if((*structures[i].Parameter_value > structures[i].Max_limit) || (*structures[i].Parameter_value < structures[i].Min_limit))
           {
-            *Menu_list[i].Parameter_value = Menu_list[i].Value_default;
+            *structures[i].Parameter_value = structures[i].Value_default;
           }
           // Выполнить запись и обработчик изменений параметра
-          eeprom_write(Menu_list[i].EEPROM_address, *Menu_list[i].Parameter_value);
-          eeprom_apply_settings(i);
+          eeprom_write(structures[i].EEPROM_address, *structures[i].Parameter_value);
+          eeprom_apply_settings(structures[i].EEPROM_address);
         }
       }
     }
@@ -143,28 +145,25 @@ void eeprom_write_settings(uint32_t menu_massive)
 //**************************************************************************
 void eeprom_apply_settings(uint32_t addr)
 {
-  uint32_t eaddr;
 
   if(addr == 0xFFFF)
     return;
 
-  eaddr = Menu_list[addr].EEPROM_address;
-
   // контраст и реверс дисплея
-  if((eaddr == 0x0C) || (eaddr == 0x08))
+  if((addr == 0x0C) || (addr == 0x08))
   {
     display_off();
     delay_ms(200);
     display_on();
   }
   // Длительность накачки, частота звука
-  if((eaddr == 0x54) || (eaddr == 0xF0))
+  if((addr == 0x54) || (addr == 0xF0))
   {
     reset_TIM_prescallers_and_Compare();
   }
   // Все пункты меню, где требуется перезагрузка времени и параметров счета фона
-  if((eaddr == 0x80) || (eaddr == 0xE8) || (eaddr == 0x94) || (eaddr == 0x98) || (eaddr == 0x9C) ||
-     (eaddr == 0xA0) || (eaddr == 0xC4) || (eaddr == 0xD4) || (eaddr == 0xCC) || (eaddr == 0xDC) || (eaddr == 0xE4) || (eaddr == 0xEC))
+  if((addr == 0x80) || (addr == 0xE8) || (addr == 0x94) || (addr == 0x98) || (addr == 0x9C) ||
+     (addr == 0xA0) || (addr == 0xC4) || (addr == 0xD4) || (addr == 0xCC) || (addr == 0xDC) || (addr == 0xE4) || (addr == 0xEC))
   {
     reload_active_isotop_time();
   }
