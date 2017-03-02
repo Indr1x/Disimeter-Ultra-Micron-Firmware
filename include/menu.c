@@ -5,63 +5,63 @@
 MenuItem Menu_list[max_struct_index] = {
   
 //Сервис Адрес  Текст		Если значение 0		Если 1		если больше чем 1	Откуда брать само значение		минимум		максимум	дефолт	Реакция на увеличение	на уменьшение 
-{0x00, 0x00, 		LANG_ALARM,			LANG_OFF,			"",				LANG_UMKR,			&Settings.Alarm_level,			0,			10000,	60,			&plus_alarm,			&minus_alarm},
-{0x00, 0x04, 		LANG_SLEEP,			LANG_OFF,			"",				LANG_USEC,			&Settings.Sleep_time,				10,			10240,	40,			&plus_sleep,			&minus_sleep},
-{0x00, 0x18, 		LANG_SOUND,			LANG_OFF,			LANG_ON,	LANG_KEY,				&Settings.Sound,						0,			2,			0,			&plus_one,				&minus_one},
+{0x00, 0x00, 		LANG_ALARM,			LANG_OFF,			"",				LANG_UMKR,			&Settings.Alarm_level,			0,			10000,	60,			&plus_alarm,			0x00,			&minus_alarm,			0x00},
+{0x00, 0x04, 		LANG_SLEEP,			LANG_OFF,			"",				LANG_USEC,			&Settings.Sleep_time,				10,			10240,	40,			&plus_sleep,			0x00,			&minus_sleep,			0x00},
+{0x00, 0x18, 		LANG_SOUND,			LANG_OFF,			LANG_ON,	LANG_KEY,				&Settings.Sound,						0,			2,			0,			&plus,						1,				&minus,						1},
 #ifdef version_401
-{0x00, 0x50, 		LANG_VIBRO,			LANG_OFF,			LANG_ON,	LANG_ALARM2,		&Settings.Vibro,						0,			2,			0x00,		&plus_one,				&minus_one},
+{0x00, 0x50, 		LANG_VIBRO,			LANG_OFF,			LANG_ON,	LANG_ALARM2,		&Settings.Vibro,						0,			2,			0x00,		&plus,						1,				&minus,					1},
 #else
-{0x00, 0xFFFF,  LANG_USBMODE,		LANG_OFF,			LANG_ON,	"",							&Settings.USB,							0x00,		0x00,		0x00,		&usb_activate,		&usb_deactivate},
+{0x00, 0xFFFF,  LANG_USBMODE,		LANG_OFF,			LANG_ON,	"",							&Settings.USB,							0x00,		0x00,		0x00,		&usb_activate,		0x00,			&usb_deactivate,	0x00},
 #endif
-{0x00, 0xFFFF,  LANG_CLEARDO,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_doze_reset,	0x00},
-{0x00, 0xFFFF,  LANG_REBOOT,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_reboot,			&minus_poweroff},
-{0x00, 0x58,		LANG_UNITS,			LANG_UR,			LANG_UZV,	"",							&Settings.units,						0x00,		0x01,		0x00,		&plus_one,				&minus_one},
-{0x00, 0xFFFF,  LANG_CLEAR_FON,	"*",					"*", 			"*",						0x00,												0x00,		0x00,		0x00,		&plus_rad_reset,	0x00},
-{0x00, 0xFFFF,  LANG_BETA_MEAS,	"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_ab_engage,	0x00},
+{0x00, 0xFFFF,  LANG_CLEARDO,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_doze_reset,	0x00,			0x00,							0x00},
+{0x00, 0xFFFF,  LANG_REBOOT,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_reboot,			0x00,			&minus_poweroff,	0x00},
+{0x00, 0x58,		LANG_UNITS,			LANG_UR,			LANG_UZV,	"",							&Settings.units,						0x00,		0x01,		0x00,		&plus,						1,				&minus,						0x00},
+{0x00, 0xFFFF,  LANG_CLEAR_FON,	"*",					"*", 			"*",						0x00,												0x00,		0x00,		0x00,		&plus_rad_reset,	0x00,			0x00,							0x00},
+{0x00, 0xFFFF,  LANG_BETA_MEAS,	"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_ab_engage,	0x00,			0x00,							0x00},
 //{0x00, LANG_SCINT_MEAS,	"*",			"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_amodul_engage,		0x00},
-{0x01, 0x7C,		LANG_SPEED,		LANG_OFF,			LANG_ON,	"",								&Settings.Speedup,					0x00,		0x01,		0x00,		&plus_one,				&minus_one},
+{0x01, 0x7C,		LANG_SPEED,		LANG_OFF,			LANG_ON,	"",								&Settings.Speedup,					0x00,		0x01,		0x00,		&plus,						1,				&minus,						1},
 // Заплатка на изотоп if(menu_struct_index == 10) ! Исправить в коде при изменении порядка пунктов меню!
-{0x01, 0x80,		LANG_ISOTOP,		"",			      "",	    "",								&Settings.Isotop,						0x00,		0x08,		0x00,		&plus_one,				&minus_one},
+{0x01, 0x80,		LANG_ISOTOP,		"",			      "",	    "",								&Settings.Isotop,						0x00,		0x08,		0x00,		&plus,						1,				&minus,						1},
 
 // Приватные пункты меню
-{0x01, 0x0C, 		LANG_CONTRAST,	"",						"",				"%u",						&Settings.contrast,					0,			15,			0,			&plus_one,				&minus_one},
-{0x01, 0x08, 		LANG_REVERSE,		LANG_OFF,			"",				"%u",						&Settings.Display_reverse,	0,			5,			0,			&plus_one,				&minus_one},
-{0x01, 0x44, 		"LSI",					LANG_QUARTZ,	"",				LANG_UHZ,				&Settings.LSI_freq,					26000,	56000,	38000,	&plus_500,				&minus_500},
-{0x01, 0x54, 		LANG_V4PUMP,		"",						"",				LANG_UV4PUMP,		&Settings.v4_target_pump,		4,			14,			11,			&plus_one,				&minus_one},
-{0x01, 0x30, 		LANG_VOLTAGE,		"",						"",				LANG_UV,				&Settings.Geiger_voltage,		300,		450,		380,		&plus_ten,				&minus_ten},
+{0x01, 0x0C, 		LANG_CONTRAST,	"",						"",				"%u",						&Settings.contrast,					0,			15,			0,			&plus,						1,				&minus,						1},
+{0x01, 0x08, 		LANG_REVERSE,		LANG_OFF,			"",				"%u",						&Settings.Display_reverse,	0,			5,			0,			&plus,						1,				&minus,						1},
+{0x01, 0x44, 		"LSI",					LANG_QUARTZ,	"",				LANG_UHZ,				&Settings.LSI_freq,					26000,	56000,	38000,	&plus,						500,			&minus,						500},
+{0x01, 0x54, 		LANG_V4PUMP,		"",						"",				LANG_UV4PUMP,		&Settings.v4_target_pump,		4,			14,			11,			&plus,						1,				&minus,						1},
+{0x01, 0x30, 		LANG_VOLTAGE,		"",						"",				LANG_UV,				&Settings.Geiger_voltage,		300,		450,		380,		&plus,						10,				&minus,						10},
 // Заплатка на бета окно if(menu_struct_index == 16) ! Исправить в коде при изменении порядка пунктов меню!
-{0x01, 0x6C,		LANG_BWINDOW,		"",						"",				LANG_BWINDOW_,	&Settings.Beta_window,			1,			100,		20,			&plus_one,				&minus_one},
-{0x01, 0x70,		LANG_BPROCENT,	"",						"",				LANG_BPROCENT_,	&Settings.Beta_procent,			1,			100,		37,			&plus_one,				&minus_one},
-{0x01, 0xFFFF,	LANG_REF_VOLT,	"",						"",				LANG_REF_VOLT_,	&ADCData.Power_voltage,			1202,		1242,		1224,		&plus_one_ref,		&minus_one_ref},
-{0x01, 0xFFFF,  LANG_BAT_CAL,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_batcal,			0x00},
-{0x01, 0xF0,		LANG_SOUND,	  	"",  					"",				LANG_UHZ2,			&Settings.Beep_freq,				1000,	  20000,	8000,		&plus_500,				&minus_500},
-{0x01, 0x78,		LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            &Settings.Pump_aggressive,	0,	    1,  		0,  		&plus_one,		   	&minus_one},
+{0x01, 0x6C,		LANG_BWINDOW,		"",						"",				LANG_BWINDOW_,	&Settings.Beta_window,			1,			100,		20,			&plus,						1,				&minus,						1},
+{0x01, 0x70,		LANG_BPROCENT,	"",						"",				LANG_BPROCENT_,	&Settings.Beta_procent,			1,			100,		37,			&plus,						1,				&minus,						1},
+{0x01, 0xFFFF,	LANG_REF_VOLT,	"",						"",				LANG_REF_VOLT_,	&ADCData.Power_voltage,			1202,		1242,		1224,		&plus_one_ref,		0x00,			&minus_one_ref,		0x00},
+{0x01, 0xFFFF,  LANG_BAT_CAL,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_batcal,			0x00,			0x00,							0x00},
+{0x01, 0xF0,		LANG_SOUND,	  	"",  					"",				LANG_UHZ2,			&Settings.Beep_freq,				1000,	  20000,	8000,		&plus,						500,			&minus,						500},
+{0x01, 0x78,		LANG_PUMP_AGR,	LANG_OFF,			LANG_ON,	"",	            &Settings.Pump_aggressive,	0,	    1,  		0,  		&plus,				   	1,				&minus,						1},
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////
 MenuItem Modul_Menu_list[modul_max_struct_index] = {
   
 //Сервис   Текст		Если значение 0		Если 1		если больше чем 1	Откуда брать само значение	        	минимум		максимум	дефолт	Реакция на увеличение	на уменьшение 
-{0x01, 0xEC,		LANG_ALARM,		LANG_OFF,				"",			LANG_UMKZV,				&Settings.AMODUL_Alarm_level,			0,				10000,	60,		&plus_five,				&minus_five},
-{0x01, 0xFFFF,  LANG_ISOTOP,			"",			   	"",	    "",								&Settings.Isotop,			        		0x00,			0x08,		0x00,	&plus_one,				&minus_one},
-{0x01, 0xE8,		LANG_ISOTOP_COUNTS,"", 	LANG_ISOTOP_COUNTS_, LANG_ISOTOP_COUNTS_,	&Settings.Isotop_counts,1,	   		20,			1,		&plus_one,				&minus_one},
+{0x01, 0xEC,		LANG_ALARM,		LANG_OFF,				"",			LANG_UMKZV,				&Settings.AMODUL_Alarm_level,			0,				10000,	60,		&plus,				5,				&minus,						5},
+{0x01, 0xFFFF,  LANG_ISOTOP,			"",			   	"",	    "",								&Settings.Isotop,			        		0x00,			0x08,		0x00,	&plus,				1,				&minus,						1},
+{0x01, 0xE8,		LANG_ISOTOP_COUNTS,"", 	LANG_ISOTOP_COUNTS_, LANG_ISOTOP_COUNTS_,	&Settings.Isotop_counts,1,	   		20,			1,		&plus,				1,				&minus,						1},
 
-{0x01, 0x94,		LANG_ISOTOP_CS137,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_cs137,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0x98,		LANG_ISOTOP_EU152,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_eu152,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0x9C,		LANG_ISOTOP_NA22, "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_na22,	   		10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0xA0,		LANG_ISOTOP_CD109,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_cd109,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0xC4,		LANG_ISOTOP_AM241,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_am241,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0xD4,		LANG_ISOTOP_TI44, "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_ti44,	   		10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0xCC,		LANG_ISOTOP_Y88,  "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_y88,		   	10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0xDC,		LANG_ISOTOP_BA133,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_ba133,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
-{0x01, 0xE4,		LANG_ISOTOP_TH228,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_th228,			10,	    	1450,		250,	&plus_ten,				&minus_ten},
+{0x01, 0x94,		LANG_ISOTOP_CS137,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_cs137,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0x98,		LANG_ISOTOP_EU152,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_eu152,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0x9C,		LANG_ISOTOP_NA22, "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_na22,	   		10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0xA0,		LANG_ISOTOP_CD109,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_cd109,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0xC4,		LANG_ISOTOP_AM241,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_am241,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0xD4,		LANG_ISOTOP_TI44, "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_ti44,	   		10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0xCC,		LANG_ISOTOP_Y88,  "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_y88,		   	10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0xDC,		LANG_ISOTOP_BA133,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_ba133,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
+{0x01, 0xE4,		LANG_ISOTOP_TH228,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_th228,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
 
-{0x01, 0xA4,		LANG_SPECT_START,"",				  "",			"%u",	    				&Settings.AMODUL_spect_start,			10,	    	20000,	1000,	&plus_ten,				&minus_ten},
-{0x01, 0xA8,		LANG_SPECT_MULTIP,"",			  	"",			"%u",		    			&Settings.AMODUL_spect_multi,			1,	    	200,	 	70,	  &plus_one,				&minus_one},
-{0x01, 0xAC,		LANG_SPECT_MARK1,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark1,			1,	    	100,		10, 	&plus_one,				&minus_one},
-{0x01, 0xB0,		LANG_SPECT_MARK2,"",				  "",			"%u",	  	  			&Settings.AMODUL_spect_mark2,			1,	    	100,		20,	  &plus_one,				&minus_one},
-{0x01, 0xB4,		LANG_SPECT_MARK3,"",				  "",			"%u",		    			&Settings.AMODUL_spect_mark3,			1,	    	100,		30,	  &plus_one,				&minus_one},
-{0x01, 0xB8,		LANG_SPECT_MARK4,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark4,			1,	    	100,		40,	  &plus_one,				&minus_one},
-{0x01, 0xBC,		LANG_SPECT_MARK5,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark5,			1,	    	100,		50,	  &plus_one,				&minus_one}
+{0x01, 0xA4,		LANG_SPECT_START,"",				  "",			"%u",	    				&Settings.AMODUL_spect_start,			10,	    	20000,	1000,	&plus,				100,			&minus,						100},
+{0x01, 0xA8,		LANG_SPECT_MULTIP,"",			  	"",			"%u",		    			&Settings.AMODUL_spect_multi,			1,	    	200,	 	70,	  &plus,				1,				&minus,						1},
+{0x01, 0xAC,		LANG_SPECT_MARK1,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark1,			1,	    	100,		10, 	&plus,				1,				&minus,						1},
+{0x01, 0xB0,		LANG_SPECT_MARK2,"",				  "",			"%u",	  	  			&Settings.AMODUL_spect_mark2,			1,	    	100,		20,	  &plus,				1,				&minus,						1},
+{0x01, 0xB4,		LANG_SPECT_MARK3,"",				  "",			"%u",		    			&Settings.AMODUL_spect_mark3,			1,	    	100,		30,	  &plus,				1,				&minus,						1},
+{0x01, 0xB8,		LANG_SPECT_MARK4,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark4,			1,	    	100,		40,	  &plus,				1,				&minus,						1},
+{0x01, 0xBC,		LANG_SPECT_MARK5,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark5,			1,	    	100,		50,	  &plus,				1,				&minus,						1}
 
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////

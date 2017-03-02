@@ -27,7 +27,9 @@ typedef struct
   uint32_t Max_limit;
   uint32_t Value_default;
   void (*Plus_reaction) (uint32_t *);
+  int16_t Plus_value;
   void (*Minus_reaction) (uint32_t *);
+  int16_t Minus_value;
 
 } MenuItem;
 

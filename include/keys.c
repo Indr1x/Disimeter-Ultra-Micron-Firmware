@@ -217,8 +217,8 @@ void plus_doze_reset(uint32_t * param)  // Сброс дозы
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// +1 -1
-void plus_one(uint32_t * param) // +1
+// +
+void plus(uint32_t * param)
 {
   if(Settings.AMODUL_mode > 0)
   {
@@ -233,7 +233,7 @@ void plus_one(uint32_t * param) // +1
       *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Min_limit;
     } else
     {
-      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value + 1;  //+1
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value + Modul_Menu_list[*param - 1].Plus_value;     // +
     }
   } else
   {
@@ -248,12 +248,12 @@ void plus_one(uint32_t * param) // +1
       *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
     } else
     {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 1;      //+1
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + Modul_Menu_list[*param - 1].Plus_value; //+
     }
   }
 }
 
-void minus_one(uint32_t * param)        // -1
+void minus(uint32_t * param)    // -
 {
   if(Settings.AMODUL_mode > 0)
   {
@@ -268,7 +268,7 @@ void minus_one(uint32_t * param)        // -1
       *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Max_limit;
     } else
     {
-      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value - 1;  // -1
+      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value - Modul_Menu_list[*param - 1].Minus_value;    // -
     }
   } else
   {
@@ -283,7 +283,7 @@ void minus_one(uint32_t * param)        // -1
       *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
     } else
     {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 1;      // -1
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - Modul_Menu_list[*param - 1].Minus_value;        // -
     }
   }
 }
@@ -332,272 +332,6 @@ void plus_one_ref(uint32_t * param)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// +5 -5
-void plus_five(uint32_t * param)        // +5
-{
-  if(Settings.AMODUL_mode > 0)
-  {
-    if(*param > modul_max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-    if(*Modul_Menu_list[*param - 1].Parameter_value >= Modul_Menu_list[*param - 1].Max_limit)
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Min_limit;
-    } else
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value + 5;  //+5
-    }
-  } else
-  {
-    if(*param > max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-    if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
-    {
-      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
-    } else
-    {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 5;      //+5
-    }
-  }
-}
-
-
-void minus_five(uint32_t * param)       // -5
-{
-  if(Settings.AMODUL_mode > 0)
-  {
-    if(*param > modul_max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-    if(*Modul_Menu_list[*param - 1].Parameter_value <= Modul_Menu_list[*param - 1].Min_limit)
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Max_limit;
-    } else
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value - 5;  // -5
-    }
-  } else
-  {
-    if(*param > max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-    if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
-    {
-      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
-    } else
-    {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 5;      // -5
-    }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// +10 -10
-void plus_ten(uint32_t * param) // +10
-{
-  if(Settings.AMODUL_mode > 0)
-  {
-    if(*param > modul_max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-    if(*Modul_Menu_list[*param - 1].Parameter_value >= Modul_Menu_list[*param - 1].Max_limit)
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Min_limit;
-    } else
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value + 10; //+10
-    }
-  } else
-  {
-    if(*param > max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-    if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
-    {
-      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
-    } else
-    {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 10;     //+10
-    }
-  }
-}
-
-
-void minus_ten(uint32_t * param)        // -10
-{
-  if(Settings.AMODUL_mode > 0)
-  {
-    if(*param > modul_max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-    if(*Modul_Menu_list[*param - 1].Parameter_value <= Modul_Menu_list[*param - 1].Min_limit)
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = Modul_Menu_list[*param - 1].Max_limit;
-    } else
-    {
-      *Modul_Menu_list[*param - 1].Parameter_value = *Modul_Menu_list[*param - 1].Parameter_value - 10; // -10
-    }
-  } else
-  {
-    if(*param > max_struct_index)
-      return;
-    if(*param == 0)
-      return;
-
-    //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-    if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
-    {
-      *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
-    } else
-    {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 10;     // -10
-    }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// +4 -4
-void plus_four(uint32_t * param)        // +10
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = ((*Menu_list[*param - 1].Parameter_value >> 2) + 1) << 2;  //+4
-  }
-}
-
-
-void minus_four(uint32_t * param)       // -10
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = ((*Menu_list[*param - 1].Parameter_value >> 2) - 1) << 2;  // -4
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// +50 -50
-void plus_50(uint32_t * param)  // +50
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 50;       //+50
-  }
-}
-
-void minus_50(uint32_t * param) // -50
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 50;       // -50
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// +500 -500
-void plus_500(uint32_t * param) // +50
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + 500;      //+500
-  }
-}
-
-void minus_500(uint32_t * param)        // -500
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //Если пытаемся привысить минимально допустимое значение, то переходим на максимум
-  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - 500;      // -500
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

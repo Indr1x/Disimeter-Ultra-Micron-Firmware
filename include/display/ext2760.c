@@ -733,8 +733,7 @@ void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t invert, uint32_t f
 
   if(label == MKRH)
   {
-
-    sprintf(lcd_buf, LANG_UZ);
+    sprintf(lcd_buf, LANG_UR);
     LcdString(((start_char + 6) * 2), line);
 
     sprintf(lcd_buf, LANG_H);
