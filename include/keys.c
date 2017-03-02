@@ -248,7 +248,7 @@ void plus(uint32_t * param)
       *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
     } else
     {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + Modul_Menu_list[*param - 1].Plus_value; //+
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value + Menu_list[*param - 1].Plus_value;       //+
     }
   }
 }
@@ -283,7 +283,7 @@ void minus(uint32_t * param)    // -
       *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
     } else
     {
-      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - Modul_Menu_list[*param - 1].Minus_value;        // -
+      *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value - Menu_list[*param - 1].Minus_value;      // -
     }
   }
 }

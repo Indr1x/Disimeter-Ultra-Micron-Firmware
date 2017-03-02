@@ -41,7 +41,7 @@ MenuItem Menu_list[max_struct_index] = {
 MenuItem Modul_Menu_list[modul_max_struct_index] = {
   
 //Сервис   Текст		Если значение 0		Если 1		если больше чем 1	Откуда брать само значение	        	минимум		максимум	дефолт	Реакция на увеличение	на уменьшение 
-{0x01, 0xEC,		LANG_ALARM,		LANG_OFF,				"",			LANG_UMKZV,				&Settings.AMODUL_Alarm_level,			0,				10000,	60,		&plus,				5,				&minus,						5},
+{0x01, 0xEC,		LANG_ALARM,				LANG_OFF,		"",			LANG_UMKZV,				&Settings.AMODUL_Alarm_level,			0,				10000,	60,		&plus,				5,				&minus,						5},
 {0x01, 0xFFFF,  LANG_ISOTOP,			"",			   	"",	    "",								&Settings.Isotop,			        		0x00,			0x08,		0x00,	&plus,				1,				&minus,						1},
 {0x01, 0xE8,		LANG_ISOTOP_COUNTS,"", 	LANG_ISOTOP_COUNTS_, LANG_ISOTOP_COUNTS_,	&Settings.Isotop_counts,1,	   		20,			1,		&plus,				1,				&minus,						1},
 
