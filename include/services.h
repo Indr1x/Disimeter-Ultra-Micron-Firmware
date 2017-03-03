@@ -12,4 +12,8 @@ void geiger_calc_fon(void);
 uint32_t calc_ab(void);
 void reload_active_isotop_time(void);
 uint32_t precision_measure(void);
+void sleep_mode(FunctionalState sleep);
+FunctionalState check_license(void);
+float convert_mkr_sv(uint32_t);
+
 #endif

@@ -226,6 +226,11 @@ extern uint32_t ix_update;
 #define MAIN_MENU 0
 #define MODUL_MENU 1
 
+#define max_fon_select 1
+#define dose_select 2
+#define eeprom_send_data 3
+
+
 extern uint16_t bat_cal_running;
 
 
@@ -242,10 +247,6 @@ extern uint32_t Detector_AB_massive[15];        // 1 минута, интервалами по 4 се
 #define FLASH_END_ADDR                  0x0801FFFF
 #define FLASH_MAX_PAGE                  (FLASH_END_ADDR - FLASH_START_ADDR) / FLASH_PAGE_SIZE
 #define FLASH_MAX_ELEMENT               FLASH_MAX_PAGE * (FLASH_PAGE_SIZE >> 3)
-
-#define max_fon_select 1
-#define dose_select 2
-#define eeprom_send_data 3
 
 #define doze_length_10m       1 // 10 минут
 #define doze_length_hour      6 // 1 час    интервалами по 10 минут 60/10
@@ -355,9 +356,5 @@ extern PowerDef Power;
 extern DataDef Data;
 extern SettingsDef Settings;
 extern AlarmDef Alarm;
-
-void sleep_mode(FunctionalState sleep);
-FunctionalState check_license(void);
-float convert_mkr_sv(uint32_t);
 
 #endif

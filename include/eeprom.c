@@ -9,7 +9,7 @@ uint32_t NbrOfPage = 0, j = 0, Address = 0;
 void eeprom_menu_working(uint32_t mode, uint32_t menu_massive)
 {
   uint32_t i, max_element;
-
+  // Выбор массива для обработки
   MenuItem *structures = NULL;
 
   if(menu_massive == MAIN_MENU)
@@ -82,9 +82,6 @@ void eeprom_write_default_settings(void)
   if(eeprom_read(Isotop_count_cs137_address) == 0x00)
   {
     Settings.Power_comp = 0;
-    Settings.units = 0;
-    Settings.Isotop = 0;
-    Settings.Isotop_counts = 1;
     Settings.Isotop_count_cs137 = 250;
     Settings.Isotop_count_eu152 = 250;
     Settings.Isotop_count_na22 = 250;

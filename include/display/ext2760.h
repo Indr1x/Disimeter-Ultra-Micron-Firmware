@@ -33,11 +33,9 @@
 #define LCD_X_RES               96      // разрешение экрана
 #define LCD_Y_RES               72
 #define LCD_CACHSIZE          LCD_X_RES*LCD_Y_RES>>3
-//#define LCD_CACHSIZE          LCD_X_RES*LCD_Y_RES/8  
 
 #define Cntr_X_RES              96      // разрешение контроллера
 #define Cntr_Y_RES              72
-//#define Cntr_buf_size           Cntr_X_RES*Cntr_Y_RES/8
 #define Cntr_buf_size           Cntr_X_RES*Cntr_Y_RE>>3
 
 #define lcd_CMD 1
@@ -56,19 +54,12 @@ void LcdPixel(unsigned char x, unsigned char y, unsigned char mode);    //Displa
 void LcdStringBold(unsigned char x, unsigned char y);   //Displays a string at current cursor location
 
 
-//void LcdSend (unsigned char data, unsigned char cmd);                         //Sends data to display controller
 void LcdUpdate(void);           //Copies the LCD cache into the device RAM
 void LcdClear(void);            //Clears the display
 void LcdInit(void);             //Настройка SPI и дисплея
-//void LcdContrast (unsigned char contrast);                                    //contrast -> Contrast value from 0x00 to 0x7F
-//void LcdMode (unsigned char mode);                                            //режимы дисплея: 0 - blank, 1 - all on, 2 - normal, 3 - inverse
-//void LcdPwrMode (void);                                                               //инвертирует состояние вкл/выкл дисплея
-//void LcdPwrOff (void);                                                                //выкл дисплея
 void LcdPwrOn(void);            //вкл дисплея
 void LcdPixel(unsigned char x, unsigned char y, unsigned char mode);    //Displays a pixel at given absolute (x, y) location, mode -> Off, On or Xor
 void LcdLine(int x1, int y1, int x2, int y2, unsigned char mode);       //Draws a line between two points on the display
-//void LcdCircle(char x, char y, char radius, unsigned char mode);              //рисуем круг с координатами центра и радиусом
-//void LcdBatt(int x1, int y1, int x2, int y2, unsigned char persent);          //рисуем батарейку и заполняем ее на %
 void LcdGotoXYFont(unsigned char x, unsigned char y);   //Sets cursor location to xy location. Range: 1,1 .. 14,6
 void clean_lcd_buf(void);       //очистка текстового буфера
 void LcdChr(int ch);            //Displays a character at current cursor location and increment cursor location
@@ -87,8 +78,6 @@ void LcdStringInv(unsigned char x, unsigned char y);    // печатает строку в инв
 
 void Draw_fon_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end, uint8_t size, uint16_t * massive, uint32_t massive_pointer_val,
                     uint32_t spec);
-//void Draw_AMODUL_graph(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end);
-//void Draw_AMODUL_graph_spectr(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end, uint8_t page);
 void Draw_speedup(uint8_t x_start, uint8_t x_end, uint8_t y_start, uint8_t y_end);
 void Draw_fon_digit(uint8_t line, uint8_t start_char, uint8_t seconds, uint32_t fonmodule_val, uint8_t label, uint8_t accentuation);
 void LcdBatt(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t persent);     //рисуем батарейку с заполнением в %

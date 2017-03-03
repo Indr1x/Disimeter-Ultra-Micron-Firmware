@@ -438,161 +438,52 @@ void amodul_screen()
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+// Отрисовка меню
 void menu_screen(uint32_t mode)
 {
   char para_string[20];
   char tmp_string[20];
-  uint16_t menu_page, i, j;
+  uint16_t menu_page, i, j, max_element, selects_menu;
+
+  ////////////////////////////////////////////
+  // Выбор массива для обработки
+  MenuItem *structures = NULL;
+
+  if(mode == NORMAL_menu_mode)
+  {
+    max_element = max_struct_index;
+    structures = Menu_list;
+    selects_menu = Data.menu_select;
+  }
+
+  if(mode == AMODUL_menu_mode)
+  {
+    max_element = modul_max_struct_index;
+    structures = Modul_Menu_list;
+    selects_menu = Data.modul_menu_select;
+  }
+  ////////////////////////////////////////////
+
+
   //прорисовка меню
   sprintf(lcd_buf, LANG_MENU);
   LcdStringInv(1, 1);
-  if(mode == AMODUL_menu_mode)  // Меню модуля-А
+  if(selects_menu == 0)
   {
-    if(Data.modul_menu_select == 0)
-    {
-      menu_page = 0;
-    } else
-    {
-
-
-      if(Data.modul_menu_select <= modul_max_struct_index)
-      {
-        menu_page = (Data.modul_menu_select - 1) / (max_string_count - start_offset);   // определение страницы меню (Публичное)
-      } else
-      {
-        menu_page = 0;
-      }
-
-    }
-
-    for (i = 0; i < (max_string_count - start_offset); i++)
-    {
-      uint32_t fill_len = 0;
-      uint32_t para_len = 0;
-      uint32_t text_len = 0;
-      uint32_t menu_struct_index = 0;
-//      float tmp;
-      uint32_t tmpi;
-      menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;  // вычисление адеса в структуре
-      if(menu_struct_index >= modul_max_struct_index)
-        break;                  // если меню кончилось
-      // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
-      // вычисляем значение параметра "10сек"
-      switch (*Modul_Menu_list[menu_struct_index].Parameter_value)
-      {
-      case 0:                  // если значение параметра равно нулю, ищем нет ли макроподстановки на этот случай
-        if(Modul_Menu_list[menu_struct_index].Param_is_0[0] != '\0')
-        {
-          sprintf(para_string, Modul_Menu_list[menu_struct_index].Param_is_0);
-          break;
-        }
-
-      case 1:                  // если значение параметра равен еденице, ищем нет ли макроподстановки на этот случай
-        if(Modul_Menu_list[menu_struct_index].Param_is_1[0] != '\0')
-        {
-          sprintf(para_string, Modul_Menu_list[menu_struct_index].Param_is_1);
-          break;
-        }
-
-      default:                 // во всех остальных случиях выводим по шаблону
-        sprintf(para_string, Modul_Menu_list[menu_struct_index].Param_is_N, *Modul_Menu_list[menu_struct_index].Parameter_value);
-        break;
-      }
-
-      // Заплатка на тревогу
-      if((menu_struct_index == 0) && (Settings.AMODUL_mode != 0))
-        sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Modul_Menu_list[menu_struct_index].Parameter_value));
-
-
-      // Заплатка на изотоп
-      if(menu_struct_index == 1)
-      {
-        tmpi = *Modul_Menu_list[menu_struct_index].Parameter_value;
-        switch (tmpi)
-        {
-        case 0x0:
-          sprintf(para_string, LANG_ISOTOP_CS137);
-          break;
-        case 0x1:
-          sprintf(para_string, LANG_ISOTOP_EU152);
-          break;
-        case 0x2:
-          sprintf(para_string, LANG_ISOTOP_NA22);
-          break;
-        case 0x3:
-          sprintf(para_string, LANG_ISOTOP_CD109);
-          break;
-        case 0x4:
-          sprintf(para_string, LANG_ISOTOP_AM241);
-          break;
-        case 0x5:
-          sprintf(para_string, LANG_ISOTOP_Y88);
-          break;
-        case 0x6:
-          sprintf(para_string, LANG_ISOTOP_TI44);
-          break;
-        case 0x7:
-          sprintf(para_string, LANG_ISOTOP_BA133);
-          break;
-        case 0x8:
-          sprintf(para_string, LANG_ISOTOP_TH228);
-          break;
-        }
-      }
-      // Заплатка на бета окно
-//      if(menu_struct_index == 16)
-//      {
-//        tmp = *Modul_Menu_list[menu_struct_index].Parameter_value;
-//        tmp = tmp / 10;
-//        sprintf(para_string, LANG_BWINDOW_, tmp);
-//      }
-
-
-      para_len = strlen(para_string);   // длинна параметра
-      text_len = strlen(Modul_Menu_list[menu_struct_index].Text);       // линна текста
-      fill_len = max_string_len - para_len - text_len;  // сколько добавлять пустых символов
-      sprintf(tmp_string, Modul_Menu_list[menu_struct_index].Text);     // пишем текст сначала             "Сон"
-      for (j = 0; j < fill_len; j++)
-        strcat(tmp_string, " ");        // добиваем пробелами посередине   "Сон      "
-      // вывод на экран
-      // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
-      sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
-      if(Data.modul_menu_select == menu_struct_index + 1 && Data.enter_menu_item == DISABLE)    // Определение подсветки
-      {
-        LcdStringInv(1, i + start_offset + 1);
-      } else
-      {
-        LcdString(1, i + start_offset + 1);
-      }
-
-      sprintf(lcd_buf, para_string);    // готовим к выводу на значения "10 сек"
-      if(Data.modul_menu_select == menu_struct_index + 1)       // Определение подсветки
-      {
-        LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
-      } else
-      {
-        LcdString(1 + text_len + fill_len, i + start_offset + 1);
-      }
-
-    }
-  }
-//**********************************************************************************************
-  if(mode == NORMAL_menu_mode)
+    menu_page = 0;
+  } else
   {
-    if(Data.menu_select == 0)
-    {
-      menu_page = 0;
-    } else
-    {
 
+    if(mode == NORMAL_menu_mode)
+    {
       if(hidden_menu)
       {
-        menu_page = (Data.menu_select - 1) / (max_string_count - start_offset); // определение страницы меню (полное)
+        menu_page = (Data.menu_select - 1) / (max_string_count - start_offset); // РѕРїСЂРµРґРµР»РµРЅРёРµ СЃС‚СЂР°РЅРёС†С‹ РјРµРЅСЋ (РїРѕР»РЅРѕРµ)
       } else
       {
         if(Data.menu_select <= max_public_string_count)
         {
-          menu_page = (Data.menu_select - 1) / (max_string_count - start_offset);       // определение страницы меню (Публичное)
+          menu_page = (Data.menu_select - 1) / (max_string_count - start_offset);       // РѕРїСЂРµРґРµР»РµРЅРёРµ СЃС‚СЂР°РЅРёС†С‹ РјРµРЅСЋ (РџСѓР±Р»РёС‡РЅРѕРµ)
         } else
         {
           menu_page = 0;
@@ -600,117 +491,140 @@ void menu_screen(uint32_t mode)
       }
     }
 
-    for (i = 0; i < (max_string_count - start_offset); i++)
+    if(mode == AMODUL_menu_mode)
     {
-      uint32_t fill_len = 0;
-      uint32_t para_len = 0;
-      uint32_t text_len = 0;
-      uint32_t menu_struct_index = 0;
-      float tmp;
-      uint32_t tmpi;
-      menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;  // вычисление адеса в структуре
-      if(menu_struct_index >= max_struct_index)
-        break;                  // если меню кончилось
-      if((menu_struct_index >= max_public_string_count) && (!hidden_menu))
-        break;                  // если за границей публичного меню
-      // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
-      // вычисляем значение параметра "10сек"
-      switch (*Menu_list[menu_struct_index].Parameter_value)
+      if(selects_menu <= max_element)
       {
-      case 0:                  // если значение параметра равно нулю, ищем нет ли макроподстановки на этот случай
-        if(Menu_list[menu_struct_index].Param_is_0[0] != '\0')
-        {
-          sprintf(para_string, Menu_list[menu_struct_index].Param_is_0);
-          break;
-        }
+        menu_page = (selects_menu - 1) / (max_string_count - start_offset);     // определение страницы меню (Публичное)
+      } else
+      {
+        menu_page = 0;
+      }
+    }
+  }
 
-      case 1:                  // если значение параметра равен еденице, ищем нет ли макроподстановки на этот случай
-        if(Menu_list[menu_struct_index].Param_is_1[0] != '\0')
-        {
-          sprintf(para_string, Menu_list[menu_struct_index].Param_is_1);
-          break;
-        }
 
-      default:                 // во всех остальных случиях выводим по шаблону
-        sprintf(para_string, Menu_list[menu_struct_index].Param_is_N, *Menu_list[menu_struct_index].Parameter_value);
+  for (i = 0; i < (max_string_count - start_offset); i++)
+  {
+    uint32_t fill_len = 0;
+    uint32_t para_len = 0;
+    uint32_t text_len = 0;
+    uint32_t menu_struct_index = 0;
+    float tmp;
+    uint32_t tmpi;
+    menu_struct_index = (menu_page * (max_string_count - start_offset)) + i;    // вычисление адеса в структуре
+
+    if((menu_struct_index >= max_element) && (!hidden_menu) && (mode == NORMAL_menu_mode))
+      break;
+    if(menu_struct_index >= max_element)
+      break;                    // если меню кончилось
+    // определение размера строки, таким образом чтобы параметр помещался целиком на строку вместе с аргументом (смещение по правому краю)
+    // вычисляем значение параметра "10сек"
+    switch (*structures[menu_struct_index].Parameter_value)
+    {
+    case 0:                    // если значение параметра равно нулю, ищем нет ли макроподстановки на этот случай
+      if(structures[menu_struct_index].Param_is_0[0] != '\0')
+      {
+        sprintf(para_string, structures[menu_struct_index].Param_is_0);
         break;
       }
 
-      // Заплатка на мкЗв
-      if((menu_struct_index == 0) && Settings.units)
-        sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*Menu_list[menu_struct_index].Parameter_value));
-      // Заплатка на изотоп
-      if(menu_struct_index == 10)
+    case 1:                    // если значение параметра равен еденице, ищем нет ли макроподстановки на этот случай
+      if(structures[menu_struct_index].Param_is_1[0] != '\0')
       {
-        tmpi = *Menu_list[menu_struct_index].Parameter_value;
-        switch (tmpi)
-        {
-        case 0x0:
-          sprintf(para_string, LANG_ISOTOP_CS137);
-          break;
-        case 0x1:
-          sprintf(para_string, LANG_ISOTOP_EU152);
-          break;
-        case 0x2:
-          sprintf(para_string, LANG_ISOTOP_NA22);
-          break;
-        case 0x3:
-          sprintf(para_string, LANG_ISOTOP_CD109);
-          break;
-        case 0x4:
-          sprintf(para_string, LANG_ISOTOP_AM241);
-          break;
-        case 0x5:
-          sprintf(para_string, LANG_ISOTOP_Y88);
-          break;
-        case 0x6:
-          sprintf(para_string, LANG_ISOTOP_TI44);
-          break;
-        case 0x7:
-          sprintf(para_string, LANG_ISOTOP_BA133);
-          break;
-        case 0x8:
-          sprintf(para_string, LANG_ISOTOP_TH228);
-          break;
-        }
-      }
-      // Заплатка на бета окно
-      if(menu_struct_index == 16)
-      {
-        tmp = *Menu_list[menu_struct_index].Parameter_value;
-        tmp = tmp / 10;
-        sprintf(para_string, LANG_BWINDOW_, tmp);
+        sprintf(para_string, structures[menu_struct_index].Param_is_1);
+        break;
       }
 
-
-      para_len = strlen(para_string);   // длинна параметра
-      text_len = strlen(Menu_list[menu_struct_index].Text);     // линна текста
-      fill_len = max_string_len - para_len - text_len;  // сколько добавлять пустых символов
-      sprintf(tmp_string, Menu_list[menu_struct_index].Text);   // пишем текст сначала             "Сон"
-      for (j = 0; j < fill_len; j++)
-        strcat(tmp_string, " ");        // добиваем пробелами посередине   "Сон      "
-      // вывод на экран
-      // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
-      sprintf(lcd_buf, tmp_string);     // готовим к выводу на экран "Сон      "
-      if(Data.menu_select == menu_struct_index + 1 && Data.enter_menu_item == DISABLE)  // Определение подсветки
-      {
-        LcdStringInv(1, i + start_offset + 1);
-      } else
-      {
-        LcdString(1, i + start_offset + 1);
-      }
-
-      sprintf(lcd_buf, para_string);    // готовим к выводу на значения "10 сек"
-      if(Data.menu_select == menu_struct_index + 1)     // Определение подсветки
-      {
-        LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
-      } else
-      {
-        LcdString(1 + text_len + fill_len, i + start_offset + 1);
-      }
-
+    default:                   // во всех остальных случиях выводим по шаблону
+      sprintf(para_string, structures[menu_struct_index].Param_is_N, *structures[menu_struct_index].Parameter_value);
+      break;
     }
+
+    // Заплатка на тревогу
+    if(mode == AMODUL_menu_mode)
+      if((menu_struct_index == 0) && (Settings.AMODUL_mode != 0))
+        sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*structures[menu_struct_index].Parameter_value));
+    if(mode == NORMAL_menu_mode)
+      if((menu_struct_index == 0) && Settings.units)
+        sprintf(para_string, LANG_UMKZV, convert_mkr_sv(*structures[menu_struct_index].Parameter_value));
+
+
+
+    // Заплатка на изотоп
+    if(((menu_struct_index == 1) && (mode == AMODUL_menu_mode)) || ((menu_struct_index == 10) && (mode == NORMAL_menu_mode)))
+    {
+      tmpi = *structures[menu_struct_index].Parameter_value;
+      switch (tmpi)
+      {
+      case 0x0:
+        sprintf(para_string, LANG_ISOTOP_CS137);
+        break;
+      case 0x1:
+        sprintf(para_string, LANG_ISOTOP_EU152);
+        break;
+      case 0x2:
+        sprintf(para_string, LANG_ISOTOP_NA22);
+        break;
+      case 0x3:
+        sprintf(para_string, LANG_ISOTOP_CD109);
+        break;
+      case 0x4:
+        sprintf(para_string, LANG_ISOTOP_AM241);
+        break;
+      case 0x5:
+        sprintf(para_string, LANG_ISOTOP_Y88);
+        break;
+      case 0x6:
+        sprintf(para_string, LANG_ISOTOP_TI44);
+        break;
+      case 0x7:
+        sprintf(para_string, LANG_ISOTOP_BA133);
+        break;
+      case 0x8:
+        sprintf(para_string, LANG_ISOTOP_TH228);
+        break;
+      }
+    }
+    // Заплатка на бета окно
+    if((menu_struct_index == 16) && (mode == NORMAL_menu_mode))
+    {
+      tmp = *structures[menu_struct_index].Parameter_value;
+      tmp = tmp / 10;
+      sprintf(para_string, LANG_BWINDOW_, tmp);
+    }
+
+
+    para_len = strlen(para_string);     // длинна параметра
+    text_len = strlen(structures[menu_struct_index].Text);      // линна текста
+    fill_len = max_string_len - para_len - text_len;    // сколько добавлять пустых символов
+    sprintf(tmp_string, structures[menu_struct_index].Text);    // пишем текст сначала             "Сон"
+    for (j = 0; j < fill_len; j++)
+      strcat(tmp_string, " ");  // добиваем пробелами посередине   "Сон      "
+    // вывод на экран
+    // если курсор на пункте, то подсвечиваем. Но если мы вошли в пункт меню, то подсвечиваем только значение
+    sprintf(lcd_buf, tmp_string);       // готовим к выводу на экран "Сон      "
+    if(selects_menu == menu_struct_index + 1 && Data.enter_menu_item == DISABLE)        // Определение подсветки
+    {
+      LcdStringInv(1, i + start_offset + 1);
+    } else
+    {
+      LcdString(1, i + start_offset + 1);
+    }
+
+    sprintf(lcd_buf, para_string);      // готовим к выводу на значения "10 сек"
+    if(selects_menu == menu_struct_index + 1)   // Определение подсветки
+    {
+      LcdStringInv(1 + text_len + fill_len, i + start_offset + 1);
+    } else
+    {
+      LcdString(1 + text_len + fill_len, i + start_offset + 1);
+    }
+
   }
+
+//**********************************************************************************************
+
   LcdUpdate();
 }
 

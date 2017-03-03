@@ -4,219 +4,6 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Калибровка АКБ
-void plus_batcal(uint32_t * param)
-{
-
-  bat_cal_running = 1;
-
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Изменение порога тревоги
-void plus_alarm(uint32_t * param)       // +
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  if((*Menu_list[*param - 1].Parameter_value >= 1000) && (*Menu_list[*param - 1].Parameter_value < 9999))
-    *Menu_list[*param - 1].Parameter_value += 500;
-  if((*Menu_list[*param - 1].Parameter_value >= 100) && (*Menu_list[*param - 1].Parameter_value < 1000))
-    *Menu_list[*param - 1].Parameter_value += 100;
-  if(*Menu_list[*param - 1].Parameter_value < 100)
-    *Menu_list[*param - 1].Parameter_value += 25;
-  if(*Menu_list[*param - 1].Parameter_value > 9999)
-    *Menu_list[*param - 1].Parameter_value = 0;
-
-}
-
-void minus_alarm(uint32_t * param)      // -
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  if(*Menu_list[*param - 1].Parameter_value <= 100)
-    *Menu_list[*param - 1].Parameter_value -= 25;
-  if((*Menu_list[*param - 1].Parameter_value > 100) && (*Menu_list[*param - 1].Parameter_value <= 1000))
-    *Menu_list[*param - 1].Parameter_value -= 100;
-  if((*Menu_list[*param - 1].Parameter_value > 1000) && (*Menu_list[*param - 1].Parameter_value < 9999))
-    *Menu_list[*param - 1].Parameter_value -= 500;
-  if(*Menu_list[*param - 1].Parameter_value > 9999)
-    *Menu_list[*param - 1].Parameter_value = 9500;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Изменение порога сна
-void plus_sleep(uint32_t * param)       //+
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
-  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value * 2;        //*2
-  }
-}
-
-void minus_sleep(uint32_t * param)      //-
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
-  {
-    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
-  } else
-  {
-    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value / 2;        // /2
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// вкл-откл
-void plus_on(uint32_t * param)  // вкл
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  *Menu_list[*param - 1].Parameter_value = 1;
-}
-
-void minus_off(uint32_t * param)        // откл
-{
-  if(*param > max_struct_index)
-    return;
-  if(*param == 0)
-    return;
-
-  *Menu_list[*param - 1].Parameter_value = 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void plus_rad_reset(uint32_t * param)
-{
-  int i;
-
-  for (i = Detector_massive_pointer_max; i > 0; i--)
-  {
-    Detector_massive[i] = 0;
-  }
-  Detector_massive_pointer = 1;
-
-  recalculate_fon();
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void ab_meas_on()
-{
-  uint32_t i;
-  Settings.AB_mode = 2;
-  for (i = 0; i < 15; i++)
-    Detector_AB_massive[i] = 0; // подсчет импульсов за минуту
-  Data.AB_fon = 0;
-
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-void ab_meas_off()
-{
-  Settings.AB_mode = 1;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void plus_ab_engage(uint32_t * param)
-{
-  uint32_t i;
-
-  Settings.AB_mode = 1;
-  for (i = 0; i < 15; i++)
-    Detector_AB_massive[i] = 0; // подсчет импульсов за минуту
-  Data.AB_fon = 0;
-  Data.menu_select = 0;
-  Data.enter_menu_item = DISABLE;
-  Data.screen = 1;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void plus_amodul_engage(uint32_t * param)
-{
-  int i;
-
-  Settings.AMODUL_Alarm_level_raw = (Settings.AMODUL_Alarm_level * Settings.ACAL_count) / 100;
-  Settings.AMODUL_mode = 1;
-
-  // Запуск подсистем модуля
-  tim4_Config();
-
-  for (i = 99; i > 0; i--)
-  {
-    Data.AMODULE_fon[i] = 0;
-  }
-  Data.AMODULE_fon[0] = 0;
-
-  Set_next_B_alarm_wakeup();
-  RTC_ITConfig(RTC_IT_ALRB, ENABLE);
-  RTC_AlarmCmd(RTC_Alarm_B, ENABLE);
-  RTC_ClearFlag(RTC_FLAG_ALRBF);
-
-  Data.menu_select = 0;
-  Data.modul_menu_select = 0;
-  Data.enter_menu_item = DISABLE;
-  Data.screen = 1;
-
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void plus_doze_reset(uint32_t * param)  // Сброс дозы
-{
-  int i;
-
-  for (i = doze_length; i > 0; i--)
-  {
-    ram_Doze_massive[i] = 0;
-    ram_max_fon_massive[i] = 0;
-    Data.Doze_hour_count += ram_Doze_massive[i];
-    Data.Doze_day_count += ram_Doze_massive[i];
-    Data.Doze_week_count += ram_Doze_massive[i];
-  }
-  Data.Doze_hour_count = 0;
-  Data.Doze_day_count = 0;
-  Data.Doze_week_count = 0;
-  DataUpdate.doze_sec_count = 0;
-
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // +
 void plus(uint32_t * param)
 {
@@ -287,6 +74,252 @@ void minus(uint32_t * param)    // -
     }
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Калибровка АКБ
+void plus_batcal(uint32_t * param)
+{
+
+  bat_cal_running = 1;
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Изменение порога тревоги
+void plus_alarm(uint32_t * param)       // +
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  if((*Menu_list[*param - 1].Parameter_value >= 1000) && (*Menu_list[*param - 1].Parameter_value < 9999))
+    *Menu_list[*param - 1].Parameter_value += 500;
+  if((*Menu_list[*param - 1].Parameter_value >= 100) && (*Menu_list[*param - 1].Parameter_value < 1000))
+    *Menu_list[*param - 1].Parameter_value += 100;
+  if(*Menu_list[*param - 1].Parameter_value < 100)
+    *Menu_list[*param - 1].Parameter_value += 25;
+  if(*Menu_list[*param - 1].Parameter_value > 9999)
+    *Menu_list[*param - 1].Parameter_value = 0;
+
+}
+
+void minus_alarm(uint32_t * param)      // -
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  if(*Menu_list[*param - 1].Parameter_value <= 100)
+    *Menu_list[*param - 1].Parameter_value -= 25;
+  if((*Menu_list[*param - 1].Parameter_value > 100) && (*Menu_list[*param - 1].Parameter_value <= 1000))
+    *Menu_list[*param - 1].Parameter_value -= 100;
+  if((*Menu_list[*param - 1].Parameter_value > 1000) && (*Menu_list[*param - 1].Parameter_value < 9999))
+    *Menu_list[*param - 1].Parameter_value -= 500;
+  if(*Menu_list[*param - 1].Parameter_value > 9999)
+    *Menu_list[*param - 1].Parameter_value = 9500;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Изменение порога сна
+void plus_sleep(uint32_t * param)       //+
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  //Если пытаемся привысить максимально допустимое значение, то переходим на минимум
+  if(*Menu_list[*param - 1].Parameter_value >= Menu_list[*param - 1].Max_limit)
+  {
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Min_limit;
+  } else
+  {
+    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value * 2;        //*2
+  }
+}
+
+void minus_sleep(uint32_t * param)      //-
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  if(*Menu_list[*param - 1].Parameter_value <= Menu_list[*param - 1].Min_limit)
+  {
+    *Menu_list[*param - 1].Parameter_value = Menu_list[*param - 1].Max_limit;
+  } else
+  {
+    *Menu_list[*param - 1].Parameter_value = *Menu_list[*param - 1].Parameter_value / 2;        // /2
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// вкл-откл
+void plus_on(uint32_t * param)  // вкл
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  *Menu_list[*param - 1].Parameter_value = 1;
+}
+
+void minus_off(uint32_t * param)        // откл
+{
+  if(*param > max_struct_index)
+    return;
+  if(*param == 0)
+    return;
+
+  *Menu_list[*param - 1].Parameter_value = 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Сброс данных о фоне
+void plus_rad_reset(uint32_t * param)
+{
+  int i;
+
+  for (i = Detector_massive_pointer_max; i > 0; i--)
+  {
+    Detector_massive[i] = 0;
+  }
+  Detector_massive_pointer = 1;
+
+  recalculate_fon();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Замер Альфа-Бета
+void ab_meas_on()
+{
+  uint32_t i;
+  Settings.AB_mode = 2;
+  for (i = 0; i < 15; i++)
+    Detector_AB_massive[i] = 0; // подсчет импульсов за минуту
+  Data.AB_fon = 0;
+
+}
+
+void ab_meas_off()
+{
+  Settings.AB_mode = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void plus_ab_engage(uint32_t * param)
+{
+  uint32_t i;
+
+  Settings.AB_mode = 1;
+  for (i = 0; i < 15; i++)
+    Detector_AB_massive[i] = 0; // подсчет импульсов за минуту
+  Data.AB_fon = 0;
+  Data.menu_select = 0;
+  Data.enter_menu_item = DISABLE;
+  Data.screen = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void plus_amodul_engage(uint32_t * param)
+{
+  int i;
+
+  Settings.AMODUL_Alarm_level_raw = (Settings.AMODUL_Alarm_level * Settings.ACAL_count) / 100;
+  Settings.AMODUL_mode = 1;
+
+  // Запуск подсистем модуля
+  tim4_Config();
+
+  for (i = 99; i > 0; i--)
+  {
+    Data.AMODULE_fon[i] = 0;
+  }
+  Data.AMODULE_fon[0] = 0;
+
+  Set_next_B_alarm_wakeup();
+  RTC_ITConfig(RTC_IT_ALRB, ENABLE);
+  RTC_AlarmCmd(RTC_Alarm_B, ENABLE);
+  RTC_ClearFlag(RTC_FLAG_ALRBF);
+
+  Data.menu_select = 0;
+  Data.modul_menu_select = 0;
+  Data.enter_menu_item = DISABLE;
+  Data.screen = 1;
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Сброс массива дозы
+void plus_doze_reset(uint32_t * param)  // Сброс дозы
+{
+  int i;
+
+  for (i = doze_length; i > 0; i--)
+  {
+    ram_Doze_massive[i] = 0;
+    ram_max_fon_massive[i] = 0;
+    Data.Doze_hour_count += ram_Doze_massive[i];
+    Data.Doze_day_count += ram_Doze_massive[i];
+    Data.Doze_week_count += ram_Doze_massive[i];
+  }
+  Data.Doze_hour_count = 0;
+  Data.Doze_day_count = 0;
+  Data.Doze_week_count = 0;
+  DataUpdate.doze_sec_count = 0;
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Установка референса
@@ -491,8 +524,10 @@ void minus_poweroff(uint32_t * param)   // выключение
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// перезагрузка и выключение
+// Включение USB
 void usb_activate(uint32_t * param)     // Включение USB
 {
   Data.USB_not_active = 0;
@@ -530,6 +565,9 @@ void usb_deactivate(uint32_t * param)   // Выключение USB
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Обработка клавиш
 void keys_proccessing(void)
 {
   extern uint16_t key;
@@ -774,5 +812,6 @@ void keys_proccessing(void)
   }
   if(Data.screen > 3)
     Data.screen = 1;
-
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
