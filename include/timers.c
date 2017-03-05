@@ -61,6 +61,7 @@ void reset_TIM_prescallers_and_Compare(void)
   uint32_t pump_period;
 
   SystemCoreClockUpdate();
+  timer9_Config();
   TIM_PrescalerConfig(TIM10, (uint32_t) (SystemCoreClock / (Settings.Beep_freq * 16)) - 1, TIM_PSCReloadMode_Immediate);        // частота таймера 128 кГц
   TIM_PrescalerConfig(TIM3, (uint32_t) (SystemCoreClock / 800) - 1, TIM_PSCReloadMode_Immediate);       // Делитель (1 тик = 1.25мс)
   TIM_PrescalerConfig(TIM4, (uint32_t) (SystemCoreClock / 100) - 1, TIM_PSCReloadMode_Immediate);       // Делитель (1 тик = 10мс)
@@ -80,7 +81,7 @@ void reset_TIM_prescallers_and_Compare(void)
     pump_period = 32;           // не привышать критический уровень для верии 3.*
 #endif
 
-  TIM_SetCompare1(TIM9, (uint32_t) pump_period);        // перерасчет энергии накачки
+  TIM_SetCompare1(TIM9, pump_period);   // перерасчет энергии накачки
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -95,12 +96,13 @@ void timer9_Config(void)        // генерация накачки
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM9, ENABLE);
 
+
   TIM_OCConfig.TIM_OCMode = TIM_OCMode_PWM1;    // Конфигурируем выход таймера, режим - PWM1
   TIM_OCConfig.TIM_OutputState = TIM_OutputState_Enable;        // Собственно - выход включен
   TIM_OCConfig.TIM_Pulse = Settings.v4_target_pump;
   TIM_OCConfig.TIM_OCPolarity = TIM_OCPolarity_High;    // Полярность => пульс - это единица (+3.3V)
 
-  TIM_BaseConfig.TIM_Prescaler = (uint32_t) (SystemCoreClock / 4000000) - 1;    // Делитель (1 тик = 0.25мкс)
+  TIM_BaseConfig.TIM_Prescaler = (uint16_t) (SystemCoreClock / 4000000) - 1;    // Делитель (1 тик = 0.25мкс)
   TIM_BaseConfig.TIM_ClockDivision = 0;
 #ifdef version_401
   TIM_BaseConfig.TIM_Period = 560;      // ИЗМЕРЕННО ОСЦЫЛОМ, 560!  Общее количество тиков (скваженность) 140мкс (частота накачки 1с/140мкс=** кГц)
@@ -236,7 +238,7 @@ void tim3_Config()
 
   TIM_TimeBaseStructInit(&TIM_BaseConfig);
 
-  TIM_BaseConfig.TIM_Prescaler = (uint32_t) (SystemCoreClock / 800) - 1;        // Делитель (1 тик = 1,25мс)
+  TIM_BaseConfig.TIM_Prescaler = (uint16_t) (SystemCoreClock / 800) - 1;        // Делитель (1 тик = 1,25мс)
   TIM_BaseConfig.TIM_ClockDivision = 0;
   TIM_BaseConfig.TIM_Period = 1;        // Общее количество тиков
   TIM_BaseConfig.TIM_CounterMode = TIM_CounterMode_Up;
@@ -269,7 +271,7 @@ void tim4_Config()              // Модуль-А - поиск
 
   TIM_TimeBaseStructInit(&TIM_BaseConfig);
 
-  TIM_BaseConfig.TIM_Prescaler = (uint32_t) (SystemCoreClock / 100) - 1;        // Делитель (1 тик = 10мс)
+  TIM_BaseConfig.TIM_Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;        // Делитель (1 тик = 10мс)
   TIM_BaseConfig.TIM_ClockDivision = 0;
   TIM_BaseConfig.TIM_Period = 10;       // Общее количество тиков
   TIM_BaseConfig.TIM_CounterMode = TIM_CounterMode_Up;

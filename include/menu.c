@@ -451,7 +451,13 @@ void menu_screen(uint32_t mode)
 
   if(mode == NORMAL_menu_mode)
   {
-    max_element = max_struct_index;
+    if(hidden_menu)
+    {
+      max_element = max_struct_index;
+    } else
+    {
+      max_element = max_public_string_count;
+    }
     structures = Menu_list;
     selects_menu = Data.menu_select;
   }

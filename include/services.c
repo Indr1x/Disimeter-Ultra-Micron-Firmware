@@ -235,7 +235,7 @@ void reload_active_isotop_time()
 void Pump_now(FunctionalState pump)
 {
 
-  if(pump == ENABLE)
+  if(pump == ENABLE && !Power.Pump_deny)
   {
     Power.Pump_active = ENABLE;
     while (PWR_GetFlagStatus(PWR_FLAG_VREFINTRDY) == DISABLE);
@@ -414,6 +414,7 @@ void sleep_mode(FunctionalState sleep)
 {
   if(Settings.Sleep_time > 0 && !Power.USB_active)
   {
+    Power.Pump_deny = ENABLE;
     if(Power.Pump_active)
       Pump_now(DISABLE);
 
@@ -448,6 +449,7 @@ void sleep_mode(FunctionalState sleep)
       RTC_ITConfig(RTC_IT_WUT, ENABLE);
       sound_deactivate();
     }
+    Power.Pump_deny = DISABLE;
   }
 }
 

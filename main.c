@@ -50,9 +50,9 @@ int main(void)
   NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x3000);
 
   set_msi();
-#ifndef debug
+
+  // Отключение отладки
   DBGMCU_Config(DBGMCU_SLEEP | DBGMCU_STANDBY | DBGMCU_STOP, DISABLE);
-#endif
 
   set_bor();
   Power.sleep_now = DISABLE;

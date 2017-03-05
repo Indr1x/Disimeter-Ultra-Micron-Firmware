@@ -142,8 +142,8 @@ void set_msi()
 void set_pll_for_usb()
 {
 
-  TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);     // запретить накачку  
-  Power.Pump_active = DISABLE;
+  //TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);     // запретить накачку  
+  //Power.Pump_active = DISABLE;
   PWR_VoltageScalingConfig(PWR_VoltageScaling_Range1);  // Voltage Scaling Range 1 (VCORE = 1.8V)
   while (PWR_GetFlagStatus(PWR_FLAG_VOS) != RESET);     // Wait Until the Voltage Regulator is ready
 
@@ -181,10 +181,10 @@ void set_pll_for_usb()
   /* Wait till PLL is used as system clock source */
   while (RCC_GetSYSCLKSource() != 0x0C);
 
-  SystemCoreClockUpdate();
+//  SystemCoreClockUpdate();
   reset_TIM_prescallers_and_Compare();
 
-  Power.Pump_active = DISABLE;
+//  Power.Pump_active = DISABLE;
 }
 
 //-------------------------------------------------------------------------------------------------------
