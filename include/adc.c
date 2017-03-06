@@ -15,7 +15,7 @@ void adc_check_event(void)
     RCC_HSICmd(DISABLE);        // Выключаем HSI
     ADCData.Batt_voltage = ((ADCData.Calibration_bit_voltage * ADCData.Batt_voltage_raw) / 1000) * 2;
 
-    reset_TIM_prescallers_and_Compare();
+    PumpPrescaler();
 
     DataUpdate.Need_batt_voltage_update = DISABLE;
   }

@@ -232,37 +232,6 @@ void reload_active_isotop_time()
 
 // ===============================================================================================
 
-void Pump_now(FunctionalState pump)
-{
-
-  if(pump == ENABLE && !Power.Pump_deny)
-  {
-    Power.Pump_active = ENABLE;
-    while (PWR_GetFlagStatus(PWR_FLAG_VREFINTRDY) == DISABLE);
-    comp_on();                  // Включаем компаратор
-
-//    dac_on();                   // Включаем ЦАП
-    TIM9->EGR |= 0x0001;        // Устанавливаем бит UG для принудительного сброса счетчика
-    TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
-
-    TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Enable);    // разрешить накачку   
-    TIM_ITConfig(TIM9, TIM_IT_Update, ENABLE);
-
-  } else
-  {
-    comp_off();                 // Выключаем компаратор
-
-    TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);   // запретить накачку
-    TIM_ITConfig(TIM9, TIM_IT_Update, DISABLE);
-    //pump_counter_avg_impulse_by_1sec[0]++;
-//    dac_off();                  // Выключаем ЦАП
-    TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
-    Power.Pump_active = DISABLE;
-  }
-}
-
-// ===============================================================================================
-
 
 void check_wakeup_keys(void)
 {
@@ -414,10 +383,10 @@ void sleep_mode(FunctionalState sleep)
 {
   if(Settings.Sleep_time > 0 && !Power.USB_active)
   {
-    Power.Pump_deny = ENABLE;
+/*    Power.Pump_deny = ENABLE;
     if(Power.Pump_active)
       Pump_now(DISABLE);
-
+*/
     set_msi();
     if(sleep)
     {
@@ -449,7 +418,7 @@ void sleep_mode(FunctionalState sleep)
       RTC_ITConfig(RTC_IT_WUT, ENABLE);
       sound_deactivate();
     }
-    Power.Pump_deny = DISABLE;
+//    Power.Pump_deny = DISABLE;
   }
 }
 

@@ -4,7 +4,6 @@
 #include "stm32l1xx.h"
 
 #include "adc.h"
-#include "comp.h"
 #include "clock.h"
 #include "dac.h"
 #include "delay.h"
@@ -21,6 +20,7 @@
 #include "services.h"
 #include "stm32_it.h"
 #include "timers.h"
+#include "pump.h"
 
 #include "usb.h"
 #include "hw_config.h"
@@ -80,6 +80,15 @@ typedef struct
   uint32_t DAC_voltage_raw;     // Уровень накачки для DAC
 
 } ADCDataDef;
+
+
+typedef struct
+{
+  uint32_t Impulses_to_normal_voltage;  // Импульсов накачки до нормализации напряжения
+  FunctionalState Active;       // Активна ли накачка
+  uint32_t pump_counter_avg_impulse_by_1sec[2]; // Колличество импульсов накачки
+
+} PumpDataDef;
 
 
 typedef struct
@@ -231,6 +240,13 @@ extern uint32_t ix_update;
 #define eeprom_send_data 3
 
 
+// Команды компаратора
+#define INIT_COMP 0
+#define ON_COMP 1
+#define OFF_COMP 2
+
+
+
 extern uint16_t bat_cal_running;
 
 
@@ -287,7 +303,6 @@ typedef struct
   uint8_t screen;
   uint8_t stat_screen_number;
 
-  uint16_t pump_counter_avg_impulse_by_1sec[2]; // Колличество импульсов накачки
   uint32_t fon_level;           // Фон
   uint32_t working_days;        // Наработка дней
   uint8_t auto_speedup_factor;  // Коэфицент ускорения счета фона
@@ -356,5 +371,6 @@ extern PowerDef Power;
 extern DataDef Data;
 extern SettingsDef Settings;
 extern AlarmDef Alarm;
+extern PumpDataDef PumpData;
 
 #endif

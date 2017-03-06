@@ -413,7 +413,7 @@ void minus_poweroff(uint32_t * param)   // выключение
 
   sleep_mode(ENABLE);
   poweroff_state = ENABLE;
-  Pump_now(DISABLE);
+//  Pump_now(DISABLE);
 // =======================================================
 // Де-Инициализация прерывания датчика 1
 

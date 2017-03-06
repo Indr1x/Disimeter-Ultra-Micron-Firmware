@@ -10,6 +10,7 @@ SettingsDef Settings;
 AlarmDef Alarm;
 PowerDef Power;
 DataDef Data;
+PumpDataDef PumpData;
 
 uint16_t key;                   // массив нажатых кнопок [012]
 
@@ -76,12 +77,6 @@ int main(void)
   Power.sleep_time = Settings.Sleep_time;
   Power.Display_active = ENABLE;
 
-//  ADCData.DAC_voltage_raw = 0x4FD;
-
-//  dac_init();
-  comp_init();
-  comp_on();
-  timer9_Config();              // Конфигурируем таймер накачки        
   timer10_Config();
   tim2_Config();
   tim3_Config();
@@ -111,6 +106,10 @@ int main(void)
   EXTI3_Config();
   EXTI4_Config();
   EXTI6_Config();
+
+  // Инициализация накачки
+  PumpTimerConfig();
+
 
   DataUpdate.Need_batt_voltage_update = ENABLE;
 
@@ -170,7 +169,7 @@ int main(void)
         if(SystemCoreClock > 20000000)  // Если частота выше 20 мгц, понизить частоту
           set_msi();
 
-        if(!Power.Pump_active && !Power.Sound_active && (Settings.AMODUL_mode == 0))
+        if(!PumpData.Active && !Power.Sound_active && (Settings.AMODUL_mode == 0))
         {
           PWR_FastWakeUpCmd(ENABLE);
           PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI); // Переходим в сон

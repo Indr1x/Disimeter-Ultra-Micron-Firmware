@@ -47,7 +47,7 @@ void set_msi()
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
-  TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);     // запретить накачку
+//  TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);     // запретить накачку
 
   FLASH_SetLatency(FLASH_Latency_1);
   FLASH_PrefetchBufferCmd(ENABLE);
@@ -123,7 +123,7 @@ void set_msi()
   while (PWR_GetFlagStatus(PWR_FLAG_VOS) != RESET);     // Wait Until the Voltage Regulator is ready
 
   reset_TIM_prescallers_and_Compare();
-
+  PumpPrescaler();
 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_400KHz;
@@ -142,8 +142,6 @@ void set_msi()
 void set_pll_for_usb()
 {
 
-  //TIM_CCxCmd(TIM9, TIM_Channel_1, TIM_CCx_Disable);     // запретить накачку  
-  //Power.Pump_active = DISABLE;
   PWR_VoltageScalingConfig(PWR_VoltageScaling_Range1);  // Voltage Scaling Range 1 (VCORE = 1.8V)
   while (PWR_GetFlagStatus(PWR_FLAG_VOS) != RESET);     // Wait Until the Voltage Regulator is ready
 
@@ -163,8 +161,8 @@ void set_pll_for_usb()
   /* PCLK2 = HCLK */
   RCC_PCLK2Config(RCC_HCLK_Div1);
 
-  /* PCLK1 = HCLK/2 */
-  RCC_PCLK1Config(RCC_HCLK_Div2);
+  /* PCLK1 = HCLK */
+  RCC_PCLK1Config(RCC_HCLK_Div1);
 
   /* PLLCLK = 8MHz * 12 / 3 = 32 MHz */
   RCC_PLLConfig(RCC_PLLSource_HSE, RCC_PLLMul_12, RCC_PLLDiv_3);
@@ -181,10 +179,8 @@ void set_pll_for_usb()
   /* Wait till PLL is used as system clock source */
   while (RCC_GetSYSCLKSource() != 0x0C);
 
-//  SystemCoreClockUpdate();
   reset_TIM_prescallers_and_Compare();
-
-//  Power.Pump_active = DISABLE;
+  PumpPrescaler();
 }
 
 //-------------------------------------------------------------------------------------------------------

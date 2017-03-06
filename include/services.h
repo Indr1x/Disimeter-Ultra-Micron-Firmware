@@ -1,7 +1,6 @@
 #ifndef __services_user_H
 #define __services_user_H
 
-void Pump_now(FunctionalState);
 void check_wakeup_keys(void);
 FunctionalState check_license(void);
 float convert_mkr_sv(uint32_t);

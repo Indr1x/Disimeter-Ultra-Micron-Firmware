@@ -661,12 +661,12 @@ void stat_screen()
     LcdString(1, 6);            // // Выводим обычным текстом содержание буфера на строку 8
     sprintf(lcd_buf, LANG_IMPMINAR);    // Выводим на дисплей
     LcdString(1, 7);            // // Выводим обычным текстом содержание буфера на строку 8
-    if(Data.pump_counter_avg_impulse_by_1sec[1] == 0)
+    if(PumpData.pump_counter_avg_impulse_by_1sec[1] == 0)
     {
       sprintf(lcd_buf, LANG_CALC2);
     }                           // Выводим на дисплей
     else
-      sprintf(lcd_buf, "%5i ", Data.pump_counter_avg_impulse_by_1sec[1]);       // Выводим на дисплей
+      sprintf(lcd_buf, "%5i ", PumpData.pump_counter_avg_impulse_by_1sec[1]);   // Выводим на дисплей
     LcdString(1, 8);            // // Выводим обычным текстом содержание буфера на строку 8
     sprintf(lcd_buf, LANG_4IDN, Data.working_days);     // Выводим на дисплей
     LcdString(9, 8);            // // Выводим обычным текстом содержание буфера на строку 8

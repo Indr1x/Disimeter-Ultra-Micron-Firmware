@@ -164,9 +164,9 @@ void EXTI4_IRQHandler(void)
 // Прерывание по импульсу от датчика и кнопки 2
 void EXTI9_5_IRQHandler(void)
 {
-  extern __IO uint8_t Receive_Buffer[64];
-  extern __IO uint32_t Receive_length;
-  extern __IO uint32_t length;
+  // extern __IO uint8_t Receive_Buffer[64];
+//  extern __IO uint32_t Receive_length;
+//  extern __IO uint32_t length;
   if(EXTI_GetITStatus(EXTI_Line8) != RESET)
   {
     EXTI_ClearITPendingBit(EXTI_Line8);
@@ -181,7 +181,7 @@ void EXTI9_5_IRQHandler(void)
         Detector_AB_massive[0]++;
       }
 
-      if(Power.Pump_active == DISABLE)
+/*      if(Power.Pump_active == DISABLE)
       {
         if(Data.last_count_pump_on_impulse > 10)
         {
@@ -191,6 +191,7 @@ void EXTI9_5_IRQHandler(void)
         } else
           Data.last_count_pump_on_impulse++;
       }
+*/
       if(Settings.Sound && !(Alarm.Alarm_active && !Alarm.User_cancel))
       {
         if(Power.Display_active)
@@ -230,26 +231,6 @@ void EXTI9_5_IRQHandler(void)
 
 }
 
-
-// =======================================================
-// Прерывание при конце интервала одного импульса накачки
-void TIM9_IRQHandler(void)
-{
-  if((TIM9->CCER & (TIM_CCx_Enable << TIM_Channel_1)) && !poweroff_state)
-  {
-    current_pulse_count++;
-    Data.pump_counter_avg_impulse_by_1sec[0]++;
-    if(COMP->CSR & COMP_CSR_INSEL)      // если компаратор активен
-    {
-      if(Power.Pump_active == DISABLE)
-        Pump_now(DISABLE);
-    } else
-    {
-      comp_on();
-    }
-  }
-  TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
-}
 
 // ========================================================
 // генерация звука на динамик
@@ -419,6 +400,7 @@ void RTC_Alarm_IRQHandler(void)
   int i;
 
   EXTI_ClearITPendingBit(EXTI_Line17);
+
   // Модуль-А
   if(RTC_GetITStatus(RTC_IT_ALRB) != RESET)
   {
@@ -516,20 +498,20 @@ void RTC_Alarm_IRQHandler(void)
         if(!Power.USB_active)
           Data.madorc_impulse = 0;
 
-        Data.pump_counter_avg_impulse_by_1sec[1] = Data.pump_counter_avg_impulse_by_1sec[0];
-        Data.pump_counter_avg_impulse_by_1sec[0] = 0;
+        PumpData.pump_counter_avg_impulse_by_1sec[1] = PumpData.pump_counter_avg_impulse_by_1sec[0];
+        PumpData.pump_counter_avg_impulse_by_1sec[0] = 0;
         DataUpdate.pump_counter_update_time = 0;
 
-        if(Data.pump_counter_avg_impulse_by_1sec[1] == 0)       //затычка на случай глюка с накачкой
+/*        if(Data.pump_counter_avg_impulse_by_1sec[1] == 0)       //затычка на случай глюка с накачкой
         {
 //          dac_init();
           Pump_now(DISABLE);
           while (RTC_WakeUpCmd(DISABLE) != SUCCESS);
-          RTC_SetWakeUpCounter(0xF96);  // Установить таймаут просыпания = 2 секунды
+          RTC_SetWakeUpCounter(0x100);
           current_pulse_count = 0;
           while (RTC_WakeUpCmd(ENABLE) != SUCCESS);
         }
-
+*/
       } else
         DataUpdate.pump_counter_update_time++;
 
@@ -674,7 +656,7 @@ void RTC_Alarm_IRQHandler(void)
         Power.sleep_time = 0;
       }
     }
-    if(Pump_on_alarm == ENABLE)
+/*    if(Pump_on_alarm == ENABLE)
     {
       if(Settings.Pump_aggressive == ENABLE)
       {
@@ -691,123 +673,10 @@ void RTC_Alarm_IRQHandler(void)
         }
       }
     }
+*/
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void RTC_WKUP_IRQHandler(void)
-{
-  EXTI_ClearITPendingBit(EXTI_Line20);
-  if(!poweroff_state)
-  {
-    if(RTC_GetITStatus(RTC_IT_WUT) != RESET)
-    {
-      RTC_ClearITPendingBit(RTC_IT_WUT);
-      if(!Power.Pump_active)
-      {
-        Pump_now(ENABLE);
-      }
-    }
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void COMP_IRQHandler(void)
-{
-  uint32_t i;
-  extern uint16_t current_pulse_count;
-  if(EXTI_GetITStatus(EXTI_Line22) != RESET)
-  {
-    if(!poweroff_state)
-    {
-      // Зафиксирован выброс нужной амплитуды, выключаем накачку
-
-      Pump_now(DISABLE);
-      if(!pump_on_impulse)
-      {
-        i = RTC->WUTR;
-        if(current_pulse_count > 20)    // если подключена мощьная нагрузка типа мультиметра, резко ускаряем накачку.
-        {
-          if(i > 0x80)
-          {
-#ifdef version_401              // Для версии 4+ делить на 4 для стабилизации накачки
-            i >>= 2;            // ускоренное деление на 4
-#else
-            i >>= 4;            // ускоренное деление на 16
-#endif
-          } else
-          {
-            i = 0x8;            // Если делить нельзя, то = 4 мс
-          }
-        } else
-        {
-          if(i < 0x8)
-            i = 0x8;
-          if(current_pulse_count > 2)   // Если количество импульсов велико, то напряжения не достаточно, ускоряем накачку.
-          {
-            if(i > 0x0010)
-              i >>= 1;          // деление на 2
-          } else
-#ifdef version_401              // Для версии 4+ накачка немного более агресивна
-          {                     // Количество импульсов накачки мало, значит можно увеличить интервал между импульсами.
-            i <<= 1;            // умножаем на 2
-            if(i > 0x1E00)
-              i = 0x2000;       // придел 4 секунды
-          }
-#else
-          {                     // Количество импульсов накачки мало, значит можно увеличить интервал между импульсами.
-            if(i < 0x7FFF)      //Если больше половины от максимума
-            {
-              i <<= 1;          // умножаем на 2
-            } else
-            {
-              // если умножать на 2 уже нельзя, просто прибавляем до придела
-              i = i + 0x2000;   // + 4 секунды
-              if(i > 0xFFFF)
-                i = 0xFFFF;     // придел 32 секунды
-            }
-          }
-#endif
-
-        }
-#ifdef version_401              // Для версии 4+
-        if(i == 0x2000)
-        {
-          RTC_ITConfig(RTC_IT_WUT, DISABLE);
-          RTC_WakeUpCmd(DISABLE);
-          Pump_on_alarm = ENABLE;
-        } else
-        {
-          RTC_ITConfig(RTC_IT_WUT, ENABLE);
-          Pump_on_alarm = DISABLE;
-#endif
-          if(RTC->WUTR != i)
-          {
-            while (RTC_WakeUpCmd(DISABLE) != SUCCESS);
-            RTC_SetWakeUpCounter(i);    // Установить таймаут просыпания
-            while (RTC_WakeUpCmd(ENABLE) != SUCCESS);
-          }
-#ifdef version_401              // Для версии 4+
-        }
-#endif
-        current_pulse_count = 0;
-      } else
-      {
-        //last_count_pump_on_impulse = current_pulse_count;
-        pump_on_impulse = DISABLE;
-      }
-
-    }
-    EXTI_ClearITPendingBit(EXTI_Line22);
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
