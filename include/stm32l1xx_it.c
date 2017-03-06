@@ -502,16 +502,6 @@ void RTC_Alarm_IRQHandler(void)
         PumpData.pump_counter_avg_impulse_by_1sec[0] = 0;
         DataUpdate.pump_counter_update_time = 0;
 
-/*        if(Data.pump_counter_avg_impulse_by_1sec[1] == 0)       //затычка на случай глюка с накачкой
-        {
-//          dac_init();
-          Pump_now(DISABLE);
-          while (RTC_WakeUpCmd(DISABLE) != SUCCESS);
-          RTC_SetWakeUpCounter(0x100);
-          current_pulse_count = 0;
-          while (RTC_WakeUpCmd(ENABLE) != SUCCESS);
-        }
-*/
       } else
         DataUpdate.pump_counter_update_time++;
 
