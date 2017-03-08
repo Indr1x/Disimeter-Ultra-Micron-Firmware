@@ -4,6 +4,7 @@
 #pragma O0
 
 #define GOOD_IMP_THRESHOLD 2    // ѕорог импульсов, ниже которого требуетс€ подкачка
+#define FAST_IMP_THRESHOLD 25   // ѕорог импульсов, выше которого требуетс€ резкое ускорение подкачки
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void TIM9_IRQHandler(void)
@@ -45,6 +46,12 @@ void COMP_IRQHandler(void)
         i <<= 1;                // умножаем на 2
         if(i > 0x1E00)
           i = 0x2000;           // придел 32 секунды
+
+      }
+
+      if(PumpData.Impulses_to_normal_voltage > FAST_IMP_THRESHOLD)
+      {
+        i = 0x10;
 
       }
 

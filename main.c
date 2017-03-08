@@ -81,9 +81,6 @@ int main(void)
   tim2_Config();
   tim3_Config();
   tim4_Config();
-  sound_activate();
-  delay_ms(100);
-  sound_deactivate();
 //--------------------------------------------------------------------
   RTC_Config();                 // Конфигурируем часы с нуля
 //--------------------------------------------------------------------
@@ -116,7 +113,9 @@ int main(void)
   if(!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6))
     hidden_menu = ENABLE;       // Открытие сервисных пунктов меню
 
+  sound_activate();
   delay_ms(500);                // подождать установки напряжения
+  sound_deactivate();
 
   while (1)
 /////////////////////////////////
