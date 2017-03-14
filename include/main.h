@@ -102,10 +102,6 @@ typedef struct
   uint32_t Display_reverse;     // переворот дисплея
   uint32_t Sound;               // Звук вкл-выкл
   uint32_t Second_count;
-  uint32_t LSI_freq;
-#ifndef version_401             // Версия платы дозиметра 4.01+
-  uint32_t USB;
-#endif
   uint32_t v4_target_pump;
   uint32_t Speedup;
   uint32_t units;

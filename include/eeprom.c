@@ -129,14 +129,6 @@ void eeprom_write_settings(uint32_t menu_massive)
     eeprom_write(Isotop_count_ba133_address, Settings.Isotop_count_ba133);
   if(eeprom_read(Isotop_count_th228_address) != Settings.Isotop_count_th228)
     eeprom_write(Isotop_count_th228_address, Settings.Isotop_count_th228);
-
-
-/*  if(Settings.LSI_freq != 0x00) // если запустился кварц, попытки сохранения игнорировать
-  {
-    if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
-      eeprom_write(LSI_freq_address, Settings.LSI_freq);
-  }
-	*/
 }
 
 //**************************************************************************
@@ -164,18 +156,6 @@ void eeprom_apply_settings(uint32_t addr)
   {
     reload_active_isotop_time();
   }
-
-
-  /*  if(eeprom_read(LSI_freq_address) != Settings.LSI_freq)
-     {
-     if(Settings.LSI_freq != 0x00)       // если запустился кварц, попытки сохранения игнорировать
-     {
-     eeprom_write(LSI_freq_address, Settings.LSI_freq);
-     NVIC_SystemReset();
-     }
-     }
-   */
-
   // -------------------------------------------------------------------
   if((eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137) ||
      (eeprom_read(Isotop_count_eu152_address) != Settings.Isotop_count_eu152) ||

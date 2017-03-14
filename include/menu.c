@@ -8,28 +8,22 @@ MenuItem Menu_list[max_struct_index] = {
 {0x00, 0x00, 		LANG_ALARM,			LANG_OFF,			"",				LANG_UMKR,			&Settings.Alarm_level,			0,			10000,	60,			&plus_alarm,			0x00,			&minus_alarm,			0x00},
 {0x00, 0x04, 		LANG_SLEEP,			LANG_OFF,			"",				LANG_USEC,			&Settings.Sleep_time,				10,			10240,	40,			&plus_sleep,			0x00,			&minus_sleep,			0x00},
 {0x00, 0x18, 		LANG_SOUND,			LANG_OFF,			LANG_ON,	LANG_KEY,				&Settings.Sound,						0,			2,			0,			&plus,						1,				&minus,						1},
-#ifdef version_401
 {0x00, 0x50, 		LANG_VIBRO,			LANG_OFF,			LANG_ON,	LANG_ALARM2,		&Settings.Vibro,						0,			2,			0x00,		&plus,						1,				&minus,					1},
-#else
-{0x00, 0xFFFF,  LANG_USBMODE,		LANG_OFF,			LANG_ON,	"",							&Settings.USB,							0x00,		0x00,		0x00,		&usb_activate,		0x00,			&usb_deactivate,	0x00},
-#endif
 {0x00, 0xFFFF,  LANG_CLEARDO,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_doze_reset,	0x00,			0x00,							0x00},
 {0x00, 0xFFFF,  LANG_REBOOT,		"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_reboot,			0x00,			&minus_poweroff,	0x00},
 {0x00, 0x58,		LANG_UNITS,			LANG_UR,			LANG_UZV,	"",							&Settings.units,						0x00,		0x01,		0x00,		&plus,						1,				&minus,						0x00},
 {0x00, 0xFFFF,  LANG_CLEAR_FON,	"*",					"*", 			"*",						0x00,												0x00,		0x00,		0x00,		&plus_rad_reset,	0x00,			0x00,							0x00},
-{0x00, 0xFFFF,  LANG_BETA_MEAS,	"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_ab_engage,	0x00,			0x00,							0x00},
-//{0x00, LANG_SCINT_MEAS,	"*",			"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_amodul_engage,		0x00},
 {0x01, 0x7C,		LANG_SPEED,		LANG_OFF,			LANG_ON,	"",								&Settings.Speedup,					0x00,		0x01,		0x00,		&plus,						1,				&minus,						1},
-// Заплатка на изотоп if(menu_struct_index == 10) ! Исправить в коде при изменении порядка пунктов меню!
+// Заплатка на изотоп if(menu_struct_index == 9) ! Исправить в коде при изменении порядка пунктов меню!
 {0x01, 0x80,		LANG_ISOTOP,		"",			      "",	    "",								&Settings.Isotop,						0x00,		0x08,		0x00,		&plus,						1,				&minus,						1},
 
 // Приватные пункты меню
+{0x00, 0xFFFF,  LANG_BETA_MEAS,	"*",					"*",			"*",						0x00,												0x00,		0x00,		0x00,		&plus_ab_engage,	0x00,			0x00,							0x00},
 {0x01, 0x0C, 		LANG_CONTRAST,	"",						"",				"%u",						&Settings.contrast,					0,			15,			0,			&plus,						1,				&minus,						1},
 {0x01, 0x08, 		LANG_REVERSE,		LANG_OFF,			"",				"%u",						&Settings.Display_reverse,	0,			5,			0,			&plus,						1,				&minus,						1},
-{0x01, 0x44, 		"LSI",					LANG_QUARTZ,	"",				LANG_UHZ,				&Settings.LSI_freq,					26000,	56000,	38000,	&plus,						500,			&minus,						500},
 {0x01, 0x54, 		LANG_V4PUMP,		"",						"",				LANG_UV4PUMP,		&Settings.v4_target_pump,		4,			14,			11,			&plus,						1,				&minus,						1},
 {0x01, 0x30, 		LANG_VOLTAGE,		"",						"",				LANG_UV,				&Settings.Geiger_voltage,		300,		450,		380,		&plus,						10,				&minus,						10},
-// Заплатка на бета окно if(menu_struct_index == 16) ! Исправить в коде при изменении порядка пунктов меню!
+// Заплатка на бета окно if(menu_struct_index == 15) ! Исправить в коде при изменении порядка пунктов меню!
 {0x01, 0x6C,		LANG_BWINDOW,		"",						"",				LANG_BWINDOW_,	&Settings.Beta_window,			1,			100,		20,			&plus,						1,				&minus,						1},
 {0x01, 0x70,		LANG_BPROCENT,	"",						"",				LANG_BPROCENT_,	&Settings.Beta_procent,			1,			100,		37,			&plus,						1,				&minus,						1},
 {0x01, 0xFFFF,	LANG_REF_VOLT,	"",						"",				LANG_REF_VOLT_,	&ADCData.Power_voltage,			1202,		1242,		1224,		&plus_one_ref,		0x00,			&minus_one_ref,		0x00},
@@ -558,7 +552,7 @@ void menu_screen(uint32_t mode)
 
 
     // Заплатка на изотоп
-    if(((menu_struct_index == 1) && (mode == AMODUL_menu_mode)) || ((menu_struct_index == 10) && (mode == NORMAL_menu_mode)))
+    if(((menu_struct_index == 1) && (mode == AMODUL_menu_mode)) || ((menu_struct_index == 9) && (mode == NORMAL_menu_mode)))
     {
       tmpi = *structures[menu_struct_index].Parameter_value;
       switch (tmpi)
@@ -593,7 +587,7 @@ void menu_screen(uint32_t mode)
       }
     }
     // Заплатка на бета окно
-    if((menu_struct_index == 16) && (mode == NORMAL_menu_mode))
+    if((menu_struct_index == 15) && (mode == NORMAL_menu_mode))
     {
       tmp = *structures[menu_struct_index].Parameter_value;
       tmp = tmp / 10;
