@@ -94,7 +94,6 @@ void io_init(void)
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-#ifdef version_401
 // ===============================================================================================  
   //Конфигурируем ножку для детектора USB
   GPIO_StructInit(&GPIO_InitStructure);
@@ -115,7 +114,6 @@ void io_init(void)
   GPIO_Init(GPIOA, &GPIO_InitStructure);
   GPIO_ResetBits(GPIOA, GPIO_Pin_15);   // Переключаем в режим 3 вольта
 
-#endif
 
 // ===============================================================================================  
   // Ножка изиерения напряжения АКБ

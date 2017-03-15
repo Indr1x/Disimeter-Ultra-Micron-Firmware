@@ -35,7 +35,6 @@ void EXTI8_Config(void)
   NVIC_Init(&NVIC_InitStructure);
 }
 
-#ifdef version_401
 // =======================================================
 // Инициализация прерывания детектора USB
 void EXTI9_Config(void)
@@ -68,7 +67,6 @@ void EXTI9_Config(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 }
-#endif
 
 // =======================================================
 // Инициализация прерывания по нажатию кнопки 0

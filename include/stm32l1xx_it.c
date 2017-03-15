@@ -217,7 +217,6 @@ void EXTI9_5_IRQHandler(void)
       check_wakeup_keys();
     }
   }
-#ifdef version_401
   if(EXTI_GetITStatus(EXTI_Line9) != RESET)     // Подключено USB
   {
     EXTI_ClearITPendingBit(EXTI_Line9);
@@ -227,7 +226,6 @@ void EXTI9_5_IRQHandler(void)
       Power.sleep_time = Settings.Sleep_time;
     }
   }
-#endif
 
 }
 

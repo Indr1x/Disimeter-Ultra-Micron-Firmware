@@ -262,222 +262,212 @@ void USB_work()
     //wait_count=0;
     //while((packet_receive != 1) && (wait_count<=1000))wait_count++; // Ждем принятия пакета
 
-#ifndef version_401             // Версия платы дозиметра 4.01+
-    if(Settings.USB == 1)       // MadOrc
-#endif
-      if(Receive_length != 0)
+    if(Receive_length != 0)
+    {
+      current_rcvd_pointer = 0; // сброс счетчика текущей позиции приема
+
+      // Предотвращение загрузки старых неверных блоков данных.
+      if(DataUpdate.Need_erase_flash == ENABLE)
       {
-        current_rcvd_pointer = 0;       // сброс счетчика текущей позиции приема
-
-        // Предотвращение загрузки старых неверных блоков данных.
-        if(DataUpdate.Need_erase_flash == ENABLE)
-        {
-          full_erase_flash();
-          DataUpdate.Need_erase_flash = DISABLE;
-        }
-        Data.USB_not_active = 0;        // Сброс четчика неактивности USB 
-
-        while (Receive_length > current_rcvd_pointer)
-        {
-          if(current_rcvd_pointer >= VIRTUAL_COM_PORT_DATA_SIZE)
-            return;
-          switch (Receive_Buffer[current_rcvd_pointer])
-          {
-          case 0xD4:           // Отправка данных по запросу каждую минуту (RCV 1 байт)
-            if(Settings.Cal_mode != 1)
-              USB_send_madorc_data();
-            current_rcvd_pointer++;
-            break;
-
-          case 0xE0:           // Отправка серийного номера МК (RCV 1 байт)
-            USB_send_serial_data(0);
-            current_rcvd_pointer++;
-            break;
-
-          case 0xE1:           // Отправка серийного номера МК (RCV 1 байт)
-            USB_send_serial_data(1);
-            current_rcvd_pointer++;
-            break;
-
-          case 0xE2:           // Отправка серийного номера МК (RCV 1 байт)
-            USB_send_serial_data(2);
-            current_rcvd_pointer++;
-            break;
-          case 0xE5:           // Отправка даты прошивки (RCV 1 байт)
-            Send_Buffer[0] = 0xE5;      // передать ключ
-            Send_Buffer[1] = __DATE__[4];       // день
-            Send_Buffer[2] = __DATE__[5];       // день
-            Send_Buffer[3] = __DATE__[0];       // месяц
-            Send_Buffer[4] = __DATE__[1];       // месяц
-            Send_Buffer[5] = __DATE__[2];       // месяц
-            Send_Buffer[6] = __DATE__[10];      // год
-            Send_length = 7;
-            current_rcvd_pointer++;
-            break;
-
-          case 0xE6:           // Отправка версии железа (RCV 1 байт)
-            Send_Buffer[0] = 0xE6;      // передать ключ
-            Send_Buffer[1] = HW_REVISION[0];
-            Send_Buffer[2] = HW_REVISION[1];
-            Send_Buffer[3] = HW_REVISION[2];
-            Send_Buffer[4] = HW_REVISION[3];
-            Send_Buffer[5] = HW_REVISION[4];
-            Send_Buffer[6] = 0x00;
-            Send_length = 7;
-
-            current_rcvd_pointer++;
-            break;
-
-          case 0xD5:           // Отправка метки смещения времени (RCV 1 байт)
-            USB_send_time_offset_data();
-            current_rcvd_pointer++;
-            break;
-
-          case 0x31:           // передача массива максимального фона (RCV 1 байт)
-            Send_length = prepare_data(max_fon_select, &USB_maxfon_massive_pointer, 0xF1);      // Подготовка массива данных к передаче
-            if(Send_length == 0)
-              current_rcvd_pointer++;   // Если массив исчерпан
-            break;
-
-          case 0x32:           // передача массива дозы (RCV 1 байт)
-            Send_length = prepare_data(dose_select, &USB_doze_massive_pointer, 0xF3);   // Подготовка массива данных к передаче
-            if(Send_length == 0)
-              current_rcvd_pointer++;   // Если массив исчерпан
-            break;
-
-          case 0x33:           // передача настроек (RCV 1 байт)
-            USB_maxfon_massive_pointer = 0;
-            USB_doze_massive_pointer = 0;
-            USB_send_settings_data();
-            current_rcvd_pointer++;
-            break;
-
-          case 0x34:           // передача калибровки (RCV 1 байт)
-            USB_send_calibration_data();
-            current_rcvd_pointer++;
-            break;
-
-          case 0x35:           // запуск калибровки (RCV 1 байт)
-            for (i = 0; i < 19; i++)
-              Data.Cal_count_mass[i] = 0;
-            Cal_count = 0;
-            Cal_count_time = 0;
-            Settings.Cal_mode = 1;
-            Data.menu_select = 0;
-            Data.enter_menu_item = DISABLE;
-            Data.screen = 1;
-            hidden_menu = ENABLE;
-            GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-            current_rcvd_pointer++;
-            break;
-
-          case 0x36:           // выход из калибровки (RCV 1 байт)
-            for (i = 0; i < 19; i++)
-              Data.Cal_count_mass[i] = 0;
-            Cal_count = 0;
-            Cal_count_time = 0;
-            Settings.Cal_mode = 0;
-            Data.menu_select = 0;
-            Data.enter_menu_item = DISABLE;
-            Data.screen = 1;
-            hidden_menu = DISABLE;
-            Data.madorc_impulse = 0;
-            plus_rad_reset(0x0);
-            plus_doze_reset(0x0);
-            full_erase_flash();
-            GPIO_SetBits(GPIOC, GPIO_Pin_13);
-            current_rcvd_pointer++;
-            break;
-
-          case 0x37:           // Загрузка данных в EEPROM (RCV 7 байт)
-            if((current_rcvd_pointer + 7) <= Receive_length)    // Проверка длинны принятого участка
-            {
-              eeprom_loading(current_rcvd_pointer);
-              current_rcvd_pointer += 7;
-            } else
-            {
-              current_rcvd_pointer = Receive_length;    // Принято меньше чем должно быть, завершаем цикл
-            }
-            break;
-
-
-          case 0x38:           // передача данных из EEPROM (RCV 1 байт)
-            Send_length = prepare_data(eeprom_send_data, 0x00, 0xF7);   // Подготовка массива данных к передаче
-            if(Send_length == 0 || eeprom_address >= 0xFF)
-            {
-              eeprom_address = 0;
-              current_rcvd_pointer++;   // Если массив исчерпан
-            }
-            break;
-
-
-          case 0x39:           // завершение передачи (RCV 1 байт)
-            USB_maxfon_massive_pointer = 0;
-            USB_doze_massive_pointer = 0;
-            current_rcvd_pointer++;
-            break;
-
-          case 0xE4:           // Загрузка времени (RCV 7 байт)
-            if((current_rcvd_pointer + 7) <= Receive_length)    // Проверка длинны принятого участка
-            {
-              time_loading(current_rcvd_pointer);
-              current_rcvd_pointer += 7;
-            } else
-            {
-              current_rcvd_pointer = Receive_length;    // Принято меньше чем должно быть, завершаем цикл
-            }
-            break;
-
-          case 0xE3:           // Ключ разблокировки (RCV 5 байт)
-            if((current_rcvd_pointer + 5) <= Receive_length)    // Проверка длинны принятого участка
-            {
-              if(current_rcvd_pointer + 4 >= VIRTUAL_COM_PORT_DATA_SIZE)
-                return;
-              eeprom_write(unlock_0_address, Receive_Buffer[current_rcvd_pointer + 1]);
-              eeprom_write(unlock_1_address, Receive_Buffer[current_rcvd_pointer + 2]);
-              eeprom_write(unlock_2_address, Receive_Buffer[current_rcvd_pointer + 3]);
-              eeprom_write(unlock_3_address, Receive_Buffer[current_rcvd_pointer + 4]);
-              current_rcvd_pointer += 5;
-              LcdClear_massive();
-              LcdUpdate();
-            } else
-            {
-              current_rcvd_pointer = Receive_length;    // Принято меньше чем должно быть, завершаем цикл
-            }
-            break;
-
-          default:
-            current_rcvd_pointer++;
-            break;
-          }
-
-          if(Send_length > 0)   // Если пакет на передачу сформитован
-          {
-            wait_count = 0;
-            while ((packet_sent != 1) && (wait_count < 0xFFFF))
-              wait_count++;     // Проверяем передан ли прошлый пакет
-
-            CDC_Send_DATA((unsigned char *) Send_Buffer, Send_length);
-            Send_length = 0;
-          }
-        }
-        Receive_length = 0;
+        full_erase_flash();
+        DataUpdate.Need_erase_flash = DISABLE;
       }
+      Data.USB_not_active = 0;  // Сброс четчика неактивности USB 
+
+      while (Receive_length > current_rcvd_pointer)
+      {
+        if(current_rcvd_pointer >= VIRTUAL_COM_PORT_DATA_SIZE)
+          return;
+        switch (Receive_Buffer[current_rcvd_pointer])
+        {
+        case 0xD4:             // Отправка данных по запросу каждую минуту (RCV 1 байт)
+          if(Settings.Cal_mode != 1)
+            USB_send_madorc_data();
+          current_rcvd_pointer++;
+          break;
+
+        case 0xE0:             // Отправка серийного номера МК (RCV 1 байт)
+          USB_send_serial_data(0);
+          current_rcvd_pointer++;
+          break;
+
+        case 0xE1:             // Отправка серийного номера МК (RCV 1 байт)
+          USB_send_serial_data(1);
+          current_rcvd_pointer++;
+          break;
+
+        case 0xE2:             // Отправка серийного номера МК (RCV 1 байт)
+          USB_send_serial_data(2);
+          current_rcvd_pointer++;
+          break;
+        case 0xE5:             // Отправка даты прошивки (RCV 1 байт)
+          Send_Buffer[0] = 0xE5;        // передать ключ
+          Send_Buffer[1] = __DATE__[4]; // день
+          Send_Buffer[2] = __DATE__[5]; // день
+          Send_Buffer[3] = __DATE__[0]; // месяц
+          Send_Buffer[4] = __DATE__[1]; // месяц
+          Send_Buffer[5] = __DATE__[2]; // месяц
+          Send_Buffer[6] = __DATE__[10];        // год
+          Send_length = 7;
+          current_rcvd_pointer++;
+          break;
+
+        case 0xE6:             // Отправка версии железа (RCV 1 байт)
+          Send_Buffer[0] = 0xE6;        // передать ключ
+          Send_Buffer[1] = HW_REVISION[0];
+          Send_Buffer[2] = HW_REVISION[1];
+          Send_Buffer[3] = HW_REVISION[2];
+          Send_Buffer[4] = HW_REVISION[3];
+          Send_Buffer[5] = HW_REVISION[4];
+          Send_Buffer[6] = 0x00;
+          Send_length = 7;
+
+          current_rcvd_pointer++;
+          break;
+
+        case 0xD5:             // Отправка метки смещения времени (RCV 1 байт)
+          USB_send_time_offset_data();
+          current_rcvd_pointer++;
+          break;
+
+        case 0x31:             // передача массива максимального фона (RCV 1 байт)
+          Send_length = prepare_data(max_fon_select, &USB_maxfon_massive_pointer, 0xF1);        // Подготовка массива данных к передаче
+          if(Send_length == 0)
+            current_rcvd_pointer++;     // Если массив исчерпан
+          break;
+
+        case 0x32:             // передача массива дозы (RCV 1 байт)
+          Send_length = prepare_data(dose_select, &USB_doze_massive_pointer, 0xF3);     // Подготовка массива данных к передаче
+          if(Send_length == 0)
+            current_rcvd_pointer++;     // Если массив исчерпан
+          break;
+
+        case 0x33:             // передача настроек (RCV 1 байт)
+          USB_maxfon_massive_pointer = 0;
+          USB_doze_massive_pointer = 0;
+          USB_send_settings_data();
+          current_rcvd_pointer++;
+          break;
+
+        case 0x34:             // передача калибровки (RCV 1 байт)
+          USB_send_calibration_data();
+          current_rcvd_pointer++;
+          break;
+
+        case 0x35:             // запуск калибровки (RCV 1 байт)
+          for (i = 0; i < 19; i++)
+            Data.Cal_count_mass[i] = 0;
+          Cal_count = 0;
+          Cal_count_time = 0;
+          Settings.Cal_mode = 1;
+          Data.menu_select = 0;
+          Data.enter_menu_item = DISABLE;
+          Data.screen = 1;
+          hidden_menu = ENABLE;
+          GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+          current_rcvd_pointer++;
+          break;
+
+        case 0x36:             // выход из калибровки (RCV 1 байт)
+          for (i = 0; i < 19; i++)
+            Data.Cal_count_mass[i] = 0;
+          Cal_count = 0;
+          Cal_count_time = 0;
+          Settings.Cal_mode = 0;
+          Data.menu_select = 0;
+          Data.enter_menu_item = DISABLE;
+          Data.screen = 1;
+          hidden_menu = DISABLE;
+          Data.madorc_impulse = 0;
+          plus_rad_reset(0x0);
+          plus_doze_reset(0x0);
+          full_erase_flash();
+          GPIO_SetBits(GPIOC, GPIO_Pin_13);
+          current_rcvd_pointer++;
+          break;
+
+        case 0x37:             // Загрузка данных в EEPROM (RCV 7 байт)
+          if((current_rcvd_pointer + 7) <= Receive_length)      // Проверка длинны принятого участка
+          {
+            eeprom_loading(current_rcvd_pointer);
+            current_rcvd_pointer += 7;
+          } else
+          {
+            current_rcvd_pointer = Receive_length;      // Принято меньше чем должно быть, завершаем цикл
+          }
+          break;
+
+
+        case 0x38:             // передача данных из EEPROM (RCV 1 байт)
+          Send_length = prepare_data(eeprom_send_data, 0x00, 0xF7);     // Подготовка массива данных к передаче
+          if(Send_length == 0 || eeprom_address >= 0xFF)
+          {
+            eeprom_address = 0;
+            current_rcvd_pointer++;     // Если массив исчерпан
+          }
+          break;
+
+
+        case 0x39:             // завершение передачи (RCV 1 байт)
+          USB_maxfon_massive_pointer = 0;
+          USB_doze_massive_pointer = 0;
+          current_rcvd_pointer++;
+          break;
+
+        case 0xE4:             // Загрузка времени (RCV 7 байт)
+          if((current_rcvd_pointer + 7) <= Receive_length)      // Проверка длинны принятого участка
+          {
+            time_loading(current_rcvd_pointer);
+            current_rcvd_pointer += 7;
+          } else
+          {
+            current_rcvd_pointer = Receive_length;      // Принято меньше чем должно быть, завершаем цикл
+          }
+          break;
+
+        case 0xE3:             // Ключ разблокировки (RCV 5 байт)
+          if((current_rcvd_pointer + 5) <= Receive_length)      // Проверка длинны принятого участка
+          {
+            if(current_rcvd_pointer + 4 >= VIRTUAL_COM_PORT_DATA_SIZE)
+              return;
+            eeprom_write(unlock_0_address, Receive_Buffer[current_rcvd_pointer + 1]);
+            eeprom_write(unlock_1_address, Receive_Buffer[current_rcvd_pointer + 2]);
+            eeprom_write(unlock_2_address, Receive_Buffer[current_rcvd_pointer + 3]);
+            eeprom_write(unlock_3_address, Receive_Buffer[current_rcvd_pointer + 4]);
+            current_rcvd_pointer += 5;
+            LcdClear_massive();
+            LcdUpdate();
+          } else
+          {
+            current_rcvd_pointer = Receive_length;      // Принято меньше чем должно быть, завершаем цикл
+          }
+          break;
+
+        default:
+          current_rcvd_pointer++;
+          break;
+        }
+
+        if(Send_length > 0)     // Если пакет на передачу сформитован
+        {
+          wait_count = 0;
+          while ((packet_sent != 1) && (wait_count < 0xFFFF))
+            wait_count++;       // Проверяем передан ли прошлый пакет
+
+          CDC_Send_DATA((unsigned char *) Send_Buffer, Send_length);
+          Send_length = 0;
+        }
+      }
+      Receive_length = 0;
+    }
   }
-#ifdef version_401
   if(!GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_9)) // если 5В на USB не подается, то отключаем его
-#else
-  if((USB_not_active > 60) && (Settings.USB == 1))      // если 4 минуты USB не активно, то отключаем его
-#endif
   {
 
     wait_count = 0;
     while ((packet_sent != 1) && (wait_count < 0xFFFF))
       wait_count++;             // Проверяем передан ли прошлый пакет
 
-#ifndef version_401
-    Settings.USB = 0;
-#endif
     usb_deactivate(0x00);
   }
 

@@ -37,7 +37,6 @@ void dac_reload()
 {
   dac_init();
   ADCData.DAC_voltage_raw = 1;
-#ifdef version_401
   if(Settings.Geiger_voltage > 200)
   {
     // К1 = 200  - Падение на диоде мВ
@@ -49,9 +48,6 @@ void dac_reload()
     // ADCData.DAC_voltage_raw=(((Settings.Geiger_voltage*(1000-K3 ))/K4)-K1 )/K2; 
     ADCData.DAC_voltage_raw = (((Settings.Geiger_voltage * (1000 - 21)) / 11) - 200) / 34;
   }
-#else
-  ADCData.DAC_voltage_raw = ((Settings.Geiger_voltage * 1000) / 30 / 11);       // напряжение датчика/Ктансформации/коэффицент резистивного делителя
-#endif
 
   ADCData.DAC_voltage_raw = (ADCData.DAC_voltage_raw * 1000) / ADCData.Calibration_bit_voltage; // коррекция значения по напряжению опоры
 

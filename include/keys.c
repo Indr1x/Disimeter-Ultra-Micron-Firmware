@@ -486,11 +486,7 @@ void minus_poweroff(uint32_t * param)   // выключение
   PWR_RTCAccessCmd(DISABLE);
   RCC_RTCCLKCmd(DISABLE);
 
-#ifdef version_204              // версия без кварца
-  RCC_LSICmd(DISABLE);
-#else                           // версии с кварцем
   RCC_LSEConfig(RCC_LSE_OFF);
-#endif
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, DISABLE);
 /////////////////////////////////////////////////////
 
@@ -540,18 +536,12 @@ void usb_activate(uint32_t * param)     // Включение USB
 //  LcdUpdate(); // записываем данные из сформированного фрейм-буфера на дисплей
 //  delay_ms(1000);
   }
-#ifndef version_401
-  Settings.USB = 1;
-#endif
 }
 
 void usb_deactivate(uint32_t * param)   // Выключение USB
 {
   if(Power.USB_active)
   {
-#ifndef version_401
-    Settings.USB = 0;
-#endif
     USB_off();
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
 //              LcdClear_massive();
