@@ -120,6 +120,9 @@
 #define LANG_DONTOTO2 "   НЕ нажимать! "
 #define LANG_USBON    "USB активирован"
 #define LANG_USBOFF   "USB  выключен"
+#define LANG_ERRISO   " Нет калибровки "
+#define LANG_ERRISO2  "   по данному   "
+#define LANG_ERRISO3  "    нуклиду     "
 
 #define LANG_BETA1    "час"
 #define LANG_BETA2    "см2"
@@ -255,6 +258,9 @@
 #define LANG_DONTOTO2 "  ANY KEYS!!!   "
 #define LANG_USBON    "USB enabled"
 #define LANG_USBOFF   "USB disabled"
+#define LANG_ERRISO   " No calibration "
+#define LANG_ERRISO2  "    on this     "
+#define LANG_ERRISO3  "   reference    "
 
 #define LANG_BETA1    "par"
 #define LANG_BETA2    "cm2"
