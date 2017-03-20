@@ -134,6 +134,7 @@ int main(void)
 
     if(Power.Display_active)
     {
+      check_isotop_time();      // Проверка наличия калибровки
       if(Power.sleep_time == 0 && !Alarm.Alarm_active)
         sleep_mode(ENABLE);     // Счетчик сна досчитал до нуля, а дисплей еще активен, то выключаем его и понижаем напряжение
       if(DataUpdate.Need_display_update == ENABLE)

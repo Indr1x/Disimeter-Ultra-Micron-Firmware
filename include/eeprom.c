@@ -1,5 +1,7 @@
 #include "stm32l1xx.h"
 #include "main.h"
+#include <stdio.h>
+#include <string.h>
 
 __IO FLASH_Status FLASHStatus = FLASH_COMPLETE;
 __IO TestStatus DataMemoryProgramStatus = PASSED;
@@ -110,6 +112,28 @@ void eeprom_write_settings(uint32_t menu_massive)
   //Запись параметров в EEPROM
   if(eeprom_read(Power_comp_address) != Settings.Power_comp)
     eeprom_write(Power_comp_address, Settings.Power_comp);
+
+  if(Settings.Second_count == 0)
+  {
+    eeprom_read_settings(MAIN_MENU);    // Чтение
+    Settings.Isotop = 0;
+    Settings.Second_count = Settings.Isotop_count_cs137;
+    Settings.ACAL_count = Settings.Isotop_ACAL_cs137;
+    eeprom_write_settings(MAIN_MENU);   // Запись
+
+    sprintf(lcd_buf, LANG_ERRISO);      // Пишем в буфер значение счетчика
+    LcdString(1, 5);            // // Выводим обычным текстом содержание буфера
+    sprintf(lcd_buf, LANG_ERRISO2);     // Пишем в буфер значение счетчика
+    LcdString(1, 6);            // // Выводим обычным текстом содержание буфера
+    sprintf(lcd_buf, LANG_ERRISO3);     // Пишем в буфер значение счетчика
+    LcdString(1, 7);            // // Выводим обычным текстом содержание буфера
+
+    LcdUpdate();                // записываем данные из сформированного фрейм-буфера на дисплей
+    delay_ms(3000);
+
+  }
+
+
 
   if(eeprom_read(Isotop_count_cs137_address) != Settings.Isotop_count_cs137)
     eeprom_write(Isotop_count_cs137_address, Settings.Isotop_count_cs137);

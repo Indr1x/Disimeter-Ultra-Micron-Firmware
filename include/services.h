@@ -14,5 +14,6 @@ uint32_t precision_measure(void);
 void sleep_mode(FunctionalState sleep);
 FunctionalState check_license(void);
 float convert_mkr_sv(uint32_t);
+void check_isotop_time(void);
 
 #endif

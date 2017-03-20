@@ -182,6 +182,35 @@ uint32_t precision_measure()
 // ===============================================================================================
 
 
+
+// ===============================================================================================
+void check_isotop_time()
+{
+  if(Settings.Second_count == 0)
+  {
+    eeprom_read_settings(MAIN_MENU);    // Чтение
+    Settings.Isotop = 0;
+    Settings.Second_count = Settings.Isotop_count_cs137;
+    Settings.ACAL_count = Settings.Isotop_ACAL_cs137;
+    eeprom_write_settings(MAIN_MENU);   // Запись
+
+    sprintf(lcd_buf, LANG_ERRISO);      // Пишем в буфер значение счетчика
+    LcdString(1, 5);            // // Выводим обычным текстом содержание буфера
+    sprintf(lcd_buf, LANG_ERRISO2);     // Пишем в буфер значение счетчика
+    LcdString(1, 6);            // // Выводим обычным текстом содержание буфера
+    sprintf(lcd_buf, LANG_ERRISO3);     // Пишем в буфер значение счетчика
+    LcdString(1, 7);            // // Выводим обычным текстом содержание буфера
+
+    LcdUpdate();                // записываем данные из сформированного фрейм-буфера на дисплей
+    delay_ms(3000);
+
+  }
+}
+
+// ===============================================================================================
+
+
+
 // ===============================================================================================
 void reload_active_isotop_time()
 {
@@ -223,25 +252,6 @@ void reload_active_isotop_time()
     Settings.Second_count = Settings.Isotop_count_th228;
     Settings.ACAL_count = Settings.Isotop_ACAL_th228;
     break;
-  }
-
-  if(Settings.Second_count == 0)
-  {
-    Settings.Isotop = 0;
-    Settings.Second_count = Settings.Isotop_count_cs137;
-    Settings.ACAL_count = Settings.Isotop_ACAL_cs137;
-    eeprom_write_settings(MAIN_MENU);   // Запись
-
-    sprintf(lcd_buf, LANG_ERRISO);      // Пишем в буфер значение счетчика
-    LcdString(1, 5);            // // Выводим обычным текстом содержание буфера
-    sprintf(lcd_buf, LANG_ERRISO2);     // Пишем в буфер значение счетчика
-    LcdString(1, 6);            // // Выводим обычным текстом содержание буфера
-    sprintf(lcd_buf, LANG_ERRISO3);     // Пишем в буфер значение счетчика
-    LcdString(1, 7);            // // Выводим обычным текстом содержание буфера
-
-    LcdUpdate();                // записываем данные из сформированного фрейм-буфера на дисплей
-    delay_ms(3000);
-
   }
 
   Settings.AMODUL_Alarm_level_raw = (Settings.AMODUL_Alarm_level * Settings.ACAL_count) / 100;
