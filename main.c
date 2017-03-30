@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "STM32L1xx.h"          // Device header
-
 #include "main.h"
 
 DataUpdateDef DataUpdate;
