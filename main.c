@@ -77,7 +77,6 @@ int main(void)
   Power.Display_active = ENABLE;
 
   timer10_Config();
-  tim2_Config();
   tim3_Config();
   tim4_Config();
 //--------------------------------------------------------------------
@@ -98,6 +97,7 @@ int main(void)
   EXTI8_Config();
   EXTI9_Config();
   EXTI3_Config();
+  EXTI1_Config();
   EXTI4_Config();
   EXTI6_Config();
 

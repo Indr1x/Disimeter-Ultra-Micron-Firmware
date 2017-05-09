@@ -47,8 +47,8 @@ MenuItem Modul_Menu_list[modul_max_struct_index] = {
 {0x00, 0xD4,		LANG_ISOTOP_TI44, "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_ti44,	   		10,	    	1450,		250,	&plus,				10,				&minus,						10},
 {0x00, 0xCC,		LANG_ISOTOP_Y88,  "",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_y88,		   	10,	    	1450,		250,	&plus,				10,				&minus,						10},
 {0x00, 0xDC,		LANG_ISOTOP_BA133,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_ba133,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
-{0x00, 0xE4,		LANG_ISOTOP_TH228,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_th228,			10,	    	1450,		250,	&plus,				10,				&minus,						10},
-
+{0x00, 0xE4,		LANG_ISOTOP_TH228,"",					"",			LANG_ACAL,				&Settings.Isotop_ACAL_th228,			10,	    	1450,		250,	&plus,				10,				&minus,						10}
+/*
 {0x00, 0xA4,		LANG_SPECT_START,"",				  "",			"%u",	    				&Settings.AMODUL_spect_start,			10,	    	20000,	1000,	&plus,				100,			&minus,						100},
 {0x00, 0xA8,		LANG_SPECT_MULTIP,"",			  	"",			"%u",		    			&Settings.AMODUL_spect_multi,			1,	    	200,	 	70,	  &plus,				1,				&minus,						1},
 {0x00, 0xAC,		LANG_SPECT_MARK1,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark1,			1,	    	100,		10, 	&plus,				1,				&minus,						1},
@@ -56,7 +56,7 @@ MenuItem Modul_Menu_list[modul_max_struct_index] = {
 {0x00, 0xB4,		LANG_SPECT_MARK3,"",				  "",			"%u",		    			&Settings.AMODUL_spect_mark3,			1,	    	100,		30,	  &plus,				1,				&minus,						1},
 {0x00, 0xB8,		LANG_SPECT_MARK4,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark4,			1,	    	100,		40,	  &plus,				1,				&minus,						1},
 {0x00, 0xBC,		LANG_SPECT_MARK5,"",				  "",			"%u",	    				&Settings.AMODUL_spect_mark5,			1,	    	100,		50,	  &plus,				1,				&minus,						1}
-
+*/
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* *INDENT-ON* */
@@ -409,7 +409,7 @@ void amodul_screen()
       Draw_fon_graph(2, 94, 67 - 25, 67, BIG_SIZE, Data.AMODULE_fon, 0, MODUL);
 
       break;
-    case 3:
+/*    case 3:
 
       sprintf(lcd_buf, LANG_SPECT_MARK_TEXT1);  // Пишем в буфер значение счетчика
       LcdString(1, 1);          // // Выводим обычным текстом содержание буфера
@@ -420,6 +420,7 @@ void amodul_screen()
       Draw_fon_graph(2, 96, 67 - 38, 67, SMALL_SIZE, Data.AMODULE_len, 0, SPECTR);
 
       break;
+*/
     }
   } else
   {

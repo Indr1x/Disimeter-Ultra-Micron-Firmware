@@ -167,14 +167,11 @@ void io_init(void)
   GPIO_Init(GPIOA, &GPIO_InitStructure);        // Загружаем конфигурацию
   */
 // ===============================================================================================  
-  // Ножка TIM2 - вход сцинтилятора
+  // Ножка вход сцинтилятора
 
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);
-
 }

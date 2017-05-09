@@ -562,7 +562,7 @@ void keys_proccessing(void)
 {
   extern uint16_t key;
   extern SettingsDef Settings;
-  int i;
+//  int i;
 
   /////////////////////////////////
   if(key & 0x2)                 // Êíîïêà +
@@ -575,7 +575,7 @@ void keys_proccessing(void)
 
     if((Settings.AMODUL_mode > 0) && (Settings.AMODUL_menu == 0))
     {
-      if(Settings.AMODUL_unit < 3)
+      if(Settings.AMODUL_unit < 2)
       {
       } else
       {
@@ -665,12 +665,13 @@ void keys_proccessing(void)
     if((Settings.AMODUL_mode > 0) && (Settings.AMODUL_menu == 0))
     {
       Settings.AMODUL_unit++;
-      if(Settings.AMODUL_unit == 3)
+/*      if(Settings.AMODUL_unit == 3)
       {
         for (i = 0; i < 100; i++)
           Data.AMODULE_len[i] = 0;
       }
-      if(Settings.AMODUL_unit > 3)
+*/
+      if(Settings.AMODUL_unit > 2)
         Settings.AMODUL_unit = 0;
     }
 

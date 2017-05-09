@@ -115,38 +115,6 @@ void timer10_Config(void)       // генерация звука
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////////////////////////////////////////////////////////////////
-void tim2_Config()              // Модуль-А - спектр
-{
-  TIM_TimeBaseInitTypeDef TIM_BaseConfig;
-  NVIC_InitTypeDef NVIC_InitStructure;
-  TIM_ICInitTypeDef TIM_ICInitStructure;
-
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-
-  TIM_TimeBaseStructInit(&TIM_BaseConfig);
-
-  TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
-  TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_BothEdge;
-  TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
-  TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-  TIM_ICInitStructure.TIM_ICFilter = 0x1;
-  TIM_ICInit(TIM2, &TIM_ICInitStructure);
-
-
-  TIM_ITConfig(TIM2, TIM_IT_CC2, ENABLE);
-
-  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-
-
-  TIM2->EGR |= 0x0001;          // Устанавливаем бит UG для принудительного сброса счетчика
-  TIM_Cmd(TIM2, ENABLE);
-
-}
 
 /////////////////////////////////////////////////////////////////////////////////
 

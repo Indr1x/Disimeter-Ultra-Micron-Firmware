@@ -164,9 +164,6 @@ void EXTI4_IRQHandler(void)
 // Прерывание по импульсу от датчика и кнопки 2
 void EXTI9_5_IRQHandler(void)
 {
-  // extern __IO uint8_t Receive_Buffer[64];
-//  extern __IO uint32_t Receive_length;
-//  extern __IO uint32_t length;
   if(EXTI_GetITStatus(EXTI_Line8) != RESET)
   {
     EXTI_ClearITPendingBit(EXTI_Line8);
@@ -181,17 +178,6 @@ void EXTI9_5_IRQHandler(void)
         Detector_AB_massive[0]++;
       }
 
-/*      if(Power.Pump_active == DISABLE)
-      {
-        if(Data.last_count_pump_on_impulse > 10)
-        {
-          pump_on_impulse = ENABLE;
-          Data.last_count_pump_on_impulse = 0;
-          Pump_now(ENABLE);
-        } else
-          Data.last_count_pump_on_impulse++;
-      }
-*/
       if(Settings.Sound && !(Alarm.Alarm_active && !Alarm.User_cancel))
       {
         if(Power.Display_active)
@@ -282,61 +268,29 @@ void TIM3_IRQHandler(void)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Модуль-А
-
-void TIM2_IRQHandler(void)
+// =======================================================
+// Прерывание по нажатию кнопки 0
+void EXTI1_IRQHandler(void)
 {
-  uint32_t i = 0;
-  if(TIM_GetITStatus(TIM2, TIM_IT_CC2) != RESET)
+  if(EXTI_GetITStatus(EXTI_Line1) != RESET)
   {
-    TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
-
-    if(Settings.AMODUL_mode == 0)       // Если модуль-А выключен, активируем его
-      plus_amodul_engage(0x00);
-
-    if(spect_impulse == DISABLE)
+    if(!poweroff_state)
     {
-      if(!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1))
-      {
-        spect_impulse = ENABLE;
-        Data.AMODULE_timstart = TIM_GetCapture2(TIM2);
-        Data.AMODULE_fon[0]++;
-        Data.AMODULE_find[0]++;
-      }
-    } else
-    {
-      spect_impulse = DISABLE;
-      Data.AMODULE_timend = TIM_GetCapture2(TIM2);
+      if(Settings.AMODUL_mode == 0)     // Если модуль-А выключен, активируем его
+        plus_amodul_engage(0x00);
 
-      /* Capture computation */
-      if(Data.AMODULE_timend > Data.AMODULE_timstart)
+      Data.AMODULE_fon[0]++;
+      Data.AMODULE_find[0]++;
+      if(Isotop_counts >= Settings.Isotop_counts)
       {
-        i = (Data.AMODULE_timend - Data.AMODULE_timstart) - 1;
-      } else if(Data.AMODULE_timend < Data.AMODULE_timstart)
-      {
-        i = ((0xFFFF - Data.AMODULE_timstart) + Data.AMODULE_timend) - 1;
+        sound_activate();
+        Isotop_counts = 0;
       } else
       {
-        i = 0;
-      }
-//////////////////////////////////////////////////      
-
-      i = i - Settings.AMODUL_spect_start;
-      i = i / Settings.AMODUL_spect_multi;
-
-      if(i < 100)
-      {
-        Data.AMODULE_len[i]++;  // Фон Модуля-А
+        Isotop_counts++;
       }
     }
-    if(Isotop_counts >= Settings.Isotop_counts)
-    {
-      sound_activate();
-      Isotop_counts = 0;
-    } else
-    {
-      Isotop_counts++;
-    }
-
+    EXTI_ClearITPendingBit(EXTI_Line1);
   }
 }
 
